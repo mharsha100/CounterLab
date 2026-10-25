@@ -1,0 +1,21 @@
+{
+  "version": "support_e4_uniform_k16_slice_v1",
+  "selected_before_published_values_and_own_execution": true,
+  "source_revision": "0e2be0e71c25330eddbf452a0bd034ba1a3f6f24",
+  "artifact_path": "outputs/e4_robustness.json",
+  "capacity": 16,
+  "family": "uniform",
+  "published_rows": [
+    {"alg": "OnOPT-OM", "pred": "inverted"},
+    {"alg": "RPB-OM(tau=1)", "pred": "inverted"},
+    {"alg": "LRU", "pred": "none"}
+  ],
+  "intervention": {"alg": "RPB-OM(tau=1)", "changed_factor": "history_refresh", "from": "after_request", "to": "after_miss"},
+  "selection_reason": "One fixed finite regime at k=16, the associativity used in the paper's trace experiments. This is a supporting reproduction's synthetic E4 slice, not a paper figure or the challenging report's adversary.",
+  "horizon_and_repeats": "Read from the selected published rows and freeze before our numerical execution; reconcile against pinned driver metadata.",
+  "comparison_tolerance": {"optimum_misses": 0, "ratio_mean_absolute": 1e-12, "ratio_std_absolute": 1e-12},
+  "preserve_mismatch_and_null_results": true,
+  "model_inference_requests": 0,
+  "external_code_execution": false,
+  "scope": "one_source_finite_reconstruction_plus_matched_history_intervention"
+}

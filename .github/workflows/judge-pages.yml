@@ -1,0 +1,61 @@
+name: Publish reviewed CounterLab evidence
+
+# Deliberate manual publication only. A push never deploys the project.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_publication:
+        description: Publish the reviewed recorded-evidence site and source download publicly
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: counterlab-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: inputs.confirm_publication && github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13.5'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.16.0'
+      - run: python -m pip install -r requirements-lock.txt
+      - run: npm ci --prefix web
+      # Explicit public data download into the ephemeral runner, hash checked.
+      # It is never packaged or uploaded. No inference secrets are needed.
+      - run: python scripts/fetch_reference.py --download
+      - run: python -m unittest discover -s tests -v
+      - run: npm run build --prefix web
+      - run: npm run build:judge --prefix web
+      - run: python scripts/build_judge_release.py --output artifacts/releases/pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: artifacts/releases/pages/judge/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish recorded evidence
+        id: deployment
+        uses: actions/deploy-pages@v4

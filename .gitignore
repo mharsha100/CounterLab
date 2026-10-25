@@ -1,0 +1,40 @@
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# JavaScript
+node_modules/
+dist/
+judge-dist/
+coverage/
+
+# Generated downloads and local runs; publish reviewed evidence deliberately
+downloads/
+artifacts/runs/
+artifacts/app/
+artifacts/ui/
+artifacts/worker/
+artifacts/preview/
+artifacts/releases/
+# Optional upstream reference is fetched explicitly; never redistribute the full file.
+cases/paging/source_regime/reported_artifact.json
+.cache/
+logs/
+*.log
+
+# Local editor / operating system files
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1 @@
+{"content":"{\"test_id\": \"history_900\", \"hypothesis\": \"SIMULATED PLAN: first check repeat consistency, then measure the matched history intervention.\", \"predict_gate_difference\": true, \"predict_miss_difference\": true}","finish_reason":"stop","model":"nvidia/Nemotron-3-Ultra-550b-a55b","tool_call_count":0,"visible_text_returned":true}

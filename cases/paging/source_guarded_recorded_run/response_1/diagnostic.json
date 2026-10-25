@@ -1,0 +1,1 @@
+{"content":"{\"test_id\": \"repeat_900\", \"hypothesis\": \"Synthetic integration proposal; not a real model response or causal explanation.\", \"predict_gate_difference\": true, \"predict_miss_difference\": true}","finish_reason":"stop","model":"nvidia/Nemotron-3-Ultra-550b-a55b","tool_call_count":0,"usage":{},"visible_text_returned":true}

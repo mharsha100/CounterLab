@@ -1,0 +1,38 @@
+{
+  "schema_version": "source_history_v1",
+  "run_id": "50eb53dbc008439cb85d4a9322da6b62",
+  "created_at": "2026-10-24T22:17:58.717771+00:00",
+  "source_protocol_sha256": "30e56749a14d9b40c080b7a38267f9ef4cce75ff984b7912b0cf634f57fc080c",
+  "files": {
+    "attempt_1/admission.json": "edb071776951251b82688e27ca7bd251ff6ea269baadaa0479f21b2044570b14",
+    "attempt_1/committed_plan.json": "7b297747c460f6e941ec37df3753f2a70dffaabe04eae4ed5ec7c1a79e235ebd",
+    "attempt_1/execution.json": "f2e67fbf4e23a9768d19e2805e6c1c3d2881de62e6949db52b938a6c6629a739",
+    "attempt_1/measurement.json": "228f417c7eaf7727f22a22ec7ebddd3641cc9f389b4841cad6b0dbdae9dde6ea",
+    "attempt_1/replay_1.json": "2187db81988399687ddec9ecc2d908ef4785e9031fabd6f36d0e6918be229f72",
+    "attempt_1/replay_2.json": "2187db81988399687ddec9ecc2d908ef4785e9031fabd6f36d0e6918be229f72",
+    "attempt_2/admission.json": "e34271b423e0560f1c40a1623ac6245bb23d71ed1613e669a5d8740f59946862",
+    "attempt_2/committed_plan.json": "146b2405bbac1dc1bb4ed674e8b6884896d3ca646e76b5cb47ca667221110361",
+    "attempt_2/execution.json": "9dd0443d3386d15fa8c6ffb66e9c0300a0d9b9025197e93fdb7bf5171009e2f8",
+    "attempt_2/measurement.json": "8998976cf166aa1857131f8f4684be095e03351065b6cdf883f7fb25425a1083",
+    "attempt_2/replay_1.json": "2187db81988399687ddec9ecc2d908ef4785e9031fabd6f36d0e6918be229f72",
+    "attempt_2/replay_2.json": "2187db81988399687ddec9ecc2d908ef4785e9031fabd6f36d0e6918be229f72",
+    "evidence_report.json": "5677e03e3ba75863757e2a4687703fb0e080d3c2b3ae08c7eda9939d11c69fab",
+    "model_input.json": "4cfe0b605cf9fb8f9770fe7d4542a6bd7f73131ca0aefc66f48de02ee70999a1",
+    "response_1/diagnostic.json": "5882b0873c40b59fff5ccea0e55ac0cb279ab9c9e31fe9c20e98d0a4a60a16e6",
+    "response_2/diagnostic.json": "81054d8064998908d7140025202046e303666f82bedd21efc872592616a51ca7",
+    "source_protocol.json": "30e56749a14d9b40c080b7a38267f9ef4cce75ff984b7912b0cf634f57fc080c",
+    "summary.json": "a127cfc2ec151670bec56cfd3b41542dd402e180b00029137c4c4606534c4743",
+    "task.json": "3b3513ae3d64f42572410e1799a2ec02173518c4b0476adc2fd841bbd4372137",
+    "workflow_plan.json": "3c7e1d5efbf2d665384fa7bfa48cd4cd800b36155bfc872d51a0e05f2c92a28b"
+  },
+  "code": {
+    "counterlab/__init__.py": "5d08d1fbb227696e332157328c9dac344fdb4f3bbd02e2cde8d7233201732dc7",
+    "counterlab/paging.py": "cb405e18315ee168223d493ef9026e1dd6863fb3f42d813022fedf14ff076258",
+    "counterlab/learning_paging.py": "9b1109c2651e6381fb3cd9ddbacce010cb4dbaa4c8ff3981557c08dbefc16eb9",
+    "counterlab/protocol_study.py": "c2eaafba0f4b6814d28131551766ee431fd92ca52b9e8539ccdef6f2e5ee0430",
+    "counterlab/source_regime.py": "f1ddeb7a4a083ca20cdcea572ee73419b607b776b085377b0867fdb7bacd4a81",
+    "counterlab/evidence_report.py": "d8589a214eb891a160699cb0dfa3d29359b6b353ef41c546af34f1f671ec8090",
+    "counterlab/source_investigation.py": "71b24685bc864ca22dfb744b2f4bb271b2971c2776e69c90ee569fc8f8663169",
+    "counterlab/source_run_record.py": "412b0d8d0193aefcb941b021d7e208bf6123716fb7d717d7a2c6061496ef768f"
+  }
+}
