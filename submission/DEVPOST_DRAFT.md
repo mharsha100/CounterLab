@@ -21,10 +21,19 @@ interventions. Restricted local Docker workers run admitted tests twice; host
 replay checks the measurements. A deterministic factual report cites all measured
 tests and distinguishes controls, rejections, null results and unresolved claims.
 
+A claim audit connects five developer-framed questions to exact verified record
+fields, comparability checks and unresolved coverage. It does not autonomously
+extract claims or resolve the full research disagreement.
+
 The React/TypeScript interface exposes source contracts, predictions, measurements,
 failures, model usage and downloadable standard-library Python replays. A keyless
 evidence build lets a judge inspect saved results without creating a paid account.
 It is labeled as recorded inspection; the full source build contains live inference.
+
+A separate human-designed workbench exposes bounded synthetic settings and
+precommitted expectations. Its local calculator and checked standard-library
+Python runner enable new comparisons without an inference key. Those results
+remain explicitly separate from the frozen model scores.
 
 ## How Nebius and NVIDIA are used
 
@@ -70,7 +79,8 @@ adds value rather than assuming that it does.
 
 ## Limits and next steps
 
-CounterLab supports fixed reviewed tests, not arbitrary paper ingestion or code
+The source investigator supports fixed reviewed tests, with a separate bounded
+synthetic adapter for human experimentation. Neither accepts arbitrary papers or code for
 execution. It independently reconstructed one selected supporting reproduction
 slice; it has not reproduced the paper's full experiments or resolved the full
 report disagreement or an asymptotic theorem. External user validation and a
@@ -85,7 +95,7 @@ React; TypeScript; Vite. Solo entrant, AI-assisted development.
 
 - Public working demo or test-build URL: **pending publication and verification**.
 - Public source repository: **pending publication**.
-- Public demo video (target 2:55): **pending recording and upload**.
+- Public demo video (target 2:55): **private rehearsal cut prepared; final recording and public upload pending**.
 - Tool feedback: use `TOOL_FEEDBACK.md`.
 
 This is a draft, not a completed Devpost submission. Review ownership,

@@ -1,5 +1,37 @@
 # CounterLab setup checklist
 
+## New source extraction
+
+Use **README → Fresh installation — current instructions** for the authoritative
+setup sequence. Python 3.13 plus `requirements-lock.txt` is sufficient to inspect
+the compiled app in read-only mode. Node is needed only to rebuild the interface;
+Docker and a Nebius key are separate live-experiment prerequisites.
+
+The full developer regression suite uses the optional pinned upstream numeric
+fixture. Install it explicitly with `scripts/fetch_reference.py --download` or
+`--local-file PATH` before running `unittest`. It is not needed for ordinary
+recorded inspection and is deliberately excluded from distributable archives.
+
+## Current setup check — October 26
+
+```powershell
+.\.venv\Scripts\python.exe scripts\check_readiness.py
+```
+
+This checks the verified Python runtime, locked package versions, current
+interface build and presence of the saved evidence manifests. Missing evidence
+is a setup problem; presence alone does not verify the numerical results.
+The default check opens no credential files, makes no network request and uses
+no credits. Add `--worker` for optional Docker image inspection only. Docker
+absence does not block inspection; provider access and balance remain unchecked.
+
+The launcher now stops with recovery instructions when a required check fails.
+Both build commands write local source/output fingerprints; release packaging
+rejects either missing or stale edition before creating an output directory.
+These fingerprints are consistency checks, not signatures or independent build
+attestations. Follow [PROJECT_COUNTDOWN.md](PROJECT_COUNTDOWN.md) for current work;
+the dated setup histories below describe earlier milestones.
+
 **October 25 guarded-workflow setup:** No new account, key, package, GPU download
 or worker rebuild is needed. Source investigator v2 uses the existing frozen
 numerical worker and adds the prediction gate in the backend.

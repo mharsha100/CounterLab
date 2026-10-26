@@ -1,8 +1,14 @@
 # Hackathon project planning package
 
-**Updated October 25, 2026.**
+**Updated October 26, 2026.**
 
-**Current publication-preparation milestone:** New packages omit the full upstream
+Start with **README → Fresh installation — current instructions**, then
+`PROJECT_COUNTDOWN.md` for the remaining work and `submission/PROJECT_FREEZE.md`
+for the reviewed release scope. Those documents supersede the historical setup
+and progress notes below. Publication, judge access, final video and submission
+are separate deliverables; the repository remains private.
+
+**Previous publication-preparation milestone:** New packages omit the full upstream
 numeric file and include an explicit hash-verified reference setup. The evidence
 interface links its full source build. A manual-only GitHub Pages workflow and
 finished narration draft are prepared locally. Start with

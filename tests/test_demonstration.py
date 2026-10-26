@@ -82,6 +82,75 @@ class DemonstrationTests(unittest.TestCase):
         with patch("counterlab.demonstration.load_environment", side_effect=ValueError("Altered evidence")):
             self.assertEqual(self.client.get("/api/demonstration").status_code, 409)
 
+    def test_trace_is_read_only_and_refuses_unverified_evidence(self):
+        response = self.client.get("/api/trace-explorer")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["inference_requests"], 0)
+        self.assertEqual(data["worker_calls"], 0)
+        self.assertEqual(len(data["cases"]), 3)
+        self.assertEqual(self.client.post("/api/trace-explorer", json={}).status_code, 403)
+        with patch("counterlab.api.project_trace_explorer", side_effect=ValueError("Altered")):
+            self.assertEqual(self.client.get("/api/trace-explorer").status_code, 409)
+        self.configure.assert_not_called()
+        self.transport.assert_not_called()
+        self.worker.descriptor.assert_not_called()
+
+    def test_library_lists_fixed_public_records_without_loading_credentials_or_experiments(self):
+        with patch('counterlab.api.project_record', side_effect=AssertionError('Catalog must not replay experiments.')):
+            response = self.client.get('/api/evidence-library')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['items']), 8)
+        self.configure.assert_not_called()
+        self.transport.assert_not_called()
+        self.worker.descriptor.assert_not_called()
+
+    def test_claim_audit_is_read_only_and_hides_claims_on_evidence_failure(self):
+        response = self.client.get('/api/claim-audit')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['report']['claims']), 5)
+        self.assertEqual(response.json()['inference_requests'], 0)
+        self.assertEqual(response.json()['worker_calls'], 0)
+        self.assertEqual(self.app.state.workspace.rows(), [])
+        self.assertEqual(self.client.post('/api/claim-audit', json={}).status_code, 403)
+        with patch('counterlab.claim_audit.project_study', side_effect=ValueError('altered record')):
+            failed = self.client.get('/api/claim-audit')
+        self.assertEqual(failed.status_code, 409)
+        self.assertNotIn('report', failed.json())
+        self.configure.assert_not_called()
+        self.transport.assert_not_called()
+        self.worker.assert_not_called()
+        self.worker.descriptor.assert_not_called()
+
+    def test_archive_response_checksum_binds_the_exact_zip_download(self):
+        response = self.client.get('/api/investigations/6c178e6a60f04b23983c98e3ccf7c51a/export')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers['X-CounterLab-Archive-SHA256'], hashlib.sha256(response.content).hexdigest())
+        self.assertEqual(int(response.headers['X-CounterLab-Archive-Bytes']), len(response.content))
+        self.assertEqual(response.headers['Content-Type'], 'application/zip')
+        with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+            self.assertIsNone(archive.testzip())
+        self.transport.assert_not_called()
+
+    def test_bounded_workbench_calculation_uses_no_provider_worker_or_saved_job(self):
+        from counterlab.synthetic_workbench import digest, make_protocol
+        response = self.client.get('/api/experiment-workbench')
+        self.assertEqual(response.status_code, 200)
+        settings = response.json()['presets'][0]['settings']
+        params = {'settings':json.dumps(settings), 'protocol_sha256':digest(make_protocol(settings))}
+        result = self.client.get('/api/experiment-workbench/compare', params=params)
+        self.assertEqual(result.status_code, 200)
+        record = result.json()
+        self.assertEqual([p['result']['misses'] for p in record['observations']['profiles']], [19,18])
+        self.assertEqual(record['inference_requests'], 0)
+        self.assertEqual(self.app.state.workspace.rows(), [])
+        self.assertEqual(self.client.get('/api/experiment-workbench/compare', params={**params, 'protocol_sha256':'0'*64}).status_code, 409)
+        self.assertEqual(self.client.get('/api/experiment-workbench/compare', params={**params, 'settings':'x'*2049}).status_code, 422)
+        self.assertEqual(self.client.post('/api/experiment-workbench/compare', json=settings).status_code, 403)
+        self.configure.assert_not_called()
+        self.transport.assert_not_called()
+        self.worker.descriptor.assert_not_called()
+
     def test_download_recomputes_later_review_with_original_evidence_intact(self):
         response = self.client.get("/api/prediction-review/export")
         self.assertEqual(response.status_code, 200)

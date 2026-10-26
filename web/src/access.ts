@@ -1,5 +1,6 @@
 // The evidence build has no backend or provider connection. Never fall back to
 // the live API when a snapshot is missing or fails its integrity check.
+import { receiveArchive, validateFingerprint, verifyArchiveBytes, type ArchiveFingerprint } from './archiveIntegrity';
 type Manifest = { schema: number; files: Record<string, { sha256: string; bytes: number }>; routes: Record<string, string> };
 export const isEvidenceBuild = import.meta.env.MODE === 'judge';
 const base = () => new URL(import.meta.env.BASE_URL, document.baseURI);
@@ -42,4 +43,37 @@ export function evidenceHref(path: string): string {
 
 export function sourceBuildHref(): string {
   return new URL('downloads/counterlab-source.zip', base()).href;
+}
+
+export interface CheckedArchive {
+  bytes: Uint8Array; sha256: string; expectedSource: 'release_manifest' | 'local_response_checksum';
+}
+
+export async function checkedEvidenceDownload(path: string, signal: AbortSignal,
+  progress: (received: number, total: number, checking: boolean) => void): Promise<CheckedArchive> {
+  if (!/^\/api\/(?:(?:research-study|evaluation|source-reproduction|source-evaluation|prediction-review)|(?:source-investigations|investigations)\/[a-f0-9]{32})\/export$/.test(path)) {
+    throw new Error('This package is outside the evidence library.');
+  }
+  let expected: ArchiveFingerprint;
+  let url: string | URL = path;
+  if (isEvidenceBuild) {
+    const index = await checkedManifest();
+    const file = `snapshots${path}.zip`;
+    expected = validateFingerprint(index.files[file] || { bytes: 0, sha256: '' });
+    url = new URL(file, base());
+  }
+  const response = await fetch(url, { signal, redirect: 'error', cache: 'no-store' });
+  if (!response.ok) throw new Error(`Package download failed (HTTP ${response.status}). No download was prepared.`);
+  if (!isEvidenceBuild) {
+    expected = validateFingerprint({ sha256: response.headers.get('X-CounterLab-Archive-SHA256') || '',
+      bytes: Number(response.headers.get('X-CounterLab-Archive-Bytes')) });
+  }
+  const known = expected!;
+  progress(0, known.bytes, false);
+  const bytes = await receiveArchive(response, known, count => progress(count, known.bytes, false), signal);
+  signal.throwIfAborted();
+  progress(bytes.byteLength, known.bytes, true);
+  const sha256 = await verifyArchiveBytes(bytes, known);
+  signal.throwIfAborted();
+  return { bytes, sha256, expectedSource: isEvidenceBuild ? 'release_manifest' : 'local_response_checksum' };
 }

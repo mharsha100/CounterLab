@@ -1,5 +1,24 @@
 # CounterLab
 
+**October 26 claim-audit update:** Sources now opens five developer-framed
+questions with deterministic answers derived from sealed study, source-slice and
+model-evaluation records. Exact record-field citations, comparability states,
+explicit unknown coverage, bounded conclusions and missing-evidence steps are
+inspectable and exported. Saved audits are rederived from verified records;
+self-hashes do not authorize changed conclusions. Optional upstream-file identity
+is an environment context, distinct from the selected local comparison rows.
+All 211 offline Python tests, 12 frontend checks and both builds pass. No new
+inference, numerical protocol changes or general research verdict.
+
+**October 25 editable-workbench update:** A separate human-designed synthetic
+workbench exposes bounded cache size, request family/length, seeds, laboratory
+forecasts, budget reset and precommitted predictions. Its local calculator uses
+the unchanged pinned kernel; complete records replay with a standard-library
+Python zipapp. Portable browsing prepares plans only. These results are outside
+the frozen benchmark and long source slice. All 201 offline Python tests and
+12 frontend tests pass. Editable synthetic experimentation is improved; full
+source fidelity, model advantage and v2 live quality remain open.
+
 **October 25 guarded-workflow update:** Source investigator v2 now applies the
 input-only prediction reviewer after commitment and before any worker launch.
 A rejected prediction produces a decision and feedback, never an observation.

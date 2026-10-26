@@ -3,6 +3,166 @@
 Turn disagreement into experiments. Planned hackathon track: Best Apps and Agents,
 with NVIDIA Nemotron inference through Nebius Token Factory.
 
+## Completion countdown
+
+The fixed project-first checklist is in [PROJECT_COUNTDOWN.md](PROJECT_COUNTDOWN.md).
+Each completed work batch reports the remaining steps.
+
+## Fresh installation — current instructions
+
+Extract the full source ZIP into a new folder and open PowerShell there:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+.\.venv\Scripts\python.exe scripts\check_readiness.py
+.\.venv\Scripts\python.exe scripts\start_app.py --read-only --port 8001
+```
+
+Open **http://127.0.0.1:8001/**. The compiled interface is included. Recorded
+inspection and the bounded workbench require neither Node, Docker, an API key
+nor the optional full upstream reference. Installation downloads dependencies;
+read-only startup makes no model request and blocks all investigation starts.
+Use another port if 8001 is occupied; do not stop an existing app unnecessarily.
+
+For development, `npm.cmd --prefix web ci --ignore-scripts` installs the locked
+frontend packages; `npm.cmd --prefix web run build` rebuilds the app and
+`npm.cmd --prefix web run build:judge` builds the separate portable edition.
+
+The **complete test suite** additionally uses the optional pinned numeric
+reference as a fixture. Install it explicitly before running the suite:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\fetch_reference.py --download
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+npm.cmd --prefix web run test:downloads
+npm.cmd --prefix web run test:workbench
+```
+
+Alternatively, `scripts\fetch_reference.py --local-file PATH` verifies an
+already downloaded copy without network access. The full upstream file is
+excluded from releases. See [release validation](submission/VALIDATION.md) and
+[project freeze](submission/PROJECT_FREEZE.md) for current evidence; test counts
+and usage figures in the dated implementation milestones below are historical.
+
+## Check local setup
+
+```powershell
+.\.venv\Scripts\python.exe scripts\check_readiness.py
+.\.venv\Scripts\python.exe scripts\start_app.py --read-only --port 8001
+```
+
+The setup check explains missing packages or an out-of-date interface build.
+It does not open API keys, contact Nebius or spend credits. Add `--worker` to
+inspect the local Docker image without running an experiment. Inspection can
+work without Docker; provider access and credit balance are deliberately unknown.
+The launcher runs the same required checks before starting. Rebuild a stale
+interface with `npm.cmd --prefix web run build`. File fingerprints detect local
+changes; they are not signatures or independent build attestations.
+
+## Private demo rehearsal
+
+A ten-scene private review cut is prepared locally: about 2:41, 1080p, captions
+and a labeled synthetic guide voice. It uses edited captures of the working
+interface. The timed script is in [submission/DEMO_NARRATION.md](submission/DEMO_NARRATION.md).
+Local media and its review kit stay under `artifacts/demo/20261026-review/` and
+are excluded from the source release. Final continuous recording, chosen final
+narration and public YouTube upload remain pending. No new model calls were used.
+
+## Audit the claims
+
+Open **Sources → Claim audit** (`?view=claim-audit`). Five bounded questions link
+source contracts, selected reference rows, matched timing interventions and the
+complete four-policy evaluation. Each answer includes its scope, exact record
+fields, comparability checks and missing evidence. Unknown coverage stays unknown;
+no model-selection advantage or full-report verdict is asserted.
+
+Save the audit JSON, then recheck it against the verified local records:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\check_claim_audit.py --record PATH_TO_JSON
+```
+
+This rederives the statements; a recomputed hash cannot legitimize edited claims.
+The optional full-reference verification context is separate from the frozen
+three-row comparison. This is developer-framed, deterministic evidence inspection,
+not autonomous claim extraction. No model, Docker or reference download is used.
+
+## Design a bounded experiment
+
+Open **Research study → Design an experiment** (`?view=experiment-workbench`).
+Edit synthetic requests, cache size, seeds, forecasts and budget, then commit
+predictions before comparing the two history rules. The unchanged pinned Python
+engine measures both arms; LRU and the future-aware offline optimum add context.
+
+These are **human-designed synthetic diagnostics**, separate from the source
+slice and frozen model benchmark. The local read-only calculator allows at most
+512 requests and 16 slots, writes no workspace files and uses no model or Docker.
+This open view retains up to ten completed comparisons; export before leaving.
+Editing a draft does not relabel an earlier result.
+
+The portable browser edition prepares plans without executing them. Save its
+committed plan and checksum-checked runner in a new folder, then use Python 3.13:
+
+```powershell
+python counterlab-experiment.pyz counterlab-plan.json --output counterlab-result.json
+python counterlab-experiment.pyz counterlab-result.json --verify
+```
+
+Only Python's standard library is needed. The runner includes our MIT license,
+checks pinned engine bytes, refuses output overwrite and rejects rehashed
+fabricated observations on replay. The protocol hash is not a trusted timestamp.
+This update passed **201 offline Python tests and 12 frontend tests**. Run the
+frontend gates with `npm run test:downloads --prefix web` and
+`npm run test:workbench --prefix web`.
+
+## Evidence library
+
+Open **Evidence → Evidence library** for all eight reviewed replay packages.
+Cards distinguish real model records, simulated planning and deterministic
+analysis, and explain each package's scope and replay command. The source-slice
+package explicitly lists its separate reference-data setup.
+
+Choose **Check package**, then **Save checked ZIP**. The browser checks size,
+ZIP signature and SHA-256 before preparing the download. The portable edition
+uses its release manifest; the local app uses the checksum for that exact server
+response. Save the file-check receipt if useful. These are byte checks; extract
+the ZIP and run its Python command for numerical verification.
+
+The library update passed **191 offline Python tests**, **eight browser-download
+unit tests**, and both interface builds. Run the download tests with
+`npm run test:downloads --prefix web`. No additional dependencies or model calls
+are needed. The private GitHub update is pending reauthentication after HTTP 401;
+the original private upload remains unchanged.
+
+## Start with the evidence
+
+The app opens the guided tour by default. In its first step, select **Open trace
+explorer** to inspect the cache one request at a time. Jump to the first history,
+decision or hit/miss difference; compare two controls; inspect the gate calculation
+and download the three traces. These are explicitly labeled original constructed
+diagnostics, separate from the source-evaluation task above them.
+
+The local Python runner recomputes every state from the pinned algorithm. The
+portable edition shows the same states verified at packaging time. Both use zero
+model calls. To reproduce the trace from source, run:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\inspect_trace.py
+```
+
+Add `--output artifacts/diagnostic-traces.json` to save a new JSON file without
+overwriting an existing one. All **187 offline tests** and both builds passed
+for this update. The witness remains 19 versus 18 misses; the controls agree.
+
+## Private GitHub repository
+
+The reviewed source is uploaded to [mharsha100/CounterLab](https://github.com/mharsha100/CounterLab).
+It is **private**. Commit `97096f2aa2112fc6057cc35e0afac487e2cc5aba` on `main`
+contains all 266 verified source-package files. Pages is off and no workflows ran.
+Public source/site access still needs a later explicit instruction. The upload
+receipt is under `artifacts/releases/810d603137ab48afb454a22a9b3ef468/`.
+
 ## Portable evidence release — October 25
 
 A separate keyless build now packages the reviewed records and replay downloads.
@@ -28,7 +188,7 @@ standard library is sufficient. See [judge instructions](submission/JUDGE_GUIDE.
 
 [Submission draft](submission/DEVPOST_DRAFT.md), [tool feedback](submission/TOOL_FEEDBACK.md)
 and [completion/recording plan](submission/RELEASE_CHECKLIST.md) are prepared locally.
-All 181 offline tests passed for the publication-preparation update. Both
+All 181 offline tests passed for the preceding publication-preparation update. Both
 interface builds pass. The earlier portable release also passed desktop/mobile,
 extracted source inspection and actual HTTP evaluation replay. See
 [validation details](submission/VALIDATION.md). Public repository, judge URL and

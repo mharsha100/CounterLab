@@ -5,7 +5,8 @@ import shutil
 import unittest
 import uuid
 
-from counterlab.investigator import MODELS, ROOT, execute_plan, load_case
+from counterlab.investigator import MODELS, ROOT, execute_plan
+from counterlab.records import reviewed_protocol
 from counterlab.verified_investigator import run_investigation
 
 
@@ -20,9 +21,11 @@ class VerifiedInvestigatorTests(unittest.TestCase):
         self.key = uuid.uuid4().hex
         self.directory = self.parent / self.key
         self.directory.mkdir(parents=True)
-        self.protocol = load_case()
-        self.calls = []
         self.addCleanup(self.cleanup)
+        # Use the shipped, hash-checked protocol, as the app does. Private
+        # development run directories are deliberately absent from releases.
+        self.protocol = reviewed_protocol()
+        self.calls = []
 
     def cleanup(self):
         target = self.directory.resolve()

@@ -16,8 +16,10 @@ def main():
     args = parser.parse_args()
     if not 1024 <= args.port <= 65535:
         parser.error("Choose a port from 1024 to 65535.")
-    if not (ROOT / "web" / "dist" / "index.html").is_file():
-        raise SystemExit("Build the interface first: npm.cmd --prefix web run build")
+    from counterlab.readiness import check_readiness, format_readiness
+    readiness = check_readiness()
+    if not readiness['inspection_ready']:
+        raise SystemExit(format_readiness(readiness))
     with socket.socket() as probe:
         try:
             probe.bind(("127.0.0.1", args.port))

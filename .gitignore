@@ -28,6 +28,9 @@ artifacts/ui/
 artifacts/worker/
 artifacts/preview/
 artifacts/releases/
+artifacts/freeze/
+artifacts/demo/
+artifacts/media_tools/
 # Optional upstream reference is fetched explicitly; never redistribute the full file.
 cases/paging/source_regime/reported_artifact.json
 .cache/

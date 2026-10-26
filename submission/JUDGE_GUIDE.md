@@ -17,7 +17,10 @@ directly: browsers need HTTP to load and verify the JSON records.
 
 | Where | What to inspect |
 | --- | --- |
+| Sources → Claim audit | Five bounded questions, exact record-field citations, comparability checks and unresolved coverage. Save its JSON and recheck it with the full source build. |
 | Guided demonstration | A real recorded Nemotron success, a wrong prediction, then every policy's aggregate result. |
+| Research study → Design an experiment | Prepare a bounded human-designed plan and export its checked offline runner; this browser edition does not execute the new plan. |
+| Evidence → Evidence library | Eight replay packages, explicit evidence types and setup, checksum-checked saving and replay commands. |
 | Evaluation → Fresh source evaluation | Eight frozen tasks, all options, failures and zero-inference baselines. |
 | Research study → Source investigator | Latest prediction guard, clearly labeled **simulated planning** with real isolated numerical executions. |
 | Research study → Source reproduction | One selected supporting reproduction slice and its limits. |
@@ -33,7 +36,25 @@ to install the pinned upstream file, which is not bundled. That setup checks its
 SHA-256; subsequent replay is offline and can take a few minutes. Hashes are
 consistency checks, not authorship proof.
 
+In the evidence library, choose **Check package** before **Save checked ZIP**.
+The browser checks size, ZIP signature and SHA-256 against this portable release's
+manifest. It refuses a mismatched or incomplete file. A session file-check
+receipt is available; numerical replay still requires the package's Python
+command. Other views retain their direct download links.
+
 ## Live workflow and required tools
+
+The design workbench needs no model credits. In this portable edition, save its
+plan and runner into a new folder, then use Python 3.13:
+
+```powershell
+python counterlab-experiment.pyz counterlab-plan.json --output counterlab-result.json
+python counterlab-experiment.pyz counterlab-result.json --verify
+```
+
+The full local app also offers the same bounded in-memory Python calculation.
+It starts no model or Docker worker. Human experiments are not added to the
+frozen benchmark; export results before leaving the workbench view.
 
 Use the evidence interface's **Download source & live workflow** link for the
 full source build. It contains the FastAPI app and explicit-consent

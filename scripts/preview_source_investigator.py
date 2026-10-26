@@ -16,7 +16,7 @@ from counterlab.investigator import MODELS
 def simulated_provider(key, route, body=None):
     if route == "models":
         return {"data": [{"id": MODELS[0]}]}
-    if body["response_format"]["json_schema"]["name"] != "source_experiment_plan":
+    if body["response_format"]["json_schema"]["name"] not in ("source_experiment_plan", "guarded_source_experiment_plan"):
         raise ValueError("This QA provider supports only the source investigator.")
     followup = any("counterlab_source_feedback" in item["content"] for item in body["messages"])
     plan = {"test_id": "history_900" if followup else "repeat_900",

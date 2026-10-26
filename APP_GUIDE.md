@@ -3,7 +3,24 @@
 The local app is built and verified. Dependencies and the interface build are
 already prepared in this workspace.
 
-**October 25 current milestone:** **Research study → Source investigator** now
+## Check setup before starting
+
+Run `.\.venv\Scripts\python.exe scripts\check_readiness.py`. Each blocked item
+includes a recovery action. The check reads package versions and build records;
+it does not read `.env`, call a model or install anything. `--json` saves a
+machine-readable report. Optional `--worker` inspects the local image and its
+reviewed source fingerprints without starting a container.
+
+The app launcher checks the same prerequisites. If frontend source changed,
+run `npm.cmd --prefix web run build` before starting again. The source download
+includes its compiled interface and build record, so Node is needed only when
+rebuilding. Recorded inspection requires neither a key nor Docker. Ready for
+inspection does not mean that live inference or account funding was checked.
+
+The remaining project and submission work is tracked in
+[PROJECT_COUNTDOWN.md](PROJECT_COUNTDOWN.md).
+
+**Previous guarded-workflow milestone — October 25:** **Research study → Source investigator** now
 uses v2 for new starts. Predictions are committed, checked against necessary
 conditions and rejected before worker execution when contradicted. The model
 can use that feedback for one untried follow-up. A rejection is not a measured
@@ -13,6 +30,64 @@ All 162 offline tests and the production build pass. The real restricted worker
 boundary probe, two isolated numerical replays and actual HTTP export/fresh-process
 replay also pass. No Nebius requests were made. Frozen v1 results and the prior
 retrospective audit remain unchanged; v2 real-model quality has not been measured.
+
+## Claim audit
+
+Open **Sources → Claim audit**, or `?view=claim-audit`.
+
+1. Choose a question, or filter to measured comparisons and open questions.
+2. Read the bounded answer, comparability checks and remaining gap.
+3. Expand a citation to inspect the exact JSON field and its source record.
+4. Use **Inspect this comparison** to open the complete study, source slice or
+   fresh source evaluation. The original four source cards remain in another tab.
+5. Save the audit JSON. From the full source build, run
+   `python scripts/check_claim_audit.py --record PATH_TO_JSON` to rederive it.
+
+The verifier rejects edited wording, missing policies and altered citations even
+if their self-hash was recomputed. Its local verification context replaces saved
+labels. This check does not rerun every long numerical experiment; the eight
+existing replay packages provide those numerical replays. Portable audit checks
+ran at packaging. Unknown is not the same as measured disagreement.
+
+Files: `counterlab/claim_audit.py` derives the bounded report from existing sealed
+verifiers; `scripts/check_claim_audit.py` checks a saved report; `web/src/ClaimAudit.tsx`
+and `claims.css` display it; `tests/test_claim_audit.py` checks its trust boundaries.
+No new model calls, reference retrieval, Docker or source publication is involved.
+
+## Design an experiment
+
+Open **Research study → Design an experiment**, or `?view=experiment-workbench`.
+
+1. Choose a request family. The known witness retains its original definition;
+   other families allow bounded edits to inputs and forecasts.
+2. Enter predictions or abstain; select **Commit this plan** and save its JSON.
+3. In the local app, **Run the committed comparison** calculates results in
+   Python without a model or Docker. Completed results come into view.
+4. Save the complete result before leaving. This view keeps up to ten completed
+   comparisons; edits clearly separate the draft from earlier measured plans.
+
+Portable browsing prepares plans only. Save the checked runner and plan in a
+new folder, then use Python 3.13 (standard library only):
+
+```powershell
+python counterlab-experiment.pyz counterlab-plan.json --output counterlab-result.json
+python counterlab-experiment.pyz counterlab-result.json --verify
+```
+
+The result includes input/forecast arrays, both raw event streams, LRU/offline
+optimum baselines and fingerprints. Replay rejects changed measurements even
+when their hashes are recalculated. Existing output files are preserved.
+These are human-designed synthetic diagnostics, not new model-performance data
+or the long source slice. Perfect/inverted forecasts use future requests as
+laboratory advice. The finite result settles no theorem.
+
+| File | Purpose |
+| --- | --- |
+| `counterlab/synthetic_workbench.py` | Strict input contract, bounded calculator, verifier and portable runner |
+| `web/src/ExperimentWorkbench.tsx`, `web/src/workbench.css` | Editable inputs, commitments, local results and portable exports |
+| `web/src/workbenchProtocol.ts` | Canonical JSON, cross-language hashes and immutable plan snapshots |
+| `tests/test_synthetic_workbench.py` | Numerical controls, bounds, code pins, fabricated records and standalone execution checks |
+| `web/tests/workbench-protocol.test.ts` | Python-compatible fingerprints, abstention, snapshots and invalid-input tests |
 
 ## Reference setup and publication preparation
 
@@ -136,6 +211,57 @@ are the preceding, separate milestone.
 
 ## Guided demonstration
 
+### Evidence library
+
+Choose **Evidence → Evidence library** for all eight fixed replay packages.
+Filter real model records, simulated planning or deterministic analysis. Each
+card explains its scope and replay requirements; three are marked as starting
+points. The source-slice card discloses its explicit reference-data setup.
+
+1. Choose **Check package**. This uses no model credits or Docker.
+2. Wait for **File integrity checked**, then choose **Save checked ZIP**.
+3. Extract into a new folder and follow **How to replay and what it verifies**.
+4. Optionally save the session's file-check receipt. It records SHA-256, bytes
+   and checksum source; it is not a numerical replay receipt or signature.
+
+The portable edition compares downloaded bytes with its manifest. The local
+server includes a checksum of its exact response. Changed/truncated bytes, wrong
+format or unsupported fingerprints do not produce a save link. Cancelling
+discards the incomplete download. **Selected investigation** retains the earlier
+record-specific evidence view.
+
+| File | Purpose |
+| --- | --- |
+| `counterlab/evidence_catalog.py` | Lists the eight fixed packages, evidence types and replay requirements |
+| `counterlab/api.py` | Attaches exact-body checksums and byte counts to existing ZIP exports |
+| `web/src/EvidenceLibrary.tsx`, `web/src/library.css` | Library, filters, checked save links and file-check receipt |
+| `web/src/archiveIntegrity.ts`, `web/src/access.ts` | Bounded streaming download, format and SHA-256 checks |
+| `web/tests/archive-integrity.test.ts`, `tests/test_evidence_catalog.py` | Changed bytes, truncation, cancellation, bounds, catalog coverage and evidence-type checks |
+
+Run the eight frontend integrity tests with `npm run test:downloads --prefix web`.
+
+### Open the tour
+
+The app now opens here by default. In step 1, **Open trace explorer** explains
+what changes inside the cache. It uses the original constructed diagnostic,
+not the source-evaluation task shown above it. Choose a control from the dropdown,
+move the slider with the arrow/Home/End keys, or jump to the first difference.
+History first differs at request 18, the eviction choice at 29, and hit/miss at 30.
+Inspect either decision for its actual gate inputs. Counts include warmup.
+
+The local app recomputes these fixed states; the portable edition inspects states
+verified when packaged. Both paths need no credits or Docker. **Definitions,
+verification and limits** contains a JSON download for all three cases.
+`python scripts/inspect_trace.py` recomputes them offline; add
+`--output artifacts/diagnostic-traces.json` to save a new file.
+
+| File | Purpose |
+| --- | --- |
+| `counterlab/trace_explorer.py` | Reads the verified original protocol/record and captures the pinned runner's real state |
+| `web/src/TraceExplorer.tsx`, `web/src/trace.css` | Interactive memory comparison, controls and explanations |
+| `scripts/inspect_trace.py` | Offline replay and optional trace JSON export |
+| `tests/test_trace_explorer.py` | Checks cache membership, exact events, causal milestones, controls and altered-evidence rejection |
+
 Keep the existing app open. Start a separate read-only instance:
 
 ```powershell
@@ -143,7 +269,7 @@ Keep the existing app open. Start a separate read-only instance:
 ```
 
 Open **http://127.0.0.1:8001/?view=demo**. No key or Docker is needed for inspection.
-The server blocks both investigation start routes. Opening this mode does not
+The server blocks all three investigation start routes. Opening this mode does not
 mark jobs in another server interrupted. Stop this instance with **Ctrl+C** when
 you finish. It is local only; public judge hosting is still outstanding.
 

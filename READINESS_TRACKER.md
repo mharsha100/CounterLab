@@ -1,8 +1,125 @@
 # Hackathon preparation tracker
 
-Updated October 25, 2026. Check an item only after confirming it in the actual account or with an official source. Do not store passwords, API keys, payment details, or private identity documents here.
+Updated October 26, 2026. Check an item only after confirming it in the actual account or with an official source. Do not store passwords, API keys, payment details, or private identity documents here.
 
-## Current publication preparation — October 25 · reference distribution
+## Current project status — October 26 · project frozen locally
+
+- Fresh Python and frontend installs pass; both frontend builds reproduce the
+  reviewed output bytes. Actual keyless read-only startup works before optional
+  reference setup. All 224 Python tests and 12 frontend checks pass.
+- All eight standalone evidence packages replay with third-party packages
+  disabled. The full source slice covers ten seeds / 30 profiles. Fixed five
+  tests' dependency on private development history; scientific code/results
+  remain unchanged. Setup instructions now explain the optional test fixture.
+- Reviewed scope and release policy: submission/PROJECT_FREEZE.md. Final local
+  archive hashes and acceptance receipt are beside the frozen packages.
+- **5 steps remain: 0 project + 5 submission.** No new model calls, spending or
+  publication. GitHub stays private; public release remains a later decision.
+
+## Previous project status — October 26 · workflow acceptance
+
+- Step 2 completed: recorded workflows, workbench, all eight checked exports,
+  deliberate failure recovery, keyboard and mobile checks pass. Fixed history
+  empty-state recovery and the running investigation's workflow label.
+- Docker recovered with temporary socket backups retained. A fresh simulated
+  source investigation completed two tests in four real isolated executions;
+  its downloaded evidence passes independent offline replay. The earlier stopped
+  run remains preserved. No live model calls or publication.
+- Countdown: **6 remain — 1 project + 5 submission**. Next: clean installation,
+  final evidence acceptance and project freeze. See submission/VALIDATION.md.
+
+## Previous project status — October 26 · startup readiness
+
+- Added a keyless setup check and launcher preflight for the verified Python
+  runtime, 17 locked packages, current interface and nine manifest paths.
+  A blocked item includes a concrete recovery action. Evidence presence is not
+  numerical verification; provider access and balance are deliberately unchecked.
+- Successful interface builds record 38 source/configuration inputs and four
+  compiled files. Same-size source edits, new files, changed assets, malformed
+  records and credential filenames are rejected. These are local fingerprints,
+  not a signature or independent build attestation.
+- Optional worker inspection verified the existing local image and reviewed
+  source fingerprints without starting a container. Unavailable Docker does not
+  block recorded inspection. The release builder rejects stale editions before
+  creating an output directory; private media and encoder files are Git-ignored.
+- Full regression: 223 Python tests passed. All nine focused release tests
+  passed after adding one further stale-release test; all 12 frontend checks and
+  both builds passed. The real launcher served HTML/assets/build metadata on
+  port 8001 with fresh read-only state, then was stopped. Port 8000 was untouched.
+- No model calls, key reads, paid service or publication. Fixed countdown:
+  [PROJECT_COUNTDOWN.md](PROJECT_COUNTDOWN.md). Final workflow acceptance and a
+  clean dependency installation remain separate project steps.
+
+## Previous delivery status — October 26 · private demo review cut
+
+- Prepared a 160.709-second private review cut (about 2:41), 1920×1080 at 24 fps,
+  with 47 burned-in and embedded subtitle cues and a labeled synthetic guide voice.
+  This is an edited still-frame interface walkthrough; continuous recording,
+  chosen final narration and public upload remain pending.
+- Fresh extracted evaluation replay passed: 22 paired tests, 45 independent
+  profiles, 145,041 events, all 16 baseline and 16 model runs rescored, zero inference.
+  The draft preserves the failed prediction, all four policy rows and the
+  simulated-planning guard label. A real new bounded workbench calculation is shown.
+- All 3,857 encoded frames decode; audio is non-silent and unclipped. Encoded
+  captions preserve every narration word. Browser playback, seeking and exact
+  HTTP video bytes pass; the local player allows six assets and rejects writes
+  and traversal. Thirty review-kit files pass their member hashes.
+- All 172 checked application, worker, source-protocol and UI files match the
+  preceding reviewed release. The last application suite remains 211 passing
+  Python tests and 12 frontend checks; it was not rerun for this media-only work.
+- Private assets and verification: `artifacts/demo/20261026-review/`. No provider,
+  paid service, Docker worker or publication was used for this milestone. GitHub
+  sync still awaits reauthentication; no remote request was attempted.
+
+## Previous product status — October 26 · claim audit
+
+- Sources opens five bounded questions with measured, documented and unresolved
+  states. Answers derive from existing sealed verifiers and retain exact record
+  citations, source links, comparability checks and missing-evidence steps.
+- The optional upstream numeric file's local identity check is explicit and
+  separate from the frozen three reference rows. Source reproduction no longer
+  implies that an absent full file was checked.
+- Saved audit JSON is rederived from the verified records. Rehashed fabricated
+  answers, omitted questions/policies and changed citations are rejected. Saved
+  verification labels are replaced by the verifier's own environment context.
+- **211 Python tests passed in 152.641 seconds**; all 12 frontend checks and both
+  builds pass. Browser and release verification are recorded in submission/VALIDATION.md.
+- No new inference, Docker, reference retrieval or remote publication. The private
+  GitHub repository still awaits reauthentication for sync. Full research parity,
+  model advantage and live v2 model quality remain unestablished.
+
+## Previous product status — October 25 · bounded experiment workbench
+
+- Editable human-designed synthetic comparisons expose request family, bounded cache/trace size, seeds, laboratory forecasts, budget and predictions/abstention. Only history timing changes within each pair; costs include warmup. These are outside the frozen model benchmark and long source slice.
+- The local read-only GET calculator runs at most 512 requests and 16 slots, writes no workspace files, starts no job and uses no credential, model or Docker worker. Completed comparisons retain their original settings when a draft changes; export before leaving the view.
+- A checked Python 3.13 zipapp executes committed plans and verifies complete records without packages, keys or network. Unknown fields, invalid types/ranges, code/commitment changes, overwritten outputs and rehashed fabricated results are rejected.
+- **201 Python tests passed in 97.970 seconds**; four plan-commitment checks and eight archive-integrity checks pass. Both builds pass. Browser tests cover wrong predictions, edited inputs, forecast sensitivity (30 vs 12 misses on one fixed trace), invalid sizes, stale-result labels and mobile fit.
+- No new inference, Docker or publication. Private GitHub sync still awaits reauthentication.
+
+## Previous product status — October 25 · evidence library
+
+- Evidence now opens a library of all eight fixed replay packages, with evidence-type filters, recommended starting points, scope, requirements and replay commands. The selected investigation remains available in a separate tab.
+- Browser downloads verify actual size, ZIP signature and SHA-256 before exposing a save link. Portable checks use the release manifest; local checks use checksums attached to the exact export response. Cancellation, mismatched bytes, invalid metadata, HTML and oversized/incomplete streams are rejected. Session receipts explicitly cover file bytes, not numerical replay.
+- **191 offline Python tests passed in 109.288 seconds**, and all eight download-integrity tests passed. Both interface builds pass. The prepared manual publication workflow now includes these local unit tests; it has not been run remotely.
+- No new inference, Docker or reference-data download. GitHub sync remains pending reauthentication (stored credentials returned HTTP 401); no remote update was attempted in this milestone.
+
+## Previous product status — October 25 · inspectable trace
+
+- Guided tour is now the default screen. Its optional trace explorer shows real cache state, history before/after, eviction decisions, gate calculations and running counts for all three original fixed cases. Keyboard, mobile and controls were checked.
+- The witness reproduces saved totals (19/18 misses; 1/0 credits), with first history, decision and hit/miss differences at requests 18, 29 and 30. The all-fit and perfect-advice controls retain equal costs. These constructed examples are explicitly separate from source-evaluation results.
+- New offline CLI and downloadable JSON expose the full states and protocol/event fingerprints. Verification fails closed on changed protocol or record data. No new model, Docker or paid service calls.
+- **187 offline tests passed in 147.637 seconds**; both builds passed. Portable snapshot and private-repository delivery verification are recorded in `submission/VALIDATION.md` when completed.
+
+## GitHub status — October 25 · initial private source upload
+
+- Repository: https://github.com/mharsha100/CounterLab — verified **private**.
+- Default branch: `main`; initial source commit `97096f2aa2112fc6057cc35e0afac487e2cc5aba`.
+- All 266 remote blobs match the exact reviewed source ZIP, including the source manifest. ZIP SHA-256: `da9af6eac5beec3e21ba29c07a8f0e8f13c3d4b5d59080160877997901f1ef92`.
+- GitHub Pages is disabled; workflow run count is zero. An unauthenticated repository request returned 404. No new inference calls were made.
+- Receipt and owned upload checkout: `artifacts/releases/810d603137ab48afb454a22a9b3ef468/github-publication.json`. The original workspace Git checkout was not reset or overwritten.
+- Keep the repository private. Public source/site publication requires a later explicit instruction; actual demo recording/upload and final submission remain pending.
+
+## Previous publication preparation — October 25 · reference distribution
 
 - New source, judge and source-replay archives exclude the full upstream numeric file. An explicit helper downloads the pinned public data, bounds its size and checks the exact hash before a non-overwriting installation. Import, app opening and status inspection perform no download.
 - Core inspection uses the unchanged frozen three-row comparison with its full-artifact verification flag false when the optional reference is absent. Invalid present references fail verification. Numerical protocols, model results and guarded workflow records remain frozen.
@@ -305,7 +422,7 @@ Restart an existing app process and keep Docker Desktop running. Worker setup is
 
 Added AST-only inspection of six pinned sources; no downloaded implementation was imported or executed. It confirms history/priority branch placement and a supporting-protocol/driver mismatch: planned 200,000 requests and at least 20 repeats versus full driver defaults of 150,000 and 10. This does not establish which configuration produced every published artifact. No license declaration was found in cached official metadata/tree; external source redistribution remains unestablished.
 
-Before observations, froze protocol fda2101b9ce51e24d767eb6120a502495a8d38977c22ee89b5175af0e9306d37 and a source-audit/image-bound execution plan. The study has 52 scenarios and all eight history/priority/prediction-delivery combinations: 416 profiles, two identical Docker executions each (832 arm executions), and host replay. The 624 matched edges contain both null and differing outcomes. History changes miss counts on 25/208 edges, priorities on 75/208 and delivery on 98/208; signed effects include both directions. Changing only the shared counting window changes 212 defined ratios. All four preregistered controls pass.
+Before observations, froze protocol fda2111b9ce51e24d767eb6120a502495a8d38977c22ee89b5175af0e9306d37 and a source-audit/image-bound execution plan. The study has 52 scenarios and all eight history/priority/prediction-delivery combinations: 416 profiles, two identical Docker executions each (832 arm executions), and host replay. The 624 matched edges contain both null and differing outcomes. History changes miss counts on 25/208 edges, priorities on 75/208 and delivery on 98/208; signed effects include both directions. Changing only the shared counting window changes 212 defined ratios. All four preregistered controls pass.
 
 An independent exhaustive oracle checked perfect-advice optimality on 140 small traces across eight arms (1,120 comparisons) before protocol freeze. The current study uses declared reduced inputs, a common k-distinct prefix, coupled random tapes, a lab forecast field and exact layers. It does not reproduce source RNG schedules, published scales or the challenge's lazy adversary. Seed repeats and arms are correlated development cases. It does not establish external implementation parity, an asymptotic result, G1 or G2/G3.
 

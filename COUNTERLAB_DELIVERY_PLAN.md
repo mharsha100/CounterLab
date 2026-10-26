@@ -1,16 +1,82 @@
 # CounterLab — delivery and evaluation
 
-**Current publication-preparation milestone — October 25:** Avoid redistribution
+**Project freeze — October 26:** The reviewed one-adapter prototype passes fresh
+installation, byte-identical frontend rebuilds, 224 Python tests, 12 frontend
+checks, real read-only startup and all eight standalone evidence replays. A
+test-only reliance on private development history was removed. The frozen scope
+is in submission/PROJECT_FREEZE.md; runtime algorithms and model scores are
+unchanged. **5 steps remain: 0 project + 5 submission.** No public publication
+or new model calls occurred; the repository remains private.
+
+**Latest project milestone — October 26:** Workflow acceptance is complete.
+History filtering and running-version labels are corrected; mobile/keyboard,
+failure recovery, all eight checked exports and offline workbench replay pass.
+A fresh simulated-planning investigation completed two tests in four actual
+isolated executions, and its downloaded package replays independently. The
+stopped first run remains preserved. No new model requests or publication.
+**6 countdown steps remain: 1 project (clean installation/freeze), 5 submission.**
+Detailed acceptance evidence is recorded in submission/VALIDATION.md.
+
+**Current project milestone — October 26:** Keyless prerequisite diagnostics,
+launcher preflight and local build records now catch missing packages and stale
+source/assets before startup or packaging. Actual read-only startup passed on
+an isolated port/state; all 223 regression tests, the nine focused release tests
+(including one additional test), 12 frontend checks and both builds passed.
+No model calls or containers were started. The fixed project-first countdown is
+in [PROJECT_COUNTDOWN.md](PROJECT_COUNTDOWN.md); acceptance and clean-install
+freeze are the next project deliverables. Earlier plans and targets below retain
+their historical scope; unmet research claims remain open.
+
+**Current delivery milestone — October 26:** A private ~2:41 edited-still demo
+review cut, synthetic guide track, 47 caption cues, chapter list, source captures
+and a checked review kit are prepared. The actual fresh evaluation replay is
+shown; failure and baseline results remain visible. Full media decode, audio,
+subtitle, browser playback and byte-range seeking checks pass. Application code
+and frozen evidence are unchanged. Final continuous capture/narration, explicit
+publication authorization, public access and final submission remain open.
+
+**Current product milestone — October 26:** Five bounded claim questions connect
+contracts, finite measurements, reference comparisons and the full policy table.
+Every answer exposes exact record-field citations, comparability and unresolved
+coverage. Exported audits rederive against existing sealed verifiers. All 211
+Python tests, 12 frontend checks and both builds pass; no new model calls or
+frozen benchmark changes. Source provenance and scope are easier to inspect.
+
+**Current product milestone — October 25:** A bounded human-designed experiment
+workbench supports editable synthetic conditions, precommitted predictions and
+paired history comparisons. Full records include both event streams, forecasts,
+baselines and code fingerprints. Its checked Python zipapp runs/verifies plans
+offline; portable browsing prepares plans only. All 201 offline Python tests,
+12 frontend tests and both builds pass. No new model calls or benchmark changes.
+
+**Previous product milestone — October 25:** Evidence library centralizes eight
+reviewed replay packages, with type filters, explicit model/simulation labels,
+reference setup and numerical replay instructions. Downloads are size/signature/
+SHA-256 checked before a save link appears; receipts describe byte checks only.
+All 191 offline Python tests, eight download tests and both builds pass. No new
+inference. Existing private GitHub sync awaits reauthentication; no public
+publication is authorized.
+
+**Previous product milestone — October 25:** The guided tour is the default entry.
+Its optional trace explorer shows actual pinned-runner states, before/after
+history, eviction choices and cumulative counts for the original witness and
+two controls. Users can jump to the first differences and export the trace JSON;
+the matching CLI replays it offline. The witness's history, decision and miss
+milestones are requests 18, 29 and 30. All 187 offline tests and both builds pass;
+desktop/mobile checks found no horizontal overflow. No new inference was used.
+
+**Next delivery gates:** Keep the existing GitHub repository private as requested.
+After a later explicit public-publication instruction, publish the reviewed
+source/build and verify actual access and downloads. Record the under-three-minute
+demo, finalize tool feedback and submit the entry. No fresh model batch is part
+of these delivery steps. Model advantage and broader research claims remain open.
+
+**Previous publication-preparation milestone — October 25:** Avoid redistribution
 of the full upstream reference by excluding it from source, judge and nested
 source-replay archives. Its setup is explicit, bounded and hash verified. Core
 inspection remains available without it and withholds the full-artifact identity
 claim. A manual-only Pages workflow, public-access instructions and narration
 script are prepared; no remote workflow or publication has run.
-
-**Next delivery gates:** Choose the public repository destination; publish the
-reviewed source and manually deploy the evidence build; check actual public links
-and downloads from a clean session; record the under-three-minute demo; finalize
-and submit the entry. No fresh model batch is part of those steps.
 
 **Previous delivery milestone — October 25:** Prepare the separate portable
 recorded-evidence build and full source archive, then verify integrity, static

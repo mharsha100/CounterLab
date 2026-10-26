@@ -8,7 +8,7 @@ import threading
 import unittest
 from unittest.mock import patch
 
-from counterlab.judge_release import SOURCE_FILES, blocked, collect_snapshots, fingerprint, routes, source_files, write_json
+from counterlab.judge_release import SOURCE_FILES, blocked, build_release, collect_snapshots, fingerprint, routes, source_files, write_json
 from scripts.serve_judge import handler_for, safe_file, verify_site
 
 
@@ -83,6 +83,7 @@ class JudgeReleaseTests(unittest.TestCase):
             path.write_text("synthetic fixture", encoding="utf-8")
         forbidden = (".env", ".npmrc", "personal-notes.md", "artifacts/runs/private.json", "downloads/external.py",
             "web/node_modules/a.js", ".git/config", "cases/unreviewed/private.json",
+            "artifacts/demo/private.mp4", "artifacts/media_tools/encoder.exe",
             "cases/paging/source_regime/reported_artifact.json")
         for name in forbidden:
             path = source / name
@@ -95,6 +96,24 @@ class JudgeReleaseTests(unittest.TestCase):
     def test_missing_required_source_file_cannot_make_a_partial_archive(self):
         with self.assertRaisesRegex(ValueError, "missing"):
             list(source_files(self.root))
+
+    def test_stale_builds_are_rejected_before_creating_or_collecting_a_release(self):
+        for failed_edition in ('application', 'recorded_evidence'):
+            destination = self.root / failed_edition
+            checked = []
+            def verify(root, *, edition='application'):
+                checked.append(edition)
+                if edition == failed_edition:
+                    raise ValueError('stale build fixture')
+            with self.subTest(edition=failed_edition), \
+                 patch('counterlab.readiness.verify_build', side_effect=verify), \
+                 patch('counterlab.judge_release.collect_snapshots') as collect:
+                with self.assertRaisesRegex(ValueError, 'stale build'):
+                    build_release(destination)
+                self.assertFalse(destination.exists())
+                collect.assert_not_called()
+                self.assertEqual(checked, ['application'] if failed_edition == 'application'
+                                 else ['application', 'recorded_evidence'])
 
     def test_snapshot_collector_fails_on_unverified_record(self):
         # Actual API creation with blocked provider/config/worker; fail before

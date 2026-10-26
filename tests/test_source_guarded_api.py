@@ -66,6 +66,11 @@ class GuardedSourceApiTests(unittest.TestCase):
         self.assertEqual((old.status_code, diagnostic.status_code), (409, 409))
         self.assertEqual(submit.call_count, 1)
         self.assertEqual(submit.call_args.args[0], self.app.state.workspace.work_source_v2)
+        queued = self.client.get(f"/api/source-investigations/{first.json()['id']}")
+        self.assertEqual(queued.status_code, 200)
+        self.assertEqual(queued.json()["workflow_version"], VERSION)
+        self.assertEqual(queued.json()["state"], "queued")
+        self.assertFalse(queued.json()["export_available"])
         self.assertEqual(self.calls, [])
 
     def test_recorded_guarded_example_labels_simulation_and_verifies_real_worker_receipts(self):

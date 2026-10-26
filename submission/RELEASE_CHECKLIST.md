@@ -1,7 +1,7 @@
 # Submission completion and recording plan
 
 Checked against the [official rules](https://nebiusglobalaihackathon.devpost.com/rules)
-on October 25, 2026. Recheck if organizers change them. This is a project evidence
+on October 26, 2026. Recheck if organizers change them. This is a project evidence
 map, not an eligibility or legal determination.
 
 Submission closes **October 30, 2026 at 10:00 AM Pacific (1:00 PM Eastern)**.
@@ -13,12 +13,15 @@ Judges need free unrestricted access through **December 15 at noon Pacific**.
 | Working accessible demo / test build | Portable keyless build prepared locally. Publish a stable downloadable build or hosted companion, verify from a clean session, and maintain access through judging. |
 | Public source and recognized OSS license | Audited source ZIP and own-code MIT license prepared. The full upstream file is omitted; its explicit verified-download setup is documented. Public repository link still needed. |
 | Setup instructions and required-tool roles | README, APP_GUIDE and JUDGE_GUIDE; exact runtime role in Devpost draft. |
-| English video under three minutes | Record 2:55 working demonstration, speak both tool names, upload publicly and verify playback. |
+| English video under three minutes | Private ~2:41 edited-still review cut with synthetic narration and captions prepared locally. Continuous screencast/final narration, public YouTube upload and playback verification remain pending. |
 | Tool feedback | TOOL_FEEDBACK draft covers actual use and observed failures. |
 | Track / originality / ownership | Best Apps and Agents proposed; entrant must review ownership and accurate AI-assistance/third-party disclosures. |
 | City award | Not claimed; entrant did not attend a qualifying event. |
 
-## Video shot list — 2:55 target
+## Earlier recording shot list — 2:55 target
+
+The new timed ten-scene rehearsal script is in `DEMO_NARRATION.md`. The table
+below remains an alternative continuous-recording plan; it is not a completed video upload.
 
 | Time | Screen and narration |
 | --- | --- |
@@ -47,5 +50,5 @@ authorized, needs its own budget; none is required to record the existing eviden
 Nothing has been uploaded or submitted by the local release builder.
 
 See `PUBLICATION_GUIDE.md` for the prepared manual Pages workflow and
-`DEMO_NARRATION.md` for the recording script. Neither is a completed publication
-or video recording.
+`DEMO_NARRATION.md` for the recording script. Neither is a completed public publication. The local review cut is an edited
+still-frame assembly; final continuous recording and public upload remain pending.

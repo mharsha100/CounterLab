@@ -38,6 +38,10 @@ from counterlab.source_run_record import seal_source_run, verify_source_run, exp
 from counterlab.source_evaluation_records import project_source_evaluation, export_source_evaluation
 from counterlab.prediction_review import load_review, export_review
 from counterlab.demonstration import project_demonstration
+from counterlab.trace_explorer import project_trace_explorer
+from counterlab.evidence_catalog import evidence_catalog
+from counterlab.claim_audit import project_claim_audit
+from counterlab.synthetic_workbench import contract as workbench_contract, compare as workbench_compare
 from counterlab.source_guard import VERSION as SOURCE_GUARDED, WORKFLOW_CODE as GUARDED_CODE, guarded_input
 from counterlab.source_planner_v2 import run_guarded_source
 from counterlab.source_run_record_v2 import seal_guarded_run, verify_guarded_run, export_guarded_run
@@ -48,6 +52,16 @@ SOURCE_RECORDED_MANIFEST_SHA256 = "6570ab12b4fdad0cb42c0b873e6ec99bf277c710a8405
 GUARDED_RECORDED_ID = "ab38ecec62e246b9829a4cf174fcecac"
 GUARDED_RECORDED_ROOT = ROOT / "cases/paging/source_guarded_recorded_run"
 GUARDED_RECORDED_MANIFEST_SHA256 = "d546e3a4195913503d78121a19b1dd54ccc65707856fdc69a72967f97ce5df12"
+
+
+def archive_response(content, filename):
+    """Checksum binds this exact response body, including ZIP metadata bytes."""
+    if not re.fullmatch(r"[a-zA-Z0-9_.-]+\.zip", filename):
+        raise ValueError("Invalid archive download filename.")
+    return Response(content, media_type="application/zip", headers={
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "X-CounterLab-Archive-SHA256": hashlib.sha256(content).hexdigest(),
+        "X-CounterLab-Archive-Bytes": str(len(content)), "Cache-Control": "no-store"})
 
 
 def source_adapter(version):
@@ -279,7 +293,8 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     origins = [f"http://127.0.0.1:{port}", f"http://localhost:{port}", "http://127.0.0.1:5173", "http://localhost:5173"]
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"] + ([] if serve_frontend else ["testserver"]))
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"],
-                       allow_headers=["Content-Type", "X-CounterLab-Action"])
+                       allow_headers=["Content-Type", "X-CounterLab-Action"],
+                       expose_headers=["X-CounterLab-Archive-SHA256", "X-CounterLab-Archive-Bytes"])
 
     @app.exception_handler(RequestValidationError)
     async def invalid_request(request, error):
@@ -288,6 +303,28 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     @app.exception_handler(RecordError)
     async def invalid_record(request, error):
         return JSONResponse({"detail": str(error)}, status_code=409)
+
+    @app.get("/api/experiment-workbench")
+    def experiment_workbench():
+        try:
+            return workbench_contract()
+        except (OSError, ValueError):
+            raise RecordError("The bounded experiment engine failed its code check.") from None
+
+    @app.get("/api/experiment-workbench/compare")
+    def experiment_workbench_compare(settings: str, protocol_sha256: str):
+        # A bounded, deterministic calculator. No job, file write, provider,
+        # worker, or other workspace mutation; safe in read-only inspection.
+        if len(settings) > 2048 or not re.fullmatch(r"[0-9a-f]{64}", protocol_sha256):
+            raise HTTPException(422, "Unsupported bounded experiment settings or protocol hash.")
+        try:
+            return workbench_compare(json.loads(settings), protocol_sha256)
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(409, "Settings or engine bytes do not match the committed bounded protocol.") from None
+
+    @app.get("/api/evidence-library")
+    def evidence_library():
+        return evidence_catalog(RECORDED_ID, SOURCE_RECORDED_ID, GUARDED_RECORDED_ID)
 
     @app.get("/api/workspace")
     def meta():
@@ -345,10 +382,13 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     def source_study():
         return project_study()
 
+    @app.get("/api/claim-audit")
+    def claim_audit():
+        return project_claim_audit()
+
     @app.get("/api/research-study/export")
     def source_study_export():
-        return Response(export_study(), media_type="application/zip",
-                        headers={"Content-Disposition": 'attachment; filename="counterlab-source-study.zip"'})
+        return archive_response(export_study(), "counterlab-source-study.zip")
 
     @app.get("/api/evaluation")
     def evaluation():
@@ -374,8 +414,14 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
             content = export_review()
         except (OSError, ValueError, KeyError, TypeError):
             raise RecordError("The prediction review export failed verification.") from None
-        return Response(content, media_type="application/zip", headers={
-            "Content-Disposition": 'attachment; filename="counterlab-prediction-review.zip"'})
+        return archive_response(content, "counterlab-prediction-review.zip")
+
+    @app.get("/api/trace-explorer")
+    def trace_explorer():
+        try:
+            return project_trace_explorer()
+        except (OSError, ValueError, KeyError, TypeError, StopIteration):
+            raise RecordError("The visual trace failed protocol or record verification.") from None
 
     @app.get("/api/demonstration")
     def demonstration():
@@ -390,8 +436,7 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
             content = export_source_evaluation()
         except (OSError, ValueError, KeyError, TypeError):
             raise RecordError("The source evaluation export failed verification.") from None
-        return Response(content, media_type="application/zip", headers={
-            "Content-Disposition": 'attachment; filename="counterlab-source-evaluation.zip"'})
+        return archive_response(content, "counterlab-source-evaluation.zip")
 
     @app.get("/api/source-reproduction")
     def source_reproduction():
@@ -399,8 +444,7 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
 
     @app.get("/api/source-reproduction/export")
     def source_reproduction_export():
-        return Response(export_source_regime(), media_type="application/zip",
-                        headers={"Content-Disposition": 'attachment; filename="counterlab-source-reproduction.zip"'})
+        return archive_response(export_source_regime(), "counterlab-source-reproduction.zip")
 
     @app.get("/api/source-investigator")
     def source_investigator_contract():
@@ -453,9 +497,11 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     def get_source_run(job_id: str):
         directory, row = source_location(job_id)
         if not (directory / "record_manifest.json").is_file():
+            workflow = read_json(directory, "workflow_plan.json")
             return {"id": job_id, "adapter": "source", "state": row["state"], "phase": row["phase"],
                     "error": row["error"], "attempts": [], "export_available": False,
-                    "provider_mode": read_json(directory, "workflow_plan.json").get("provider_mode")}
+                    "workflow_version": workflow.get("workflow_version"),
+                    "provider_mode": workflow.get("provider_mode")}
         try:
             guarded = read_json(directory, "workflow_plan.json").get("workflow_version") == SOURCE_GUARDED
             record = (verify_guarded_run if guarded else verify_source_run)(directory, ROOT)
@@ -475,13 +521,11 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
             content = (export_guarded_run if guarded else export_source_run)(directory, ROOT)
         except (OSError, ValueError, KeyError, TypeError):
             raise RecordError("Source export failed numerical verification.") from None
-        return Response(content, media_type="application/zip", headers={
-            "Content-Disposition": f'attachment; filename="counterlab-source-{job_id[:8]}.zip"'})
+        return archive_response(content, f"counterlab-source-{job_id[:8]}.zip")
 
     @app.get("/api/evaluation/export")
     def evaluation_export():
-        return Response(export_evaluation(), media_type="application/zip",
-                        headers={"Content-Disposition": 'attachment; filename="counterlab-evaluation.zip"'})
+        return archive_response(export_evaluation(), "counterlab-evaluation.zip")
 
     def locate(job_id):
         if job_id == RECORDED_ID:
@@ -520,8 +564,7 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
         if metadata["state"] in ("queued", "running"):
             raise HTTPException(409, "Wait for the investigation to finish before exporting.")
         project_record(directory, job_id, **metadata)
-        return Response(replay_archive(directory), media_type="application/zip",
-                        headers={"Content-Disposition": f'attachment; filename="counterlab-{job_id[:8]}.zip"'})
+        return archive_response(replay_archive(directory), f"counterlab-{job_id[:8]}.zip")
 
     dist = ROOT / "web" / "dist"
     if serve_frontend and (dist / "index.html").is_file():

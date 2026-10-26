@@ -1,4 +1,4 @@
-import { projectFetch, evidenceHref } from './access';
+import { projectFetch, evidenceHref, isEvidenceBuild } from './access';
 import { useEffect, useState } from 'react';
 import './research.css';
 import './source.css';
@@ -18,7 +18,7 @@ interface Reproduction {
   observations: { seed: number; input_sha256: string; prediction_sha256: string; warmup_length: number; initial_pages: number[] }[];
   execution: { receipts: unknown[]; identical_isolated_replays: boolean; host_replay_verified: boolean };
   validation: { profiles_checked: number; post_warmup_events_checked: number; original_prefix_checks: number };
-  verification: { note: string };
+  verification: { note: string; published_data_verified: boolean };
 }
 const names: Record<string, string> = { 'OnOPT-OM': 'OnOPT-OM · budget reset 0', 'RPB-OM(tau=1)': 'RPB-OM · budget reset 1', LRU: 'Source LRU control' };
 const signed = (value: number) => value > 0 ? `+${value}` : String(value);
@@ -37,7 +37,7 @@ export default function SourceReproduction({ onInvestigate }: { onInvestigate?: 
     return () => controller.abort();
   }, []);
   if (error) return <div className="error-banner" role="alert"><strong>Source reconstruction unavailable.</strong> {error}</div>;
-  if (!data) return <div className="loading-card" role="status"><span className="spinner" /> Checking the frozen source record, published artifact and aggregates…</div>;
+  if (!data) return <div className="loading-card" role="status"><span className="spinner" /> Checking the frozen source record and selected aggregates…</div>;
   const summary = data.summary;
   const selected = summary.history_intervention.find(row => row.seed === seed)!;
   const observation = data.observations.find(row => row.seed === seed)!;
@@ -60,7 +60,7 @@ export default function SourceReproduction({ onInvestigate }: { onInvestigate?: 
     </article>
     {onInvestigate && <div className="export-panel"><div><h3>Investigate this source regime.</h3><p>Let Nemotron commit predictions and choose a bounded source test. New planning calls require separate credit approval.</p></div><button className="button button-primary" onClick={onInvestigate}>Open source investigator →</button></div>}
     <article className="study-panel"><div className="section-title"><h3>What was checked, and what remains open?</h3><span className="badge badge-green">Reconstruction: zero inference requests</span></div>
-      <ul className="study-checks"><li><span>✓</span>Two isolated replays and a host replay for each seed; all event fingerprints agree.</li><li><span>✓</span>{data.validation.profiles_checked} independent work-function checks and {data.validation.post_warmup_events_checked.toLocaleString()} events, including {data.validation.original_prefix_checks} original-input prefix checks.</li><li><span>✓</span>Published numeric artifact pinned to a repository revision and content fingerprint.</li><li><span>✓</span>Source-code, protocol, receipts and summary verified before display.</li></ul>
+      <ul className="study-checks"><li><span>✓</span>Two isolated replays and a host replay for each seed; all event fingerprints agree.</li><li><span>✓</span>{data.validation.profiles_checked} independent work-function checks and {data.validation.post_warmup_events_checked.toLocaleString()} events, including {data.validation.original_prefix_checks} original-input prefix checks.</li><li><span>{data.verification.published_data_verified ? '✓' : 'i'}</span>{data.verification.published_data_verified ? `Full upstream numeric file hash-verified ${isEvidenceBuild ? 'at packaging' : 'in this environment'}.` : 'Full upstream file not verified here; selected comparison values are checked against the frozen local record.'}</li><li><span>✓</span>Source-code, protocol, receipts and summary verified before display.</li></ul>
       <p className="study-caption">{data.verification.note}</p>
       <div className="study-note"><strong>This is a selected supporting-report reconstruction.</strong><p>The original paper’s official implementation, forgiveness behavior, real traces, other source regimes and the challenging lazy-adversary experiment have not been reproduced here. No asymptotic theorem has been proved or refuted. This run was selected and executed by the developer; it is not evidence of autonomous model experiment selection.</p></div>
       <details className="study-details"><summary>Inspect the frozen operational rules and all limits</summary><dl className="source-rule-list">{Object.entries(data.protocol.rules).map(([name, value]) => <div key={name}><dt>{name.replaceAll('_',' ')}</dt><dd>{value}</dd></div>)}</dl><ul>{data.protocol.limits.map(limit => <li key={limit}>{limit}</li>)}</ul></details>

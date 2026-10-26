@@ -38,7 +38,7 @@ def routes():
     from counterlab.api import RECORDED_ID, SOURCE_RECORDED_ID, GUARDED_RECORDED_ID
     json_routes = ["/api/workspace", "/api/investigations", "/api/research-study", "/api/evaluation",
         "/api/source-reproduction", "/api/source-investigator", "/api/source-investigator-v2",
-        "/api/source-evaluation", "/api/prediction-review", "/api/demonstration",
+        "/api/source-evaluation", "/api/prediction-review", "/api/demonstration", "/api/trace-explorer", "/api/evidence-library", "/api/experiment-workbench", "/api/claim-audit",
         f"/api/investigations/{RECORDED_ID}", f"/api/source-investigations/{SOURCE_RECORDED_ID}",
         f"/api/source-investigations/{GUARDED_RECORDED_ID}"]
     exports = [route + "/export" for route in json_routes if route in
@@ -96,12 +96,13 @@ CASE_DIRECTORIES = ("agent_evaluation", "oracle_validation", "protocol_study", "
     "source_guarded_recorded_run", "source_planning_evaluation", "source_recorded_run", "source_regime")
 SOURCE_TREES = {"counterlab": {".py"}, "scripts": {".py"}, "tests": {".py"},
     **{f"cases/paging/{name}": {".json", ".md"} for name in CASE_DIRECTORIES},
-    "worker": {".py", ""}, "web/src": {".ts", ".tsx", ".css"}, "web/public": {".svg"},
-    "web/dist": {".html", ".js", ".css", ".svg"}, "submission": {".md"}}
+    "worker": {".py", ""}, "web/src": {".ts", ".tsx", ".css"}, "web/tests": {".ts"}, "web/public": {".svg"},
+    "web/dist": {".html", ".js", ".css", ".svg", ".json"}, "submission": {".md"}}
 SOURCE_FILES = {".env.example", ".gitignore", ".gitattributes", "LICENSE", "THIRD_PARTY_NOTICES.md",
     "THIRD_PARTY_LICENSES.txt",
     "requirements.txt", "requirements-dev.txt", "requirements-lock.txt", "web/index.html",
     "web/package.json", "web/package-lock.json", "web/tsconfig.json", "web/vite.config.ts",
+    "web/scripts/stamp-build.mjs", "PROJECT_COUNTDOWN.md",
     ".github/workflows/judge-pages.yml",
     "cases/paging/README.md", "cases/paging/SOURCE_AUDIT.md", "cases/paging/sources.json",
     "AMBITIOUS_IDEA_COMPARISON.md", "APP_GUIDE.md", "COUNTERLAB_DELIVERY_PLAN.md", "COUNTERLAB_PRD.md",
@@ -136,6 +137,10 @@ def archive_files(destination, entries):
 
 
 def build_release(destination, progress=None):
+    from counterlab.readiness import verify_build
+    # Reject stale/missing editions before creating a partial release directory.
+    verify_build(ROOT)
+    verify_build(ROOT, edition='recorded_evidence')
     destination = pathlib.Path(destination)
     destination.mkdir(parents=True, exist_ok=False)
     site = destination / "judge" / "site"

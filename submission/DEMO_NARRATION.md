@@ -1,65 +1,75 @@
-# CounterLab — narration and screen cues
+# CounterLab — timed demo narration
 
-Target **2:55**, including pauses and transitions. Rehearse and measure the final
-recording; this draft's word count alone cannot guarantee the duration. All
-inspection scenes use saved evidence. Use working public links in the final shot.
+Private local review cut created October 26, 2026. Measured planned timeline: **160.708 seconds (about 2:41)**.
 
-## 0:00–0:18 · Problem / title
+**Draft status:** edited still-frame walkthrough of the working interface, with a clearly labeled synthetic guide voice. It is not a continuous screencast, the entrant’s own narration, a public upload or a completed submission.
 
-“When two research implementations disagree, another explanation is not enough.
-We need a test that separates the explanations, a prediction committed before
-execution, and evidence another person can replay. That is CounterLab.”
+The numerical examples are bound to the reviewed source/evidence release. All underlying results retain their original scope. No fresh model calls are made.
 
-## 0:18–0:40 · Contract / tool roles
+Local assets are under `artifacts/demo/20261026-review/`: `counterlab-demo-review.mp4`, `captions.srt`, `narration.txt`, `chapters.txt`, the source captures, timing manifest and fresh replay result. Private media assets are excluded from the source release.
 
-“The working Python application uses NVIDIA Nemotron through Nebius Token Factory
-to propose experiments and predictions. Restricted local Docker workers measure
-admitted tests. Deterministic code derives the factual report. This tour inspects
-recorded responses and measurements; it makes no fresh model call.”
+## 0:00–0:14 · A test worth trusting.
 
-## 0:40–1:15 · Guided demonstration / first experiment
+**Screen:** Recorded interface.
 
-“Here, the question is whether changing when a caching algorithm updates its
-history changes its behavior. Everything else is held fixed. This real recorded
-Nemotron plan predicts a difference. The measurements show five hundred and nine
-versus five hundred and ten misses, and zero versus ten gate credits. The report
-makes a finite claim about this test. It does not resolve a theorem or the whole
-research disagreement.”
+When research implementations disagree, another explanation is not enough. We need an experiment that separates them, a prediction committed before execution, and evidence someone else can replay. This is CounterLab.
 
-## 1:15–1:40 · Wrong prediction / latest guard
+## 0:14–0:29 · Compare the contracts first.
 
-“A model prediction can also be wrong. CounterLab keeps that failure visible.
-The newer workflow checks necessary conditions before execution and can return
-a rejection reason for another proposal. This particular guard example uses
-simulated planning with real numerical execution. Its live model improvement
-has not been measured.”
+**Screen:** Pinned source inspection.
 
-## 1:40–2:10 · Complete comparison
+Start by checking what is comparable. Here, inspected implementations differ in history updates, random priorities, forecast delivery, and miss counting. CounterLab makes those differences explicit before drawing a conclusion.
 
-“We also evaluated experiment selection. Eight frozen tasks compared two Nemotron
-policies and two simple baselines. Adaptive Nemotron found both available finite
-differences. So did the zero-inference heuristic. The model's predictions were
-often wrong, and truncated responses remain in the results. We have not
-established an advantage over the heuristic. This is a small development set,
-not a general model ranking.”
+## 0:29–0:45 · An AI proposer. Measured evidence.
 
-## 2:10–2:38 · Download / completed replay
+**Screen:** Saved workflow · no fresh inference.
 
-“The evidence leaves the app with you: frozen inputs, saved plans, observations
-and verification code. This downloaded evaluation replay checks twenty-two paired
-tests and independently validates forty-five profiles. It uses standard-library
-Python, with no model key, Docker or credits. A separate optional source replay
-documents its reference download requirement.”
+The Python application uses NVIDIA Nemotron through Nebius Token Factory to propose tests and predictions. Restricted local workers measure admitted experiments. Deterministic code builds the factual report. This walkthrough inspects saved model responses.
 
-## 2:38–2:55 · Scope / final links
+## 0:45–1:05 · One changed rule. A measured difference.
 
-“CounterLab currently supports one reviewed paging adapter. The broader research
-claims remain open. What it delivers is an inspectable experiment workflow:
-commit, check, measure, preserve and replay. The public evidence build and full
-source are linked here.”
+**Screen:** Real recorded Nemotron plan.
 
-## Recording checks
+In this recorded Nemotron example, only history timing changes. Requests, forecasts and randomness stay fixed. The model predicts a difference. Measurements show five hundred and nine versus five hundred and ten misses, and zero versus ten gate credits. The result is finite and reproducible.
 
-Speak both sponsor/tool names clearly. Keep counts visible when narrated. Do not
-display `.env`, account menus, promo codes or private terminals. Show the completed
-replay's actual output. Do not edit out failures from the policy comparison.
+## 1:05–1:19 · Keep the failure visible.
+
+**Screen:** Real recorded Nemotron prediction.
+
+The model can also be wrong. On this smaller cache, it predicts both counts will differ. Both have six hundred and thirty six misses and zero gate credits. The failed prediction stays in the evidence.
+
+## 1:19–1:34 · Check before executing.
+
+**Screen:** Simulated planning · real numerical execution.
+
+The newer workflow checks necessary conditions before execution, then returns a rejection reason for a follow-up. This guard example uses simulated planning with real numerical execution. Its live model improvement has not been measured.
+
+## 1:34–1:51 · Evaluate the AI, too.
+
+**Screen:** Frozen real-model evaluation.
+
+Across eight frozen development tasks, adaptive Nemotron finds both available differences. So does the zero-inference heuristic. Wrong predictions and truncated responses remain visible. We have not established an advantage over that baseline or a general model ranking.
+
+## 1:51–2:06 · Design a new bounded test.
+
+**Screen:** Human-designed synthetic diagnostic.
+
+You can also edit synthetic inputs, commit predictions or abstain, then compare both rules without model credits. This workbench keeps new experiments separate from the frozen model evaluation. Every result retains its original settings.
+
+## 2:06–2:24 · Take the evidence with you.
+
+**Screen:** Completed fresh-process replay.
+
+A downloaded replay recomputes twenty two paired tests and independently checks forty five profiles. This is the actual completed result. It needs standard-library Python, with no model key, Docker or inference credits. The evidence can be checked outside the app.
+
+## 2:24–2:40 · Commit. Check. Measure. Replay.
+
+**Screen:** Private review draft.
+
+CounterLab currently supports one reviewed paging adapter. The full research disagreement remains open. What it delivers is an inspectable investigation: explicit contracts, committed predictions, preserved failures, bounded experiments, and evidence you can replay.
+
+## Final recording and publication
+
+Use this cut to rehearse, review the claims and record a continuous screencast with the chosen final narration. Keep saved-model and simulated-planning labels visible, retain the failed prediction and every policy row, and show the actual completed replay. Recheck the final encoded duration after edits.
+
+Public source, accessible test-build links and public YouTube upload remain pending. Keep the repository and this draft private until a later explicit publication instruction. Do not display account menus, API keys, promo codes or private terminals.
