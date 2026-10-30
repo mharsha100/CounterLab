@@ -2,7 +2,7 @@
 
 ## New source extraction
 
-Use **README → Fresh installation — current instructions** for the authoritative
+Use **README → Quick start** for the authoritative
 setup sequence. Python 3.13 plus `requirements-lock.txt` is sufficient to inspect
 the compiled app in read-only mode. Node is needed only to rebuild the interface;
 Docker and a Nebius key are separate live-experiment prerequisites.

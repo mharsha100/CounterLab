@@ -1,0 +1,43 @@
+{
+ "code_files": [
+  {
+   "bytes": 727,
+   "path": "cache_refresh/authors/pge.py",
+   "sha256": "5f54978c74ad8d95f50b75248844f9809c1e0b859757f925f98c5249916017c0"
+  },
+  {
+   "bytes": 727,
+   "path": "cache_refresh/reproduction/pge.py",
+   "sha256": "b7b3f3ab9641e104d808e7e148a2cd8dd5a5fe2f6c52dc607e42a82b039d96b2"
+  }
+ ],
+ "notes": [],
+ "papers": [
+  {
+   "characters": 978,
+   "name": "pge_note.md",
+   "pages": null,
+   "sha256": "28ff5bab2feddf6f4fd165774d06250ecf1987caaf4b98faea0697dd743e4240",
+   "source": "upload"
+  }
+ ],
+ "sources": [
+  {
+   "bytes": 979,
+   "characters": 978,
+   "kind": "paper",
+   "name": "pge_note.md",
+   "pages": null,
+   "sha256": "28ff5bab2feddf6f4fd165774d06250ecf1987caaf4b98faea0697dd743e4240",
+   "source": "upload"
+  },
+  {
+   "bytes": 4082,
+   "files_kept": 2,
+   "kind": "code_archive",
+   "name": "cache_refresh",
+   "sha256": "0e20a821650b7a55afd31e63ce7aacc9b5770cd6bcd0cba5d54f6fb16460ee2c",
+   "source": "upload"
+  }
+ ]
+}

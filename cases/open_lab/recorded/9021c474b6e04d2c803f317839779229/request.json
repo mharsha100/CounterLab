@@ -1,0 +1,22 @@
+{
+ "created_at": "2026-10-28T02:42:50Z",
+ "follow_up": true,
+ "links": {
+  "code_url": null,
+  "paper_url": null
+ },
+ "max_output_tokens": 16384,
+ "provider_mode": "simulated_provider",
+ "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?",
+ "uploads": [
+  {
+   "name": "pge_note.md",
+   "role": "paper"
+  },
+  {
+   "name": "cache-refresh.zip",
+   "role": "code"
+  }
+ ],
+ "workflow_version": "open_investigation_v1"
+}

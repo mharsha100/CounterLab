@@ -1,0 +1,73 @@
+{
+ "committed_at": "2026-10-28T02:42:35Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E3",
+  "claim": {
+   "evidence_quote": "grows roughly with (mean / standard deviation)^2",
+   "source": "paper",
+   "statement": "Relative error grows roughly with (mean/sd)^2."
+  },
+  "conditions": [
+   {
+    "description": "Data ~ N(1e4, 1)",
+    "id": "offset_1e4",
+    "label": "Mean 1e4"
+   },
+   {
+    "description": "Data ~ N(1e8, 1)",
+    "id": "offset_1e8",
+    "label": "Mean 1e8"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "offset_1e8",
+      "metric": "log10_rel_error",
+      "relation": "greater",
+      "right": "offset_1e4",
+      "tolerance": 4.0
+     }
+    ],
+    "id": "E3",
+    "statement": "Error grows with the offset: about 8 orders of magnitude from 1e4 to 1e8."
+   },
+   {
+    "expected": [
+     {
+      "left": "offset_1e8",
+      "metric": "log10_rel_error",
+      "relation": "equal",
+      "right": "offset_1e4",
+      "tolerance": 1.0
+     }
+    ],
+    "id": "E4",
+    "statement": "Error does not depend on the offset."
+   }
+  ],
+  "factor": "Mean offset of the data (one-pass formula only)",
+  "harness_code": "import math\nimport statistics\nimport counterlab_sandbox as sb\n\nN = 1000\nOFFSETS = {\"offset_1e4\": 1e4, \"offset_1e8\": 1e8}\n\n\ndef naive(xs):\n    s1 = s2 = 0.0\n    for x in xs:\n        s1 += x\n        s2 += x * x\n    n = len(xs)\n    return s2 / n - (s1 / n) ** 2\n\n\ndef welford(xs):\n    n, mean, m2 = 0, 0.0, 0.0\n    for x in xs:\n        n += 1\n        d = x - mean\n        mean += d / n\n        m2 += d * (x - mean)\n    return m2 / n\n\n\ndef measure(condition, seed):\n    rng = sb.rng(seed)\n    xs = [rng.gauss(OFFSETS[condition], 1.0) for _ in range(N)]\n    exact = statistics.pvariance(xs)  # exact rational arithmetic on the same floats\n    estimate = naive(xs)\n    error = abs(estimate - exact) / exact\n    return {\"log10_rel_error\": math.log10(max(error, 1e-18))}\n",
+  "implementation_note": "Implemented from the paper's description.",
+  "metrics": [
+   {
+    "description": "One-pass formula error against exact rational variance.",
+    "id": "log10_rel_error",
+    "label": "log10 relative error",
+    "unit": "log10"
+   }
+  ],
+  "question": "Does the one-pass formula's error grow as the mean moves away from zero?",
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "title": "Does the one-pass error grow with the offset?"
+ },
+ "plan_sha256": "e480ece36bf4e45db463086e1a8e0d218fea533c66bda783783d3b1c362f00cf"
+}

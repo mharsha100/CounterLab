@@ -27,15 +27,15 @@ def main():
     from counterlab.source_guard import VERSION, WORKFLOW_CODE, guarded_input
     from counterlab.source_investigation import SOURCE_HASH, fingerprint, reviewed_source, task_contract
     from counterlab.source_planner_v2 import run_guarded_source
-    from counterlab.source_run_record_v2 import seal_guarded_run, verify_guarded_run, export_guarded_run
+    from counterlab.source_run_record_v3 import EXECUTION_PROFILE, seal_guarded_run, verify_guarded_run, export_guarded_run
     from scripts.check_experiment_engine import write_once
     worker = DockerExperimentWorker()
-    descriptor = worker.check()
+    descriptor = worker.check_source()
     run_id, created = uuid.uuid4().hex, utc_now()
     owned = ROOT / "artifacts/runs/source-guard-check" / run_id
     directory = owned / "record"
     source, task = reviewed_source(ROOT), task_contract()
-    workflow = {"workflow_version": VERSION, "model": MODELS[0], "created_at": created,
+    workflow = {"workflow_version": VERSION, "execution_profile": EXECUTION_PROFILE, "model": MODELS[0], "created_at": created,
         "provider_mode": "simulated_provider", "source_protocol_sha256": SOURCE_HASH, "task_sha256": fingerprint(task),
         "maximum_inference_requests": 2, "max_output_tokens_per_request": 8192, "automatic_retries": 0,
         "approval": {"credit_use_confirmed": False, "simulated_planning_only": True}, "experiment_worker": descriptor,
@@ -49,7 +49,7 @@ def main():
         plan = {"test_id": test_id, "hypothesis": "Synthetic integration proposal; not a real model response or causal explanation.",
                 "predict_gate_difference": True, "predict_miss_difference": True}
         return {"model": MODELS[0], "usage": {}, "choices": [{"finish_reason": "stop", "message": {"content": json.dumps(plan)}}]}
-    summary = run_guarded_source(MODELS[0], task, source, simulated_provider, directory, worker.execute_source)
+    summary = run_guarded_source(MODELS[0], task, source, simulated_provider, directory, worker.execute_source_guarded)
     manifest = seal_guarded_run(directory, ROOT, run_id, created)
     record = verify_guarded_run(directory, ROOT)
     assert summary["prediction_rejections"] == 1 and summary["experiments_executed"] == 1
@@ -62,6 +62,7 @@ def main():
         archive.extractall(portable)
     result = subprocess.run([sys.executable, "replay.py"], cwd=portable, capture_output=True, text=True, timeout=60, check=True)
     output = {"status": "guarded_source_integration_passed", "provider_mode": "simulated_provider",
+        "execution_profile": EXECUTION_PROFILE, "worker_wall_seconds": descriptor["policy"]["wall_seconds"],
         "inference_requests": 0, "simulated_planning_turns": len(calls), "prediction_rejections": summary["prediction_rejections"],
         "experiments_measured": summary["experiments_executed"], "isolated_replays": 2, "boundary_probe_passed": True,
         "image_id": descriptor["image_id"], "manifest_sha256": hashlib.sha256((directory / "record_manifest.json").read_bytes()).hexdigest(),

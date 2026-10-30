@@ -1,0 +1,58 @@
+{
+ "code_files": {
+  "reservoir_samplers/impl_a/reservoir.py": "\"\"\"Reservoir sampling, group A.\"\"\"\nimport random\n\n\ndef reservoir_sample(stream, k, rng=None):\n    \"\"\"Return k items chosen uniformly at random from an iterable (Algorithm R).\"\"\"\n    rng = rng or random.Random()\n    reservoir = []\n    for i, item in enumerate(stream):\n        if i < k:\n            reservoir.append(item)\n        else:\n            j = rng.randint(0, i)  # uniform over {0, ..., i}\n            if j < k:\n                reservoir[j] = item\n    return reservoir\n",
+  "reservoir_samplers/impl_b/reservoir.py": "\"\"\"Reservoir sampling, group B (slightly faster: avoids one extra draw value).\"\"\"\nimport random\n\n\ndef reservoir_sample(stream, k, rng=None):\n    \"\"\"Return k items chosen uniformly at random from an iterable (Algorithm R).\"\"\"\n    rng = rng or random.Random()\n    reservoir = []\n    for i, item in enumerate(stream):\n        if i < k:\n            reservoir.append(item)\n        else:\n            j = rng.randint(0, i - 1)  # draw a slot index\n            if j < k:\n                reservoir[j] = item\n    return reservoir\n"
+ },
+ "code_files_not_shown": [],
+ "code_tree": [
+  "reservoir_samplers/impl_a/reservoir.py",
+  "reservoir_samplers/impl_b/reservoir.py"
+ ],
+ "intake_notes": [],
+ "papers": [
+  {
+   "characters": 807,
+   "name": "methods_note.md",
+   "pages": null,
+   "text": "# Methods note: uniform sampling from a stream (Algorithm R)\n\nWe need a uniform random sample of k items from a stream of unknown length n,\nusing O(k) memory. We use Algorithm R (Vitter, 1985):\n\n1. Put the first k items into the reservoir.\n2. For the item at zero-based position i (i >= k), draw j uniformly from\n   {0, 1, ..., i}. If j < k, replace reservoir[j] with the new item.\n\n**Claim.** After the stream ends, every item has probability exactly k/n of\nbeing in the reservoir, independent of its position.\n\nTwo groups implemented the method for our data pipeline (`impl_a/reservoir.py`\nand `impl_b/reservoir.py`). Group B reports that its downstream estimates of\nthe stream's early segment are consistently lower than group A's, and both\ngroups state that their implementation follows the steps above.",
+   "truncated": false
+  }
+ ],
+ "python_files": [
+  "reservoir_samplers/impl_a/reservoir.py",
+  "reservoir_samplers/impl_b/reservoir.py"
+ ],
+ "python_outlines": [
+  {
+   "definitions": [
+    {
+     "doc": "Return k items chosen uniformly at random from an iterable (Algorithm R).",
+     "kind": "function",
+     "line": 5,
+     "name": "reservoir_sample",
+     "signature": "reservoir_sample(stream, k, rng)"
+    }
+   ],
+   "imports": [
+    "random"
+   ],
+   "path": "reservoir_samplers/impl_a/reservoir.py"
+  },
+  {
+   "definitions": [
+    {
+     "doc": "Return k items chosen uniformly at random from an iterable (Algorithm R).",
+     "kind": "function",
+     "line": 5,
+     "name": "reservoir_sample",
+     "signature": "reservoir_sample(stream, k, rng)"
+    }
+   ],
+   "imports": [
+    "random"
+   ],
+   "path": "reservoir_samplers/impl_b/reservoir.py"
+  }
+ ],
+ "question": "Both implementations claim to implement Algorithm R from the note. Does each one give every stream item the same chance k/n of ending up in the sample? If one is biased, which items are affected and how badly?"
+}

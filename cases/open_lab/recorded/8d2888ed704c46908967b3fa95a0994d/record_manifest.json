@@ -1,0 +1,21 @@
+{
+ "created_at": "2026-10-28T02:42:24Z",
+ "files": {
+  "experiment_1/committed_plan.json": "445c89ad1018889e2936c6b310a66078501b9df976bbd7d2e987f846409fe983",
+  "experiment_1/design_request_1.json": "75279132060bf89b81443f33349e7a13d8974f83f5d43a22fbf6db9e35f36ef7",
+  "experiment_1/harness.py": "dc5cc6a773749aaaa930f4dbcc873eb9080420000d93e8992c957ee48e414d36",
+  "experiment_1/result.json": "2c99d773a76af6ed7fcad8107cf1b06e931e2da1957663efbf26e38a513e9000",
+  "experiment_2/committed_plan.json": "3761bafb01b77635cf6300f5eea796d58cfa5fa280fa136b22a60498280d5dc7",
+  "experiment_2/design_request_1.json": "90738e22ecb7dfc5dfb18ff0f713194757c92fcab4c5d66abc3a225c4cd46936",
+  "experiment_2/harness.py": "9fc4f4814cc8308313270bec10848c7d36ebfcb9c64a85598762a99178a23c0a",
+  "experiment_2/result.json": "d8f5d7c9ec1734905f8e82ae4458e6c59eabb4b3091d2cd01e002ca13986ae66",
+  "inputs/manifest.json": "df86f985262670a3349e6de215bf36e4786a40daf1d4c0ba9c4137203435039b",
+  "inputs/paper_1.txt": "c4034f660f15964f1ecdfd81d242655dc81b2bc6ecc78af4572a7dc22863a4b3",
+  "model_input.json": "e96fd0862691ce511f553d0e694908c122693ed48d84b208453073b4d587fcdb",
+  "request.json": "0ad7221191f518e601f18089ae8e3c74f8487c3854a4cb040cd7104c40e0c71b",
+  "summary.json": "8f74086c5726f644d724f25de4af2836083016da3e75ccfd6b41e1b84bdae771"
+ },
+ "run_id": "8d2888ed704c46908967b3fa95a0994d",
+ "schema": 1,
+ "workflow_version": "open_investigation_v1"
+}

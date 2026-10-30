@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { checkedEvidenceDownload, isEvidenceBuild, projectFetch } from './access';
+import { navigateTo, useRoute } from './navigation';
 import './library.css';
 
 interface Package {
@@ -86,7 +87,7 @@ function Library() {
         <div className="library-card-top"><span className={`library-kind library-kind-${item.kind}`}>{item.label}</span><span>{item.recommended ? 'START HERE' : item.historical ? 'HISTORICAL' : 'SUPPORTING'}</span></div>
         <h3 id={`package-${item.id}`}>{item.title}</h3><p>{item.description}</p>
         {item.setup && <div className="library-setup"><strong>Reference setup required</strong><p>{item.setup}</p></div>}
-        <div className="library-actions">{check?.state === 'ready' ? <a className="button button-primary" href={check.url} download={item.filename}>Save checked ZIP ↓</a> : <button className="button button-primary" disabled={!!busy} onClick={() => prepare(item)} aria-label={`Check package: ${item.title}`}>{busy === item.id ? 'Checking package…' : 'Check package →'}</button>}{busy === item.id && <button className="button button-secondary" onClick={() => controller.current?.abort()}>Cancel</button>}{check?.state === 'ready' && <span className="library-checked">✓ File integrity checked · {size(check.received)}</span>}</div>
+        <div className="library-actions"><button className={`button ${check?.state === 'ready' ? 'button-secondary' : 'button-primary'}`} aria-disabled={!!busy} onClick={() => { if (!busy) prepare(item); }} aria-label={`Check package: ${item.title}`}>{busy === item.id ? 'Checking package…' : check?.state === 'ready' ? 'Check again' : 'Check package →'}</button>{check?.state === 'ready' && <a className="button button-primary" href={check.url} download={item.filename}>Save checked ZIP ↓</a>}{busy === item.id && <button className="button button-secondary" onClick={() => controller.current?.abort()}>Cancel</button>}<span className="library-checked" role="status" aria-live="polite" aria-atomic="true">{check?.state === 'ready' ? `File integrity checked: ${item.title} · ${size(check.received)}. Save checked ZIP is ready.` : ''}</span></div>
         {(check?.state === 'fetching' || check?.state === 'checking') && <div className="library-progress" role="status"><progress max={check.total || 1} value={check.received} aria-label={`Download progress: ${item.title}`} /><p>{check.state === 'checking' ? 'Checking SHA-256…' : check.total ? `Received ${size(check.received)} of ${size(check.total)}` : 'The server is verifying and preparing this package…'}</p></div>}
         {check?.state === 'error' && <p className="library-failure" role="alert">{check.error}</p>}
         {check?.state === 'cancelled' && <p className="library-caption" role="status">Check cancelled. No file was prepared.</p>}
@@ -99,6 +100,6 @@ function Library() {
 }
 
 export default function EvidenceWorkspace({ children }: { children: ReactNode }) {
-  const [view, setView] = useState('library');
-  return <div className="evidence-workspace"><div className="study-tabs library-tabs" role="group" aria-label="Evidence views"><button aria-pressed={view === 'library'} onClick={() => setView('library')}>Evidence library</button><button aria-pressed={view === 'record'} onClick={() => setView('record')}>Selected investigation</button></div>{view === 'library' ? <Library /> : children}</div>;
+  const view = useRoute() === 'selected-evidence' ? 'record' : 'library';
+  return <div className="evidence-workspace"><div className="study-tabs library-tabs" role="group" aria-label="Evidence views"><button aria-pressed={view === 'library'} onClick={() => navigateTo('evidence')}>Evidence library</button><button aria-pressed={view === 'record'} onClick={() => navigateTo('selected-evidence')}>Selected investigation</button></div>{view === 'library' ? <Library /> : children}</div>;
 }

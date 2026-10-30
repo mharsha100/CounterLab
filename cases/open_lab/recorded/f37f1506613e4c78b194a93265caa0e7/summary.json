@@ -1,0 +1,88 @@
+{
+ "automatic_retries": 0,
+ "calls": [
+  {
+   "elapsed_seconds": 20.622,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_1_design",
+   "reasoning_tokens": 5028,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 6150,
+    "prompt_tokens": 1876,
+    "total_tokens": 8026
+   }
+  },
+  {
+   "elapsed_seconds": 20.616,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_2_design",
+   "reasoning_tokens": 4899,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 6494,
+    "prompt_tokens": 2674,
+    "total_tokens": 9168
+   }
+  },
+  {
+   "elapsed_seconds": 4.156,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_2_repair",
+   "reasoning_tokens": 195,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 1013,
+    "prompt_tokens": 4798,
+    "total_tokens": 5811
+   }
+  }
+ ],
+ "experiments": [
+  {
+   "index": 1,
+   "reason": null,
+   "status": "completed"
+  },
+  {
+   "index": 2,
+   "reason": null,
+   "status": "completed"
+  }
+ ],
+ "finished_at": "2026-10-30T04:57:18Z",
+ "follow_up_requested": true,
+ "max_output_tokens": 16384,
+ "maximum_model_calls": 7,
+ "model_calls": 3,
+ "provider_events": [],
+ "provider_requests": 4,
+ "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?",
+ "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "response_format": "strict",
+ "returned_models": [
+  "nvidia/Nemotron-3-Ultra-550b-a55b"
+ ],
+ "review_reason": null,
+ "sandbox": {
+  "isolation": "docker_no_network",
+  "mode": "docker"
+ },
+ "started_at": "2026-10-30T04:55:51Z",
+ "status": "completed",
+ "usage": {
+  "completion_tokens": 13657,
+  "prompt_tokens": 9348,
+  "total_tokens": 23005
+ },
+ "workflow_version": "open_investigation_v1"
+}

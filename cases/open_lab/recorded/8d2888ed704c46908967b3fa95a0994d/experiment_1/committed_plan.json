@@ -1,0 +1,73 @@
+{
+ "committed_at": "2026-10-28T02:42:24Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E1",
+  "claim": {
+   "evidence_quote": "its relative error grows roughly with (mean / standard deviation)^2",
+   "source": "paper",
+   "statement": "The one-pass formula loses accuracy roughly with (mean/sd)^2; Welford stays accurate."
+  },
+  "conditions": [
+   {
+    "description": "S2/n - (S1/n)^2",
+    "id": "naive",
+    "label": "One-pass formula"
+   },
+   {
+    "description": "Online mean and M2 update",
+    "id": "welford",
+    "label": "Welford"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "welford",
+      "metric": "log10_rel_error",
+      "relation": "less",
+      "right": "naive",
+      "tolerance": 3.0
+     }
+    ],
+    "id": "E1",
+    "statement": "Catastrophic cancellation ruins the one-pass formula; Welford avoids it."
+   },
+   {
+    "expected": [
+     {
+      "left": "welford",
+      "metric": "log10_rel_error",
+      "relation": "equal",
+      "right": "naive",
+      "tolerance": 1.0
+     }
+    ],
+    "id": "E2",
+    "statement": "In double precision both are about equally accurate at this scale."
+   }
+  ],
+  "factor": "Variance algorithm",
+  "harness_code": "import math\nimport statistics\nimport counterlab_sandbox as sb\n\nN, OFFSET = 1000, 1e8\n\n\ndef naive(xs):\n    s1 = s2 = 0.0\n    for x in xs:\n        s1 += x\n        s2 += x * x\n    n = len(xs)\n    return s2 / n - (s1 / n) ** 2\n\n\ndef welford(xs):\n    n, mean, m2 = 0, 0.0, 0.0\n    for x in xs:\n        n += 1\n        d = x - mean\n        mean += d / n\n        m2 += d * (x - mean)\n    return m2 / n\n\n\ndef measure(condition, seed):\n    rng = sb.rng(seed)\n    xs = [rng.gauss(OFFSET, 1.0) for _ in range(N)]\n    exact = statistics.pvariance(xs)  # exact rational arithmetic on the same floats\n    estimate = {\"naive\": naive, \"welford\": welford}[condition](xs)\n    error = abs(estimate - exact) / exact\n    return {\"log10_rel_error\": math.log10(max(error, 1e-18))}\n",
+  "implementation_note": "No code was uploaded; both algorithms are implemented from the paper's description.",
+  "metrics": [
+   {
+    "description": "log10 of |estimate - exact| / exact, exact from rational arithmetic on the same data.",
+    "id": "log10_rel_error",
+    "label": "log10 relative error",
+    "unit": "log10"
+   }
+  ],
+  "question": "Is Welford's algorithm more accurate when the mean is large relative to the spread?",
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "title": "Welford versus the one-pass formula at a large offset"
+ },
+ "plan_sha256": "697a6883cb0e487ecbc0c4123707972919281b27ab1b463f1485a5dccf6968f3"
+}

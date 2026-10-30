@@ -1,0 +1,54 @@
+{
+ "code_files": {
+  "cache_refresh/authors/pge.py": "\"\"\"Prediction-guided eviction, authors' implementation.\"\"\"\n\n\ndef simulate(requests, capacity, predict):\n    \"\"\"Run PGE over a request list.\n\n    predict(t, page) returns the predicted time of the page's next request,\n    given the request at time t. Returns the number of misses.\n    \"\"\"\n    cache = {}  # page -> stored predicted next-request time\n    misses = 0\n    for t, page in enumerate(requests):\n        if page in cache:\n            continue  # hit: keep the stored prediction (refreshed when the page was loaded)\n        misses += 1\n        if len(cache) >= capacity:\n            victim = max(cache, key=lambda p: (cache[p], -p))\n            del cache[victim]\n        cache[page] = predict(t, page)\n    return misses\n",
+  "cache_refresh/reproduction/pge.py": "\"\"\"Prediction-guided eviction, independent reproduction.\"\"\"\n\n\ndef simulate(requests, capacity, predict):\n    \"\"\"Run PGE over a request list.\n\n    predict(t, page) returns the predicted time of the page's next request,\n    given the request at time t. Returns the number of misses.\n    \"\"\"\n    cache = {}  # page -> stored predicted next-request time\n    misses = 0\n    for t, page in enumerate(requests):\n        if page in cache:\n            cache[page] = predict(t, page)  # refresh on every request\n            continue\n        misses += 1\n        if len(cache) >= capacity:\n            victim = max(cache, key=lambda p: (cache[p], -p))\n            del cache[victim]\n        cache[page] = predict(t, page)\n    return misses\n"
+ },
+ "code_files_not_shown": [],
+ "code_tree": [
+  "cache_refresh/authors/pge.py",
+  "cache_refresh/reproduction/pge.py"
+ ],
+ "intake_notes": [],
+ "papers": [
+  {
+   "characters": 978,
+   "name": "pge_note.md",
+   "pages": null,
+   "text": "# Prediction-guided eviction (PGE)\n\nA cache holds k pages. Each request names one page. If the page is cached\n(a hit), nothing is evicted; otherwise (a miss) the page is loaded and, when\nthe cache is full, one cached page is evicted.\n\nPGE uses a predictor that, at request time t, estimates when page p will next\nbe requested. **Eviction rule:** on a miss with a full cache, evict the cached\npage whose stored predicted next-request time is furthest in the future\n(ties broken by the smallest page id).\n\n**Refreshing predictions.** \"Whenever a page is requested, its stored\nprediction is updated with the predictor's latest estimate.\"\n\n**Reported results.** With noisy predictions, the authors report fewer misses\nthan LRU on traces with repeated access patterns. An independent\nreproduction (`reproduction/pge.py`) reports noticeably different miss counts\nfrom the authors' code (`authors/pge.py`) on the same traces and noise\nlevels. Both teams say they follow the rule above.",
+   "truncated": false
+  }
+ ],
+ "python_files": [
+  "cache_refresh/authors/pge.py",
+  "cache_refresh/reproduction/pge.py"
+ ],
+ "python_outlines": [
+  {
+   "definitions": [
+    {
+     "doc": "Run PGE over a request list.",
+     "kind": "function",
+     "line": 4,
+     "name": "simulate",
+     "signature": "simulate(requests, capacity, predict)"
+    }
+   ],
+   "imports": [],
+   "path": "cache_refresh/authors/pge.py"
+  },
+  {
+   "definitions": [
+    {
+     "doc": "Run PGE over a request list.",
+     "kind": "function",
+     "line": 4,
+     "name": "simulate",
+     "signature": "simulate(requests, capacity, predict)"
+    }
+   ],
+   "imports": [],
+   "path": "cache_refresh/reproduction/pge.py"
+  }
+ ],
+ "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?"
+}

@@ -125,7 +125,10 @@ class JudgeReleaseTests(unittest.TestCase):
     def test_release_routes_are_fixed_and_all_exports_have_a_record(self):
         records, exports = routes()
         self.assertEqual(len(records), len(set(records)))
-        self.assertEqual(len(exports), 8)
+        from counterlab.open_lab.service import RECORDED
+        recorded_open = [path for path in RECORDED.glob("*") if (path / "record_manifest.json").is_file()]
+        self.assertEqual(len([route for route in exports if not route.startswith('/api/open-investigations/')]), 8)
+        self.assertEqual(len([route for route in exports if route.startswith('/api/open-investigations/')]), len(recorded_open))
         self.assertTrue(all(route.removesuffix('/export') in records for route in exports))
         self.assertFalse(any('artifacts' in route for route in records))
         with self.assertRaises(AssertionError):

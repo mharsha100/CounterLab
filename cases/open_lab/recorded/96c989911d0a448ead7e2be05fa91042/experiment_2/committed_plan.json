@@ -1,0 +1,73 @@
+{
+ "committed_at": "2026-10-28T02:42:09Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E3",
+  "claim": {
+   "evidence_quote": "rng.randint(0, i - 1)",
+   "source": "code",
+   "statement": "impl_b under-samples the first k items."
+  },
+  "conditions": [
+   {
+    "description": "impl_b with a 2-item reservoir",
+    "id": "k2",
+    "label": "k = 2"
+   },
+   {
+    "description": "impl_b with a 10-item reservoir",
+    "id": "k10",
+    "label": "k = 10"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "k10",
+      "metric": "first_k_ratio",
+      "relation": "greater",
+      "right": "k2",
+      "tolerance": 0.2
+     }
+    ],
+    "id": "E3",
+    "statement": "The bias is about 1/k: the first-k ratio is near (k-1)/k, so larger reservoirs hide it."
+   },
+   {
+    "expected": [
+     {
+      "left": "k10",
+      "metric": "first_k_ratio",
+      "relation": "equal",
+      "right": "k2",
+      "tolerance": 0.05
+     }
+    ],
+    "id": "E4",
+    "statement": "The bias depends on stream length, not on k."
+   }
+  ],
+  "factor": "Reservoir size k in impl_b",
+  "harness_code": "import counterlab_sandbox as sb\n\nSIZES = {\"k2\": 2, \"k10\": 10}\nN, TRIALS = 100, 2000\n\n\ndef measure(condition, seed):\n    module = sb.load(\"reservoir_samplers/impl_b/reservoir.py\")\n    k = SIZES[condition]\n    rng = sb.rng(seed)\n    counts = [0] * N\n    for _ in range(TRIALS):\n        for item in module.reservoir_sample(range(N), k, rng=rng):\n            counts[item] += 1\n    expected = TRIALS * k / N\n    return {\"first_k_ratio\": sum(counts[:k]) / (k * expected)}\n",
+  "implementation_note": "Only impl_b, n=100, 2,000 trials per seed.",
+  "metrics": [
+   {
+    "description": "Inclusion frequency of the first k items divided by k/n.",
+    "id": "first_k_ratio",
+    "label": "First-k inclusion ratio",
+    "unit": "x expected"
+   }
+  ],
+  "question": "Does the under-sampling of the first k items shrink as k grows?",
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "title": "Does group B's bias depend on the reservoir size?"
+ },
+ "plan_sha256": "7bd8bb1e29de0364ce09a56761d4422886c6a6943f5bf3cc8bb3571bab517228"
+}

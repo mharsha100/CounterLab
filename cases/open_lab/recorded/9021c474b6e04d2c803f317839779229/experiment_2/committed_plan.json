@@ -1,0 +1,74 @@
+{
+ "committed_at": "2026-10-28T02:43:01Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E3",
+  "claim": {
+   "evidence_quote": "cache[page] = predict(t, page)  # refresh on every request",
+   "source": "code",
+   "statement": "Refresh timing changes miss counts."
+  },
+  "conditions": [
+   {
+    "description": "Gaussian noise sd 5 on the true next-request time",
+    "id": "noise_5",
+    "label": "Accurate predictions (sd 5)"
+   },
+   {
+    "description": "Gaussian noise sd 100",
+    "id": "noise_100",
+    "label": "Noisy predictions (sd 100)"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "noise_5",
+      "metric": "refresh_gain",
+      "relation": "greater",
+      "right": "noise_100",
+      "tolerance": 50
+     }
+    ],
+    "id": "E3",
+    "statement": "Fresh predictions help only when they are accurate; with noisy predictions, refreshing on every request adds noise to every hit and hurts."
+   },
+   {
+    "expected": [
+     {
+      "left": "noise_5",
+      "metric": "refresh_gain",
+      "relation": "equal",
+      "right": "noise_100",
+      "tolerance": 30
+     }
+    ],
+    "id": "E4",
+    "statement": "Prediction noise does not change the effect of refresh timing."
+   }
+  ],
+  "factor": "Prediction noise (both implementations measured on each trace)",
+  "harness_code": "import counterlab_sandbox as sb\n\nPAGES, LENGTH, CAPACITY = 60, 3000, 10\nNOISE = {\"noise_5\": 5.0, \"noise_100\": 100.0}\nIMPLEMENTATIONS = {\"authors\": \"cache_refresh/authors/pge.py\", \"reproduction\": \"cache_refresh/reproduction/pge.py\"}\n\n\ndef trace(rng):\n    loop = list(range(0, 24))\n    requests = []\n    while len(requests) < LENGTH:\n        if rng.random() < 0.7:\n            requests.extend(loop[:rng.randint(8, 24)])\n        else:\n            requests.extend(rng.randrange(PAGES) for _ in range(rng.randint(1, 6)))\n    return requests[:LENGTH]\n\n\ndef next_use(requests):\n    upcoming, last = [0] * len(requests), {}\n    for t in range(len(requests) - 1, -1, -1):\n        upcoming[t] = last.get(requests[t], len(requests) + 1000)\n        last[requests[t]] = t\n    return upcoming\n\n\ndef measure(condition, seed):\n    rng = sb.rng(seed)\n    requests = trace(rng)\n    truth = next_use(requests)\n    noise = [rng.gauss(0.0, NOISE[condition]) for _ in requests]\n    predict = lambda t, page: truth[t] + noise[t]\n    authors = sb.load(IMPLEMENTATIONS[\"authors\"]).simulate(requests, CAPACITY, predict)\n    reproduction = sb.load(IMPLEMENTATIONS[\"reproduction\"]).simulate(requests, CAPACITY, predict)\n    return {\"refresh_gain\": authors - reproduction}\n",
+  "implementation_note": "Each call runs both uploaded simulate() functions on the same trace and predictions.",
+  "metrics": [
+   {
+    "description": "Authors' misses minus the reproduction's misses on the same trace (positive: refreshing helps).",
+    "id": "refresh_gain",
+    "label": "Misses saved by refreshing",
+    "unit": "misses"
+   }
+  ],
+  "question": "Does refreshing on every request help with accurate predictions and hurt with noisy ones?",
+  "seeds": [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  "title": "Does the refresh effect depend on prediction quality?"
+ },
+ "plan_sha256": "42df62a0872149cbf3fb2bf3424a0cab69e22acee7d1a58d78fe6a702aa6cd06"
+}

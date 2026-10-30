@@ -1,0 +1,6 @@
+{
+  "title": "Cache eviction: when should predictions refresh?",
+  "description": "The authors' code and an independent reproduction of a prediction-guided cache report different miss counts. The only visible difference is when a page's predicted next request is refreshed.",
+  "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?",
+  "kind": "paper_and_two_implementations"
+}

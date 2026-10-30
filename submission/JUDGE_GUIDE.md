@@ -17,20 +17,27 @@ directly: browsers need HTTP to load and verify the JSON records.
 
 | Where | What to inspect |
 | --- | --- |
-| Sources → Claim audit | Five bounded questions, exact record-field citations, comparability checks and unresolved coverage. Save its JSON and recheck it with the full source build. |
-| Guided demonstration | A real recorded Nemotron success, a wrong prediction, then every policy's aggregate result. |
-| Research study → Design an experiment | Prepare a bounded human-designed plan and export its checked offline runner; this browser edition does not execute the new plan. |
-| Evidence → Evidence library | Eight replay packages, explicit evidence types and setup, checksum-checked saving and replay commands. |
-| Evaluation → Fresh source evaluation | Eight frozen tasks, all options, failures and zero-inference baselines. |
-| Research study → Source investigator | Latest prediction guard, clearly labeled **simulated planning** with real isolated numerical executions. |
-| Research study → Source reproduction | One selected supporting reproduction slice and its limits. |
-| Evidence / downloads | Plans, observations, hashes and portable replay instructions. |
+| Home (first screen) | The product: setup checklist, numbers, recent investigations, examples and a drop zone to start. |
+| Investigations → an investigation | Recorded open investigations (the first was planned live by Nemotron on October 30; the others are labelled simulated planning): progress rail; tabs for the overview, each experiment (claim, committed explanations and bet, charts with every seed, verdicts, code-written finding, harness code), inputs, activity (every request and retry) and the sealed record with the replay package. The live record is labelled Nebius/Nemotron; the three simulated examples are labelled separately. New live runs require the source build. |
+| New investigation and Settings | Shown in the hosted demo for orientation; starting, saving a key and building the sandbox need the local app. |
+| Case study → Sources → Claim audit | Five bounded questions, exact record-field citations, comparability checks and unresolved coverage. Save its JSON and recheck it with the full source build. |
+| Case study → Guided demonstration | A real recorded Nemotron success, a wrong prediction, then every policy's aggregate result. |
+| Case study → Research study → Design an experiment | Prepare a bounded human-designed plan and export its checked offline runner; this browser edition does not execute the new plan. |
+| Case study → Evidence → Evidence library | Eight replay packages, explicit evidence types and setup, checksum-checked saving and replay commands. |
+| Case study → Evaluation → Fresh source evaluation | Eight frozen tasks, all options, failures and zero-inference baselines. |
+| Case study → Research study → Source investigator | Latest prediction guard, clearly labeled **simulated planning** with real isolated numerical executions. |
+| Case study → Research study → Source reproduction | One selected supporting reproduction slice and its limits. |
+| Case study → Evidence / downloads | Plans, observations, hashes and portable replay instructions. |
 
 The browser verifies snapshot JSON bytes. Numerical checks ran at packaging;
 they do not rerun in this browser. For independent local recomputation, download
 a replay ZIP, extract it into another folder and follow its `README.txt`.
-The guarded investigation and evaluation replays need only standard-library
-Python; they do not regenerate model replies. The long source-slice replay first
+The case-study guarded investigation and evaluation replays need only standard-library
+Python; they do not regenerate model replies. For an **Open Lab** download,
+`python replay.py` checks hashes and recomputes findings from the saved measurements.
+The optional `--rerun` executes the included harness and code locally, needs their
+imported packages, and does not itself provide Docker isolation. Review that code
+before rerunning it, or use a separate container. The long source-slice replay first
 needs an explicit `python fetch_reference.py --download` (or `--local-file PATH`)
 to install the pinned upstream file, which is not bundled. That setup checks its
 SHA-256; subsequent replay is offline and can take a few minutes. Hashes are
@@ -63,10 +70,12 @@ local restricted Docker workers measure admitted tests; deterministic code
 builds the factual report. Nebius Token Factory supplies the runtime inference.
 The static build is a companion to that working implementation, not fresh AI.
 
-No advantage over the contract heuristic has been established. The latest
-guarded workflow has integration evidence but no live model evaluation. This
-prototype covers one reviewed paging adapter, not arbitrary papers or uploaded
-code, and resolves neither a theorem nor the complete research disagreement.
+No planning advantage over the contract heuristic has been established in the
+frozen paging evaluation. The case-study prediction guard has integration evidence
+but no new live-model benchmark. Open Lab also accepts supported paper and code
+uploads for bounded Python/CPU experiments. Its recorded live Nemotron run
+establishes one working end-to-end example; broader design quality is unmeasured.
+Neither workflow resolves a theorem or the full published research disagreement.
 
 ## Full source setup
 
@@ -78,7 +87,8 @@ py -3.13 -m venv .venv
 .\.venv\Scripts\python.exe scripts\start_app.py --read-only --port 8001
 ```
 
-Open **http://127.0.0.1:8001/?view=demo**. The compiled normal UI is included;
+Open **http://127.0.0.1:8001/** for Home and the recorded Open Lab investigations.
+Use **Case study** for the earlier paging evidence. The compiled normal UI is included;
 Node and Docker are unnecessary for recorded inspection. The source-reproduction
 view can inspect its frozen three-row comparison without the optional full
 reference, and explicitly labels the unavailable full-artifact identity check.
@@ -88,3 +98,10 @@ the pinned dependencies. Runtime read-only inspection does not need a network.
 See `APP_GUIDE.md` / `COUNTERLAB_SETUP.md` for the separate live configuration.
 Never place an inference key in frontend code. A new live run requires explicit
 credit-use consent and a configured local Docker worker.
+
+## Judging access window
+
+The [official rules](https://nebiusglobalaihackathon.devpost.com/rules), checked
+October 30, specify judging December 9–23, 2026. Keep the working build freely
+accessible through **December 23 at noon Pacific**. Public URLs must be verified
+after deployment; this guide alone is not proof of public access.

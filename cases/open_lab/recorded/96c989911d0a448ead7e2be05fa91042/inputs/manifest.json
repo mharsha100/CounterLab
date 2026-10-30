@@ -1,0 +1,43 @@
+{
+ "code_files": [
+  {
+   "bytes": 476,
+   "path": "reservoir_samplers/impl_a/reservoir.py",
+   "sha256": "7deafb667522059bf205fdaa4700b75b016d11817fffc69ec3dc65ac97f59131"
+  },
+  {
+   "bytes": 520,
+   "path": "reservoir_samplers/impl_b/reservoir.py",
+   "sha256": "d724bdae6cc6d670955c8b8331932892ad5fb7ec1cb1bdde1611cea10c059512"
+  }
+ ],
+ "notes": [],
+ "papers": [
+  {
+   "characters": 807,
+   "name": "methods_note.md",
+   "pages": null,
+   "sha256": "6f960df4172e60e4cf7bf60701ccfc85c7f33dcc47a307f85e8c8dd7c04e97e2",
+   "source": "upload"
+  }
+ ],
+ "sources": [
+  {
+   "bytes": 808,
+   "characters": 807,
+   "kind": "paper",
+   "name": "methods_note.md",
+   "pages": null,
+   "sha256": "6f960df4172e60e4cf7bf60701ccfc85c7f33dcc47a307f85e8c8dd7c04e97e2",
+   "source": "upload"
+  },
+  {
+   "bytes": 1246,
+   "files_kept": 2,
+   "kind": "code_archive",
+   "name": "reservoir_samplers",
+   "sha256": "c5cf364bc1ac308703ba92ca54d66275e1dda2817a938a5ac0d99922dc79cd23",
+   "source": "upload"
+  }
+ ]
+}

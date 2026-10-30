@@ -2,7 +2,34 @@
 
 Updated October 26, 2026. Check an item only after confirming it in the actual account or with an official source. Do not store passwords, API keys, payment details, or private identity documents here.
 
-## Current project status — October 26 · project frozen locally
+## Current submission status — private GitHub sync verified
+
+- GitHub repository installation is now available for mharsha100/CounterLab.
+  The frozen source archive's 295 files, including its manifest, are on `main`
+  at `a9fe693cbc979c33097b824b8a6049c34788bd40`. GitHub's complete tree SHA equals
+  the independently prepared local tree `0c7626f8405cf953dcfbb40dfd1df2e0fa2bed7a`.
+- The old branch head was confirmed before a leased, non-forced update; the
+  resulting branch head and private visibility were checked afterward. No Pages
+  deployment or Actions dispatch was requested. The frozen archives are unchanged.
+- Receipt: artifacts/releases/counterlab-private-sync-20261026/github-sync-receipt.json.
+  **5 steps remain**: public source access is still pending explicit authorization;
+  private synchronization alone does not complete the submission requirement.
+
+## Current project status — October 26 · final quality review accepted
+
+- 241 Python tests, 18 frontend tests and both production builds pass. Navigation,
+  accessibility, failure recovery, strict credit consent, workspace ownership and
+  numeric evidence validation improved. See submission/FINAL_PROJECT_REVIEW.md.
+- Real Docker source replays passed under a separately versioned 60-second limit;
+  their export replays offline. Planning was simulated, with zero provider calls.
+  Historical algorithms, responses, scores and all 100 case files are unchanged.
+- Extracted-source acceptance, all eight replay payloads and release manifests
+  verified. New local release: artifacts/releases/counterlab-final-review-20261026/.
+  The private GitHub commit above contains the preceding release and needs updating.
+- **5 remain: 0 project + 5 submission.** Keep GitHub private. Restart the old local
+  app before adopting the reviewed live build; no public publication occurred.
+
+## Previous project status — October 26 · project frozen locally
 
 - Fresh Python and frontend installs pass; both frontend builds reproduce the
   reviewed output bytes. Actual keyless read-only startup works before optional

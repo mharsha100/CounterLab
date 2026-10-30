@@ -1,0 +1,13 @@
+{
+ "checked_at": "2026-10-30T04:55:51Z",
+ "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "model_note": null,
+ "nemotron_models": [
+  "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+  "nvidia/Nemotron-3-Ultra-550b-a55b",
+  "nvidia/Nemotron-3.5-Super-VL",
+  "nvidia/Nemotron-3_5-Lightning",
+  "nvidia/nemotron-3-super-120b-a12b"
+ ],
+ "preferred_model": "nvidia/Nemotron-3-Ultra-550b-a55b"
+}

@@ -1,6 +1,6 @@
 # CounterLab — reviewed project freeze
 
-Release label: **CounterLab 0.1 — one-adapter hackathon prototype**.
+Release label: **CounterLab 0.1 — final quality review, one-adapter prototype**.
 Review date: October 26, 2026. Publication remains a separate step.
 
 ## Included scope
@@ -25,18 +25,23 @@ asymptotic theorem remain unresolved. Original failures and scores are retained.
 ## Acceptance and reproducibility
 
 The acceptance evidence is recorded in `submission/VALIDATION.md`; detailed local
-logs and receipts are under `artifacts/freeze/20261026/` and are not distributed.
-The clean-install procedure is **README → Fresh installation — current
-instructions**. The full regression suite needs the explicitly installed pinned
+logs and receipts are under `artifacts/freeze/20261026/` and
+`artifacts/freeze/20261026-final-review/` and are not distributed.
+The clean-install procedure is **README → Quick start** (the
+earlier wording is preserved in DEVELOPMENT_LOG → Fresh installation). The full regression suite needs the explicitly installed pinned
 reference fixture; ordinary recorded inspection does not.
 
-The final local release is written to
-`artifacts/releases/counterlab-project-freeze-20261026/`. Its `release-summary.json`
+The final quality-review release is written to
+`artifacts/releases/counterlab-final-review-20261026/`. Its `release-summary.json`
 identifies the exact source and judge ZIP hashes; `source-manifest.json` identifies
 every distributed source file. The final acceptance receipt lives beside those
 archives. These are consistency records, not independent signatures or proof
 of scientific validity. No full upstream reference, private run history, API
 credentials, virtual environments or installed frontend packages are bundled.
+
+The preceding `counterlab-project-freeze-20261026` archives remain unchanged as
+historical releases. Use the quality-review archive for the next source upload.
+See `FINAL_PROJECT_REVIEW.md` for its improvements and bounded execution profile.
 
 ## What happens after freezing
 

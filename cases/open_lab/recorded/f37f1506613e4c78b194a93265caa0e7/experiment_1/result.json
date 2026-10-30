@@ -1,0 +1,577 @@
+{
+ "attempts": [
+  {
+   "admission": {
+    "accepted": true,
+    "checks": [
+     {
+      "check": "conditions",
+      "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+      "passed": true
+     },
+     {
+      "check": "metrics",
+      "message": "One to five uniquely named numeric metrics.",
+      "passed": true
+     },
+     {
+      "check": "explanations",
+      "message": "Two to four competing explanations with unique ids.",
+      "passed": true
+     },
+     {
+      "check": "seeds",
+      "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+      "passed": true
+     },
+     {
+      "check": "budget",
+      "message": "At most 60 measure() calls (conditions x seeds).",
+      "passed": true
+     },
+     {
+      "check": "predictions",
+      "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+      "passed": true
+     },
+     {
+      "check": "discriminating",
+      "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+      "passed": true
+     },
+     {
+      "check": "bet",
+      "message": "Commit which explanation you expect the measurements to support.",
+      "passed": true
+     },
+     {
+      "check": "harness_syntax",
+      "message": "The harness parses as Python.",
+      "passed": true
+     },
+     {
+      "check": "measure_signature",
+      "message": "Define measure(condition, seed) at the top level.",
+      "passed": true
+     },
+     {
+      "check": "uses_condition",
+      "message": "measure() must change behaviour based on the condition.",
+      "passed": true
+     },
+     {
+      "check": "uses_seed",
+      "message": "measure() must use the seed so every condition is paired and repeatable.",
+      "passed": true
+     },
+     {
+      "check": "no_network_or_processes",
+      "message": "No network, process, serialisation or interpreter-control modules.",
+      "passed": true
+     },
+     {
+      "check": "no_dynamic_code",
+      "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+      "passed": true
+     },
+     {
+      "check": "tests_uploaded_code",
+      "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+      "passed": true
+     }
+    ]
+   },
+   "harness_sha256": "58290663d0c86815bb776155c504e2ca1f4f0683e9516c7719e2eb4c740cd569",
+   "number": 1,
+   "repeat": {
+    "status": "ok"
+   },
+   "run": {
+    "failed_calls": 0,
+    "rows": 20,
+    "status": "ok"
+   }
+  }
+ ],
+ "evaluation": {
+  "bet": {
+   "explanation": "E1",
+   "outcome": "failed"
+  },
+  "complete": true,
+  "errors": [],
+  "explanations": [
+   {
+    "failed": 1,
+    "held": 0,
+    "id": "E1",
+    "inconclusive": 0,
+    "statement": "Refresh timing causes the difference in miss counts.",
+    "status": "contradicted"
+   },
+   {
+    "failed": 1,
+    "held": 0,
+    "id": "E2",
+    "inconclusive": 0,
+    "statement": "Refresh timing does not cause the difference; something else does.",
+    "status": "contradicted"
+   }
+  ],
+  "finding": [
+   "miss count: refresh on miss only 601.9 vs refresh on every request 557.3 (mean of 10 seeds). E1 expected refresh on miss only lower than refresh on every request: failed (0/10 seeds agree). E2 expected refresh on miss only and refresh on every request equal within ±0: failed (0/10 seeds agree).",
+   "Every explanation's expectations failed (E1, E2); the right explanation is not among them.",
+   "Nemotron's committed bet (E1) failed.",
+   "Scope: this measures the uploaded code (or the stated re-implementation) under this harness, these settings and these seeds. It does not prove a general theorem."
+  ],
+  "measurements": {
+   "misses": {
+    "authors": {
+     "max": 602.0,
+     "mean": 601.9,
+     "min": 601.0,
+     "n": 10,
+     "per_seed": [
+      602.0,
+      602.0,
+      602.0,
+      602.0,
+      602.0,
+      602.0,
+      602.0,
+      601.0,
+      602.0,
+      602.0
+     ],
+     "std": 0.3
+    },
+    "reproduction": {
+     "max": 562.0,
+     "mean": 557.3,
+     "min": 551.0,
+     "n": 10,
+     "per_seed": [
+      557.0,
+      555.0,
+      559.0,
+      552.0,
+      557.0,
+      551.0,
+      561.0,
+      560.0,
+      562.0,
+      559.0
+     ],
+     "std": 3.49428
+    }
+   }
+  },
+  "repeat_rows_sha256": "3077f5daa5c6e635c0ce102692b529ddfedd596d9cb349d7714b2f67fad90b39",
+  "report_version": "open_report_v1",
+  "reproduced": true,
+  "rows_sha256": "ea0a8e9b2a86e013e7ac638b76b4c1c23bba39d2f3979c10f5aa8e3a55a36ffb",
+  "stable_metrics": {
+   "misses": true
+  },
+  "verdicts": [
+   {
+    "difference": 44.6,
+    "explanation": "E1",
+    "left": "authors",
+    "left_mean": 601.9,
+    "metric": "misses",
+    "relation": "less",
+    "right": "reproduction",
+    "right_mean": 557.3,
+    "seeds_agreeing": 0,
+    "seeds_compared": 10,
+    "sign_test_p": 0.001953,
+    "status": "failed",
+    "tolerance": 0
+   },
+   {
+    "difference": 44.6,
+    "explanation": "E2",
+    "left": "authors",
+    "left_mean": 601.9,
+    "metric": "misses",
+    "relation": "equal",
+    "right": "reproduction",
+    "right_mean": 557.3,
+    "seeds_agreeing": 0,
+    "seeds_compared": 10,
+    "sign_test_p": 0.001953,
+    "status": "failed",
+    "tolerance": 0
+   }
+  ]
+ },
+ "harness_sha256": "58290663d0c86815bb776155c504e2ca1f4f0683e9516c7719e2eb4c740cd569",
+ "index": 1,
+ "repeat": {
+  "elapsed_seconds": 5.516,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.5",
+  "rows": [
+   {
+    "condition": "authors",
+    "seconds": 0.0199,
+    "seed": 42,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0135,
+    "seed": 42,
+    "values": {
+     "misses": 557.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.011,
+    "seed": 43,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0111,
+    "seed": 43,
+    "values": {
+     "misses": 555.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0077,
+    "seed": 44,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0191,
+    "seed": 44,
+    "values": {
+     "misses": 559.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0114,
+    "seed": 45,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0077,
+    "seed": 45,
+    "values": {
+     "misses": 552.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0072,
+    "seed": 46,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0109,
+    "seed": 46,
+    "values": {
+     "misses": 557.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0065,
+    "seed": 47,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0088,
+    "seed": 47,
+    "values": {
+     "misses": 551.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.011,
+    "seed": 48,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0099,
+    "seed": 48,
+    "values": {
+     "misses": 561.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0106,
+    "seed": 49,
+    "values": {
+     "misses": 601.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0131,
+    "seed": 49,
+    "values": {
+     "misses": 560.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0121,
+    "seed": 50,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0133,
+    "seed": 50,
+    "values": {
+     "misses": 562.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.009,
+    "seed": 51,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0113,
+    "seed": 51,
+    "values": {
+     "misses": 559.0
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "run": {
+  "elapsed_seconds": 6.749,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.5",
+  "rows": [
+   {
+    "condition": "authors",
+    "seconds": 0.0151,
+    "seed": 42,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0218,
+    "seed": 42,
+    "values": {
+     "misses": 557.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0145,
+    "seed": 43,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0069,
+    "seed": 43,
+    "values": {
+     "misses": 555.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0089,
+    "seed": 44,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0177,
+    "seed": 44,
+    "values": {
+     "misses": 559.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0224,
+    "seed": 45,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0099,
+    "seed": 45,
+    "values": {
+     "misses": 552.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.012,
+    "seed": 46,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0122,
+    "seed": 46,
+    "values": {
+     "misses": 557.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0099,
+    "seed": 47,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0121,
+    "seed": 47,
+    "values": {
+     "misses": 551.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0173,
+    "seed": 48,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0173,
+    "seed": 48,
+    "values": {
+     "misses": 561.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0134,
+    "seed": 49,
+    "values": {
+     "misses": 601.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0217,
+    "seed": 49,
+    "values": {
+     "misses": 560.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0113,
+    "seed": 50,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.0105,
+    "seed": 50,
+    "values": {
+     "misses": 562.0
+    }
+   },
+   {
+    "condition": "authors",
+    "seconds": 0.0095,
+    "seed": 51,
+    "values": {
+     "misses": 602.0
+    }
+   },
+   {
+    "condition": "reproduction",
+    "seconds": 0.013,
+    "seed": 51,
+    "values": {
+     "misses": 559.0
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "sandbox": {
+  "image_id": "sha256:f49bb007d44a750ab471bfaedc2d9e27bd0ab9c4ca6f341032e31fe795b3f9dd",
+  "isolation": "docker_no_network",
+  "mode": "docker",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "runner_sha256": "9d58d2e6430a6ad8f61ac764edff26edd2bf6ab7bccf98af01e01c7580c11d2b"
+ },
+ "status": "completed"
+}

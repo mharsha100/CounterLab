@@ -1,0 +1,70 @@
+{
+ "automatic_retries": 0,
+ "calls": [
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_1_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 2142,
+    "total_tokens": 3042
+   }
+  },
+  {
+   "elapsed_seconds": 0.001,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_2_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 2784,
+    "total_tokens": 3684
+   }
+  }
+ ],
+ "experiments": [
+  {
+   "index": 1,
+   "reason": null,
+   "status": "completed"
+  },
+  {
+   "index": 2,
+   "reason": null,
+   "status": "completed"
+  }
+ ],
+ "finished_at": "2026-10-28T02:42:47Z",
+ "follow_up_requested": true,
+ "max_output_tokens": 16384,
+ "maximum_model_calls": 7,
+ "model_calls": 2,
+ "question": "Is Welford's online variance algorithm actually more accurate than the one-pass sum-of-squares formula, and does its advantage grow as the data's mean moves away from zero relative to its spread?",
+ "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "returned_models": [
+  "nvidia/Nemotron-3-Ultra-550b-a55b"
+ ],
+ "review_reason": null,
+ "sandbox": {
+  "isolation": "docker_no_network",
+  "mode": "docker"
+ },
+ "started_at": "2026-10-28T02:42:24Z",
+ "status": "completed",
+ "usage": {
+  "completion_tokens": 1800,
+  "prompt_tokens": 4926,
+  "total_tokens": 6726
+ },
+ "workflow_version": "open_investigation_v1"
+}

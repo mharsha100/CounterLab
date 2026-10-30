@@ -1,0 +1,26 @@
+{
+ "created_at": "2026-10-30T04:55:50Z",
+ "files": {
+  "connection.json": "055c7790efeff9f0098dadc36bbf4c8a917b70c496a5519fb5533a77ec778530",
+  "experiment_1/committed_plan.json": "1e78555242097bae0022c00cb47e77ad9204efa0e9f4ad57d6e7bf9cafd8318d",
+  "experiment_1/design_request_1.json": "22dc0b38e6e7557fae2b0df7d266891d2c8c419a310565720f47f47260d9b15a",
+  "experiment_1/harness.py": "619f2e9549b7f93616ac55bc866178bee4e87b4fdb947d5117cf440cc547c095",
+  "experiment_1/result.json": "ade0b1a45cc03448546838f79cdcad4508e36485663d3794af3a8a9dad40fec5",
+  "experiment_2/attempt_1.json": "6f4c6f140283529729b3f61a3f3b151feabac605511ebf353449dd5b8dc0be19",
+  "experiment_2/committed_plan.json": "b8567967a2ed1bbfe40cb623112ecd15b7eb83fb6ee74260613c7de097fefb78",
+  "experiment_2/design_request_1.json": "1ba7b0fbb09c8fbf9a8ea387c0616ebe659c349f8408754c9a8968ad4ecbbb87",
+  "experiment_2/harness.py": "f89f37b1cfbe1cca3e5d1a7e0bcabf0a188b4a683558c5d0bcb9a20310063be7",
+  "experiment_2/repair_request_1.json": "129409f06b31b0b79b13d7c1d61d0944ac9c5019469562f9de67611c2719b728",
+  "experiment_2/result.json": "cd9f87010656fedf9a853eb80e569eab61b64153eb5e1bf7b3be35e8d6a1a3d8",
+  "inputs/code/cache_refresh/authors/pge.py": "5f54978c74ad8d95f50b75248844f9809c1e0b859757f925f98c5249916017c0",
+  "inputs/code/cache_refresh/reproduction/pge.py": "b7b3f3ab9641e104d808e7e148a2cd8dd5a5fe2f6c52dc607e42a82b039d96b2",
+  "inputs/manifest.json": "f43f56004d9f1a6b67460994705bec4258f69ca624d12579430447bedec318f2",
+  "inputs/paper_1.txt": "2093c102c5820bafcdeb1f9d7cd5f27f51b6c4b1b0bc31263fa84b292b6d0659",
+  "model_input.json": "7a6fec7389020c571de0719170060543699f433ae143da8ca5fbf5393b398cbd",
+  "request.json": "b5b211608d53ae6fcbc7e00997532b9d9e3ddcb247e07c3720e35fe6fa0445e5",
+  "summary.json": "49e61d2a31fc54a0c1da1717d3fbfae8f1b4246621b308fca983c3b8d879d936"
+ },
+ "run_id": "f37f1506613e4c78b194a93265caa0e7",
+ "schema": 1,
+ "workflow_version": "open_investigation_v1"
+}

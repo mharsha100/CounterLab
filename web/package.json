@@ -9,9 +9,14 @@
     "build:judge": "tsc --noEmit && vite build --mode judge && node scripts/stamp-build.mjs judge-dist",
     "test:downloads": "node --experimental-strip-types --test tests/archive-integrity.test.ts",
     "test:workbench": "node --experimental-strip-types --test tests/workbench-protocol.test.ts",
+    "test:recovery": "node --experimental-strip-types --test tests/resource-recovery.test.ts",
+    "test:format": "node --experimental-strip-types --test tests/format.test.ts",
+    "test:all": "node --experimental-strip-types --test tests/archive-integrity.test.ts tests/workbench-protocol.test.ts tests/resource-recovery.test.ts tests/navigation.test.ts tests/format.test.ts",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

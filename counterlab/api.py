@@ -2,6 +2,7 @@
 
 import json
 import hashlib
+import os
 import pathlib
 import platform
 import re
@@ -18,7 +19,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from counterlab.verified_investigator import MAX_INFERENCE_REQUESTS, WORKFLOW_VERSION, investigation_input, run_investigation
@@ -44,7 +45,25 @@ from counterlab.claim_audit import project_claim_audit
 from counterlab.synthetic_workbench import contract as workbench_contract, compare as workbench_compare
 from counterlab.source_guard import VERSION as SOURCE_GUARDED, WORKFLOW_CODE as GUARDED_CODE, guarded_input
 from counterlab.source_planner_v2 import run_guarded_source
+from counterlab.open_lab.service import OpenLab, long_request as open_lab_request, register as register_open_lab
 from counterlab.source_run_record_v2 import seal_guarded_run, verify_guarded_run, export_guarded_run
+from counterlab.source_run_record_v3 import (EXECUTION_PROFILE as SOURCE_EXECUTION_PROFILE,
+    POLICY as GUARDED_EXECUTION_POLICY, seal_guarded_run as seal_guarded_execution_run,
+    verify_guarded_run as verify_guarded_execution_run, export_guarded_run as export_guarded_execution_run)
+
+# OWASP Secure Headers Project baseline, adapted to this local single-origin app.
+# React style attributes need inline styles; no inline or third-party scripts run.
+SECURITY_HEADERS = {
+    "Content-Security-Policy": ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
+                                "img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; "
+                                "base-uri 'self'; form-action 'self'; frame-ancestors 'none'"),
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "X-Frame-Options": "DENY",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+}
 
 SOURCE_RECORDED_ID = "50eb53dbc008439cb85d4a9322da6b62"
 SOURCE_RECORDED_ROOT = ROOT / "cases/paging/source_recorded_run"
@@ -68,6 +87,15 @@ def source_adapter(version):
     return "source_guarded" if version == SOURCE_GUARDED else "source" if version == SOURCE_WORKFLOW else "diagnostic"
 
 
+def guarded_record_handlers(workflow):
+    """Historical records retain their original execution contract and verifier."""
+    if "execution_profile" not in workflow:
+        return verify_guarded_run, export_guarded_run
+    if workflow["execution_profile"] == SOURCE_EXECUTION_PROFILE:
+        return verify_guarded_execution_run, export_guarded_execution_run
+    raise RecordError("Unsupported source execution profile.")
+
+
 def recorded_source_manifest():
     path = SOURCE_RECORDED_ROOT / "record_manifest.json"
     if hashlib.sha256(path.read_bytes()).hexdigest() != SOURCE_RECORDED_MANIFEST_SHA256:
@@ -88,26 +116,75 @@ class StartInvestigation(BaseModel):
     request_id: str = Field(pattern=r"^[a-f0-9]{32}$")
     max_output_tokens: Literal[4096, 8192] = 8192
 
+    @field_validator("confirm_credit_use", mode="before")
+    @classmethod
+    def explicit_boolean_consent(cls, value):
+        # Literal[True] otherwise treats JSON 1 and 1.0 as equal to True.
+        if value is not True:
+            raise ValueError("Credit use must be explicitly confirmed with true.")
+        return value
+
+    @field_validator("max_output_tokens", mode="before")
+    @classmethod
+    def integer_output_cap(cls, value):
+        if type(value) is not int:
+            raise ValueError("The output allowance must be an integer.")
+        return value
+
+
+def acquire_workspace_writer(state_root):
+    """Hold an OS-released lease; a second process must not recover active jobs."""
+    lease = (state_root / "writer.lock").open("a+b")
+    try:
+        if lease.seek(0, os.SEEK_END) == 0:
+            lease.write(b"\0")
+            lease.flush()
+        lease.seek(0)
+        if os.name == "nt":
+            import msvcrt
+            msvcrt.locking(lease.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(lease.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        lease.close()
+        raise RuntimeError("This CounterLab workspace is already open for live investigations. "
+                           "Use the existing app, or open another port with --read-only.") from None
+    return lease
+
 
 class Workspace:
     def __init__(self, state_root, run_root, *, transport=nebius_request, configure=configuration,
-                 experiment_worker=None, recover_interrupted=True):
+                 experiment_worker=None, recover_interrupted=True, read_only=False):
         self.state_root = pathlib.Path(state_root)
         self.run_root = pathlib.Path(run_root)
         self.state_root.mkdir(parents=True, exist_ok=True)
         self.run_root.mkdir(parents=True, exist_ok=True)
         self.database = self.state_root / "workspace.sqlite3"
+        self.read_only = read_only
+        self.writer_lease = None if read_only else acquire_workspace_writer(self.state_root)
         self.transport, self.configure = transport, configure
         self.provider_mode = "nebius_live" if transport is nebius_request else "simulated_provider"
         self.experiment_worker = experiment_worker or DockerExperimentWorker()
         self.guard = threading.Lock()
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="counterlab")
-        with self.connection() as db:
-            db.execute("""CREATE TABLE IF NOT EXISTS jobs (
-                id TEXT PRIMARY KEY, request_id TEXT UNIQUE, created_at TEXT, state TEXT,
-                phase TEXT, output_cap INTEGER, error TEXT)""")
-            if recover_interrupted:
-                db.execute("UPDATE jobs SET state='failed', phase='Interrupted', error='server_restarted' WHERE state IN ('queued','running')")
+        try:
+            with self.connection() as db:
+                db.execute("""CREATE TABLE IF NOT EXISTS jobs (
+                    id TEXT PRIMARY KEY, request_id TEXT UNIQUE, created_at TEXT, state TEXT,
+                    phase TEXT, output_cap INTEGER, error TEXT)""")
+                if recover_interrupted and not read_only:
+                    db.execute("UPDATE jobs SET state='failed', phase='Interrupted', error='server_restarted' WHERE state IN ('queued','running')")
+        except BaseException:
+            self.close()
+            raise
+
+    def close(self):
+        # Keep ownership until in-flight work stops, even during server shutdown.
+        self.executor.shutdown(wait=True, cancel_futures=True)
+        if self.writer_lease is not None:
+            self.writer_lease.close()
+            self.writer_lease = None
 
     @contextmanager
     def connection(self):
@@ -138,6 +215,8 @@ class Workspace:
 
     def start(self, payload, adapter="diagnostic"):
         with self.guard:
+            if self.read_only or self.writer_lease is None:
+                raise HTTPException(403, "This workspace is not open for live investigations.")
             with self.connection() as db:
                 existing = db.execute("SELECT * FROM jobs WHERE request_id=?", (payload.request_id,)).fetchone()
                 if existing:
@@ -151,7 +230,12 @@ class Workspace:
                 try:
                     self.configure()
                     protocol = reviewed_source(ROOT) if adapter in ("source", "source_guarded") else reviewed_protocol()
-                    worker = self.experiment_worker.check()
+                    if adapter == "source_guarded" and hasattr(self.experiment_worker, "check_source"):
+                        worker = self.experiment_worker.check_source()
+                    elif adapter != "source_guarded" or self.provider_mode == "simulated_provider":
+                        worker = self.experiment_worker.check()
+                    else:
+                        raise WorkerError("Guarded source execution profile unavailable.")
                 except WorkerError:
                     raise HTTPException(409, "Experiment worker unavailable. Keep Docker Desktop running and run scripts/setup_worker.py.") from None
                 except (ValueError, OSError):
@@ -167,6 +251,7 @@ class Workspace:
                     write_once(directory / "model_input.json", (guarded_input if guarded else source_input)(task, protocol))
                     write_once(directory / "workflow_plan.json", {
                         "model": MODELS[0], "workflow_version": SOURCE_GUARDED if guarded else SOURCE_WORKFLOW, "created_at": created_at,
+                        **({"execution_profile": SOURCE_EXECUTION_PROFILE} if guarded else {}),
                         "provider_mode": self.provider_mode, "task_sha256": digest(task),
                         "source_protocol_sha256": SOURCE_HASH, "maximum_inference_requests": 2,
                         "max_output_tokens_per_request": payload.max_output_tokens, "automatic_retries": 0,
@@ -249,18 +334,39 @@ class Workspace:
             if MODELS[0] not in {row.get("id") for row in catalog.get("data", []) if isinstance(row, dict)}:
                 self.update(job_id, "failed", "Model unavailable", "model_not_in_catalog")
                 return
+            provider_failures = []
+
             def send(body):
                 self.update(job_id, "running", "Nemotron is choosing a source test")
-                return self.transport(key, "chat/completions", body)
+                # The planner records a generic, sealed review reason. Keep only the
+                # fixed status code here so the job can say what to fix; no body,
+                # header or provider message is retained.
+                try:
+                    return self.transport(key, "chat/completions", body)
+                except urllib.error.HTTPError as error:
+                    provider_failures.append(f"provider_http_{error.code}")
+                    raise
+                except (urllib.error.URLError, TimeoutError):
+                    provider_failures.append("provider_connection_error")
+                    raise
             def execute(task, contract, plan, path):
                 self.update(job_id, "running", "Replaying the source test in two isolated containers")
+                if guarded:
+                    if hasattr(self.experiment_worker, "execute_source_guarded"):
+                        return self.experiment_worker.execute_source_guarded(task, contract, plan, path)
+                    if self.provider_mode != "simulated_provider":
+                        raise WorkerError("Guarded source execution profile unavailable.")
                 return self.experiment_worker.execute_source(task, contract, plan, path)
             runner = run_guarded_source if guarded else run_source_investigation
             result = runner(MODELS[0], task_contract(), source, send, directory, execute,
                                                max_output_tokens=output_cap)
-            (seal_guarded_run if guarded else seal_source_run)(directory, ROOT, job_id, created_at)
-            (verify_guarded_run if guarded else verify_source_run)(directory, ROOT)
-            self.update(job_id, result["status"], "Finished" if result["status"] == "completed" else "Review needed")
+            (seal_guarded_execution_run if guarded else seal_source_run)(directory, ROOT, job_id, created_at)
+            (verify_guarded_execution_run if guarded else verify_source_run)(directory, ROOT)
+            # A provider failure always ends the bounded run, so the last one is the cause.
+            provider_stop = (provider_failures[-1] if provider_failures and result.get("review_reason")
+                             in ("provider_error_no_retry", "transport_or_worker_error_no_retry") else None)
+            self.update(job_id, result["status"], "Finished" if result["status"] == "completed"
+                        else "Nebius request stopped" if provider_stop else "Review needed", provider_stop)
         except urllib.error.HTTPError as error:
             self.update(job_id, "failed", "Nebius request stopped", f"provider_http_{error.code}")
         except (urllib.error.URLError, TimeoutError):
@@ -272,16 +378,19 @@ class Workspace:
 
 
 def create_app(*, state_root=None, run_root=None, transport=nebius_request,
-               configure=configuration, port=8000, serve_frontend=True, experiment_worker=None, read_only=False):
+               configure=configuration, port=8000, serve_frontend=True, experiment_worker=None, read_only=False,
+               open_sandbox=None, env_path=None):
     workspace = Workspace(state_root or ROOT / "artifacts" / "app",
                           run_root or ROOT / "artifacts" / "runs" / "investigation",
                           transport=transport, configure=configure, experiment_worker=experiment_worker,
-                          recover_interrupted=not read_only)
+                          recover_interrupted=not read_only, read_only=read_only)
 
     @asynccontextmanager
     async def lifespan(app):
-        yield
-        workspace.executor.shutdown(wait=False, cancel_futures=True)
+        try:
+            yield
+        finally:
+            workspace.close()
 
     app = FastAPI(title="CounterLab local workspace", version="0.1.0", lifespan=lifespan)
     app.state.workspace = workspace
@@ -290,6 +399,12 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
         if read_only and request.method not in ("GET", "HEAD", "OPTIONS"):
             return JSONResponse({"detail": "Read-only demonstration: starting investigations is disabled."}, status_code=403)
         return await call_next(request)
+    @app.middleware("http")
+    async def security_headers(request, call_next):
+        response = await call_next(request)
+        for name, value in SECURITY_HEADERS.items():
+            response.headers.setdefault(name, value)
+        return response
     origins = [f"http://127.0.0.1:{port}", f"http://localhost:{port}", "http://127.0.0.1:5173", "http://localhost:5173"]
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost"] + ([] if serve_frontend else ["testserver"]))
     app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"],
@@ -303,6 +418,20 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     @app.exception_handler(RecordError)
     async def invalid_record(request, error):
         return JSONResponse({"detail": str(error)}, status_code=409)
+
+    @app.get("/api/health")
+    def health():
+        # Liveness only: reads no credentials, contacts no provider and starts no worker.
+        return {"status": "ok", "read_only": read_only, "model": MODELS[0], "provider": "Nebius Token Factory",
+                "inference_requests_on_open": 0}
+
+    # Open investigations: bring any paper and/or code; Nemotron designs a checked experiment.
+    open_lab = OpenLab(workspace, run_root=workspace.run_root.parent / "open",
+                       transport=open_lab_request if transport is nebius_request else transport,
+                       configure=configure, sandbox=open_sandbox, model=MODELS[0],
+                       **({"env_path": env_path} if env_path else {}))
+    app.state.open_lab = open_lab
+    register_open_lab(app, open_lab, origins=origins)
 
     @app.get("/api/experiment-workbench")
     def experiment_workbench():
@@ -456,7 +585,8 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
     def guarded_source_contract():
         source = reviewed_source(ROOT)
         return {"task": task_contract(), "input": guarded_input(task_contract(), source), "model": MODELS[0],
-                "workflow_version": SOURCE_GUARDED, "read_only": read_only, "provider_mode": workspace.provider_mode}
+                "workflow_version": SOURCE_GUARDED, "read_only": read_only, "provider_mode": workspace.provider_mode,
+                "execution_profile": SOURCE_EXECUTION_PROFILE, "worker_wall_seconds": GUARDED_EXECUTION_POLICY["wall_seconds"]}
 
     @app.post("/api/source-investigations-v2", status_code=202)
     def start_guarded_source(payload: StartInvestigation, request: Request):
@@ -503,8 +633,10 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
                     "workflow_version": workflow.get("workflow_version"),
                     "provider_mode": workflow.get("provider_mode")}
         try:
-            guarded = read_json(directory, "workflow_plan.json").get("workflow_version") == SOURCE_GUARDED
-            record = (verify_guarded_run if guarded else verify_source_run)(directory, ROOT)
+            workflow = read_json(directory, "workflow_plan.json")
+            guarded = workflow.get("workflow_version") == SOURCE_GUARDED
+            verifier = guarded_record_handlers(workflow)[0] if guarded else verify_source_run
+            record = verifier(directory, ROOT)
         except (OSError, ValueError, KeyError, TypeError):
             raise RecordError("Source investigation failed record or numerical verification.") from None
         if record["id"] != job_id:
@@ -517,8 +649,10 @@ def create_app(*, state_root=None, run_root=None, transport=nebius_request,
         if row["state"] in ("queued", "running") or not (directory / "record_manifest.json").is_file():
             raise HTTPException(409, "Wait for a sealed source record before exporting.")
         try:
-            guarded = read_json(directory, "workflow_plan.json").get("workflow_version") == SOURCE_GUARDED
-            content = (export_guarded_run if guarded else export_source_run)(directory, ROOT)
+            workflow = read_json(directory, "workflow_plan.json")
+            guarded = workflow.get("workflow_version") == SOURCE_GUARDED
+            exporter = guarded_record_handlers(workflow)[1] if guarded else export_source_run
+            content = exporter(directory, ROOT)
         except (OSError, ValueError, KeyError, TypeError):
             raise RecordError("Source export failed numerical verification.") from None
         return archive_response(content, f"counterlab-source-{job_id[:8]}.zip")

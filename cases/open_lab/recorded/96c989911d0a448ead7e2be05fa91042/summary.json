@@ -1,0 +1,85 @@
+{
+ "automatic_retries": 0,
+ "calls": [
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_1_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 2642,
+    "total_tokens": 3542
+   }
+  },
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_1_repair",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 3050,
+    "total_tokens": 3950
+   }
+  },
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_2_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 3386,
+    "total_tokens": 4286
+   }
+  }
+ ],
+ "experiments": [
+  {
+   "index": 1,
+   "reason": null,
+   "status": "completed"
+  },
+  {
+   "index": 2,
+   "reason": null,
+   "status": "completed"
+  }
+ ],
+ "finished_at": "2026-10-28T02:42:22Z",
+ "follow_up_requested": true,
+ "max_output_tokens": 16384,
+ "maximum_model_calls": 7,
+ "model_calls": 3,
+ "question": "Both implementations claim to implement Algorithm R from the note. Does each one give every stream item the same chance k/n of ending up in the sample? If one is biased, which items are affected and how badly?",
+ "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "returned_models": [
+  "nvidia/Nemotron-3-Ultra-550b-a55b"
+ ],
+ "review_reason": null,
+ "sandbox": {
+  "isolation": "docker_no_network",
+  "mode": "docker"
+ },
+ "started_at": "2026-10-28T02:41:50Z",
+ "status": "completed",
+ "usage": {
+  "completion_tokens": 2700,
+  "prompt_tokens": 9078,
+  "total_tokens": 11778
+ },
+ "workflow_version": "open_investigation_v1"
+}

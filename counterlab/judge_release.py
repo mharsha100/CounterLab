@@ -40,10 +40,13 @@ def routes():
         "/api/source-reproduction", "/api/source-investigator", "/api/source-investigator-v2",
         "/api/source-evaluation", "/api/prediction-review", "/api/demonstration", "/api/trace-explorer", "/api/evidence-library", "/api/experiment-workbench", "/api/claim-audit",
         f"/api/investigations/{RECORDED_ID}", f"/api/source-investigations/{SOURCE_RECORDED_ID}",
-        f"/api/source-investigations/{GUARDED_RECORDED_ID}"]
+        f"/api/source-investigations/{GUARDED_RECORDED_ID}", "/api/open-lab", "/api/open-investigations"]
+    from counterlab.open_lab.service import RECORDED as OPEN_RECORDED
+    json_routes += [f"/api/open-investigations/{path.name}" for path in sorted(OPEN_RECORDED.glob("*"))
+                    if (path / "record_manifest.json").is_file()]
     exports = [route + "/export" for route in json_routes if route in
         ("/api/research-study", "/api/evaluation", "/api/source-reproduction", "/api/source-evaluation", "/api/prediction-review")
-        or route.startswith(("/api/investigations/", "/api/source-investigations/"))]
+        or route.startswith(("/api/investigations/", "/api/source-investigations/", "/api/open-investigations/"))]
     return json_routes, exports
 
 
@@ -86,7 +89,8 @@ def collect_snapshots(site, progress=None):
                     write_json(path, value)
                     mapped[route] = name
             # Prove all start routes are closed even if frontend controls fail.
-            for route in ("/api/investigations", "/api/source-investigations", "/api/source-investigations-v2"):
+            for route in ("/api/investigations", "/api/source-investigations", "/api/source-investigations-v2",
+                          "/api/open-investigations"):
                 if client.post(route, json={}).status_code != 403:
                     raise ValueError("Release collection must remain read-only.")
     return mapped
@@ -97,7 +101,7 @@ CASE_DIRECTORIES = ("agent_evaluation", "oracle_validation", "protocol_study", "
 SOURCE_TREES = {"counterlab": {".py"}, "scripts": {".py"}, "tests": {".py"},
     **{f"cases/paging/{name}": {".json", ".md"} for name in CASE_DIRECTORIES},
     "worker": {".py", ""}, "web/src": {".ts", ".tsx", ".css"}, "web/tests": {".ts"}, "web/public": {".svg"},
-    "web/dist": {".html", ".js", ".css", ".svg", ".json"}, "submission": {".md"}}
+    "web/dist": {".html", ".js", ".css", ".svg", ".json", ".woff2", ".woff"}, "submission": {".md"}, "docs/images": {".png"}, "docs/planning": {".md"}, "cases/open_lab": {".json", ".md", ".py", ".txt"}}
 SOURCE_FILES = {".env.example", ".gitignore", ".gitattributes", "LICENSE", "THIRD_PARTY_NOTICES.md",
     "THIRD_PARTY_LICENSES.txt",
     "requirements.txt", "requirements-dev.txt", "requirements-lock.txt", "web/index.html",
@@ -105,9 +109,8 @@ SOURCE_FILES = {".env.example", ".gitignore", ".gitattributes", "LICENSE", "THIR
     "web/scripts/stamp-build.mjs", "PROJECT_COUNTDOWN.md",
     ".github/workflows/judge-pages.yml",
     "cases/paging/README.md", "cases/paging/SOURCE_AUDIT.md", "cases/paging/sources.json",
-    "AMBITIOUS_IDEA_COMPARISON.md", "APP_GUIDE.md", "COUNTERLAB_DELIVERY_PLAN.md", "COUNTERLAB_PRD.md",
-    "COUNTERLAB_SETUP.md", "DELIVERY_AND_EVALUATION_PLAN.md", "HACKATHON_PREPARATION.md",
-    "PROJECT_PRD.md", "READINESS_TRACKER.md", "README.md", "RESEARCH_AND_DECISION.md", "START_HERE.md"}
+    "APP_GUIDE.md", "COUNTERLAB_DELIVERY_PLAN.md", "COUNTERLAB_PRD.md", "COUNTERLAB_SETUP.md",
+    "READINESS_TRACKER.md", "README.md", "START_HERE.md", "DEVELOPMENT_LOG.md"}
 
 
 def source_files(root):

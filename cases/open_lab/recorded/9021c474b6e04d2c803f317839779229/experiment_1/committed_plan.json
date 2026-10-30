@@ -1,0 +1,74 @@
+{
+ "committed_at": "2026-10-28T02:42:50Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E1",
+  "claim": {
+   "evidence_quote": "Whenever a page is requested, its stored prediction is updated",
+   "source": "paper_and_code",
+   "statement": "Whenever a page is requested, its stored prediction is updated."
+  },
+  "conditions": [
+   {
+    "description": "authors/pge.py",
+    "id": "authors",
+    "label": "Authors (refresh on miss)"
+   },
+   {
+    "description": "reproduction/pge.py",
+    "id": "reproduction",
+    "label": "Reproduction (refresh every request)"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "authors",
+      "metric": "misses",
+      "relation": "greater",
+      "right": "reproduction",
+      "tolerance": 0
+     }
+    ],
+    "id": "E1",
+    "statement": "Stale predictions on hits make the authors' code evict pages that are about to be used, so it misses more."
+   },
+   {
+    "expected": [
+     {
+      "left": "authors",
+      "metric": "misses",
+      "relation": "equal",
+      "right": "reproduction",
+      "tolerance": 15
+     }
+    ],
+    "id": "E2",
+    "statement": "Refresh timing does not matter; the reported difference comes from something else."
+   }
+  ],
+  "factor": "When a cached page's prediction is refreshed",
+  "harness_code": "import counterlab_sandbox as sb\n\nPAGES, LENGTH, CAPACITY, NOISE = 60, 3000, 10, 40.0\nIMPLEMENTATIONS = {\"authors\": \"cache_refresh/authors/pge.py\", \"reproduction\": \"cache_refresh/reproduction/pge.py\"}\n\n\ndef trace(rng):\n    loop = list(range(0, 24))\n    requests = []\n    while len(requests) < LENGTH:\n        if rng.random() < 0.7:\n            requests.extend(loop[:rng.randint(8, 24)])\n        else:\n            requests.extend(rng.randrange(PAGES) for _ in range(rng.randint(1, 6)))\n    return requests[:LENGTH]\n\n\ndef next_use(requests):\n    upcoming, last = [0] * len(requests), {}\n    for t in range(len(requests) - 1, -1, -1):\n        upcoming[t] = last.get(requests[t], len(requests) + 1000)\n        last[requests[t]] = t\n    return upcoming\n\n\ndef measure(condition, seed):\n    rng = sb.rng(seed)\n    requests = trace(rng)\n    truth = next_use(requests)\n    noise = [rng.gauss(0.0, NOISE) for _ in requests]\n    predict = lambda t, page: truth[t] + noise[t]\n    module = sb.load(IMPLEMENTATIONS[condition])\n    return {\"misses\": module.simulate(requests, CAPACITY, predict)}\n",
+  "implementation_note": "Both uploaded simulate() functions get the identical trace and identical noisy predictions per seed.",
+  "metrics": [
+   {
+    "description": "Misses over a 3,000-request looping trace, 10-page cache, prediction noise sd 40.",
+    "id": "misses",
+    "label": "Cache misses",
+    "unit": "misses"
+   }
+  ],
+  "question": "Is refreshing predictions only on misses what separates the authors' and the reproduction's miss counts?",
+  "seeds": [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  "title": "Does refresh timing explain the two miss counts?"
+ },
+ "plan_sha256": "6d9c18f5384d7acf71e3705ec3749c55da41f57879bda663e313a2c5bcfd5cc4"
+}

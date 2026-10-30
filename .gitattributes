@@ -4,3 +4,6 @@
 *.ts text eol=lf
 *.css text eol=lf
 *.md text eol=lf
+*.txt text eol=lf
+# Sealed investigation records are hashed byte for byte; never convert their line endings.
+cases/open_lab/recorded/** -text

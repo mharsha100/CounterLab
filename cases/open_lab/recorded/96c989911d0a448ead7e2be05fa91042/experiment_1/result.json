@@ -1,0 +1,570 @@
+{
+ "attempts": [
+  {
+   "admission": {
+    "accepted": true,
+    "checks": [
+     {
+      "check": "conditions",
+      "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+      "passed": true
+     },
+     {
+      "check": "metrics",
+      "message": "One to five uniquely named numeric metrics.",
+      "passed": true
+     },
+     {
+      "check": "explanations",
+      "message": "Two to four competing explanations with unique ids.",
+      "passed": true
+     },
+     {
+      "check": "seeds",
+      "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+      "passed": true
+     },
+     {
+      "check": "budget",
+      "message": "At most 60 measure() calls (conditions x seeds).",
+      "passed": true
+     },
+     {
+      "check": "predictions",
+      "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+      "passed": true
+     },
+     {
+      "check": "discriminating",
+      "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+      "passed": true
+     },
+     {
+      "check": "bet",
+      "message": "Commit which explanation you expect the measurements to support.",
+      "passed": true
+     },
+     {
+      "check": "harness_syntax",
+      "message": "The harness parses as Python.",
+      "passed": true
+     },
+     {
+      "check": "measure_signature",
+      "message": "Define measure(condition, seed) at the top level.",
+      "passed": true
+     },
+     {
+      "check": "uses_condition",
+      "message": "measure() must change behaviour based on the condition.",
+      "passed": true
+     },
+     {
+      "check": "uses_seed",
+      "message": "measure() must use the seed so every condition is paired and repeatable.",
+      "passed": true
+     },
+     {
+      "check": "no_network_or_processes",
+      "message": "No network, process, serialisation or interpreter-control modules.",
+      "passed": true
+     },
+     {
+      "check": "no_dynamic_code",
+      "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+      "passed": true
+     },
+     {
+      "check": "tests_uploaded_code",
+      "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+      "passed": true
+     }
+    ]
+   },
+   "feedback": {
+    "examples": [
+     {
+      "condition": "impl_a",
+      "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 8, in measure\n    module = sb.load(IMPLEMENTATIONS[condition])\n  File \"/tmp/counterlab/lib/counterlab_sandbox.py\", line 15, in load\n    raise FileNotFoundError(f\"No uploaded file named {relative_path!r}\")\nFileNotFoundError: No uploaded file named 'impl_a/reservoir.py'\n",
+      "seed": 1
+     },
+     {
+      "condition": "impl_b",
+      "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 8, in measure\n    module = sb.load(IMPLEMENTATIONS[condition])\n  File \"/tmp/counterlab/lib/counterlab_sandbox.py\", line 15, in load\n    raise FileNotFoundError(f\"No uploaded file named {relative_path!r}\")\nFileNotFoundError: No uploaded file named 'impl_b/reservoir.py'\n",
+      "seed": 1
+     },
+     {
+      "condition": "impl_a",
+      "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 8, in measure\n    module = sb.load(IMPLEMENTATIONS[condition])\n  File \"/tmp/counterlab/lib/counterlab_sandbox.py\", line 15, in load\n    raise FileNotFoundError(f\"No uploaded file named {relative_path!r}\")\nFileNotFoundError: No uploaded file named 'impl_a/reservoir.py'\n",
+      "seed": 2
+     }
+    ],
+    "failed_calls": 10,
+    "kind": "measure_errors",
+    "output_tail": ""
+   },
+   "harness_sha256": "bb531a342a9009670cb2912dc8c36383a9c83f6544268ded6c8140cd9ae6ccc9",
+   "number": 1,
+   "repair_summary": "Load the uploaded files through the archive folder they were unpacked into.",
+   "run": {
+    "failed_calls": 10,
+    "rows": 10,
+    "status": "measure_errors"
+   }
+  },
+  {
+   "admission": {
+    "accepted": true,
+    "checks": [
+     {
+      "check": "conditions",
+      "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+      "passed": true
+     },
+     {
+      "check": "metrics",
+      "message": "One to five uniquely named numeric metrics.",
+      "passed": true
+     },
+     {
+      "check": "explanations",
+      "message": "Two to four competing explanations with unique ids.",
+      "passed": true
+     },
+     {
+      "check": "seeds",
+      "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+      "passed": true
+     },
+     {
+      "check": "budget",
+      "message": "At most 60 measure() calls (conditions x seeds).",
+      "passed": true
+     },
+     {
+      "check": "predictions",
+      "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+      "passed": true
+     },
+     {
+      "check": "discriminating",
+      "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+      "passed": true
+     },
+     {
+      "check": "bet",
+      "message": "Commit which explanation you expect the measurements to support.",
+      "passed": true
+     },
+     {
+      "check": "harness_syntax",
+      "message": "The harness parses as Python.",
+      "passed": true
+     },
+     {
+      "check": "measure_signature",
+      "message": "Define measure(condition, seed) at the top level.",
+      "passed": true
+     },
+     {
+      "check": "uses_condition",
+      "message": "measure() must change behaviour based on the condition.",
+      "passed": true
+     },
+     {
+      "check": "uses_seed",
+      "message": "measure() must use the seed so every condition is paired and repeatable.",
+      "passed": true
+     },
+     {
+      "check": "no_network_or_processes",
+      "message": "No network, process, serialisation or interpreter-control modules.",
+      "passed": true
+     },
+     {
+      "check": "no_dynamic_code",
+      "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+      "passed": true
+     },
+     {
+      "check": "tests_uploaded_code",
+      "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+      "passed": true
+     }
+    ]
+   },
+   "harness_sha256": "f49e8d1e06afa4d95d4940689db0c0b32ad394cd7d7f50210fc0c2d468c84f45",
+   "number": 2,
+   "repeat": {
+    "status": "ok"
+   },
+   "run": {
+    "failed_calls": 0,
+    "rows": 10,
+    "status": "ok"
+   }
+  }
+ ],
+ "evaluation": {
+  "bet": {
+   "explanation": "E2",
+   "outcome": "held"
+  },
+  "complete": true,
+  "errors": [],
+  "explanations": [
+   {
+    "failed": 1,
+    "held": 0,
+    "id": "E1",
+    "inconclusive": 0,
+    "statement": "Both implementations are uniform; group B's lower early estimates are noise.",
+    "status": "contradicted"
+   },
+   {
+    "failed": 0,
+    "held": 1,
+    "id": "E2",
+    "inconclusive": 0,
+    "statement": "impl_b draws j from {0..i-1}, so the first k items are evicted too often and under-represented.",
+    "status": "consistent"
+   }
+  ],
+  "finding": [
+   "First-k inclusion ratio: Group B 0.8236 vs Group A 1.006 (mean of 5 seeds). E1 expected Group B and Group A equal within ±0.05: failed (0/5 seeds agree). E2 expected Group B lower than Group A by more than 0.05: held (5/5 seeds agree).",
+   "Consistent with the measurements: E2. Contradicted: E1.",
+   "Nemotron's committed bet (E2) held.",
+   "Scope: this measures the uploaded code (or the stated re-implementation) under this harness, these settings and these seeds. It does not prove a general theorem."
+  ],
+  "measurements": {
+   "first_k_ratio": {
+    "impl_a": {
+     "max": 1.048,
+     "mean": 1.006,
+     "min": 0.96,
+     "n": 5,
+     "per_seed": [
+      1.012,
+      0.986,
+      0.96,
+      1.024,
+      1.048
+     ],
+     "std": 0.0304631
+    },
+    "impl_b": {
+     "max": 0.854,
+     "mean": 0.8236,
+     "min": 0.798,
+     "n": 5,
+     "per_seed": [
+      0.832,
+      0.826,
+      0.798,
+      0.808,
+      0.854
+     ],
+     "std": 0.0194895
+    }
+   },
+   "rest_ratio": {
+    "impl_a": {
+     "max": 1.00211,
+     "mean": 0.999684,
+     "min": 0.997474,
+     "n": 5,
+     "per_seed": [
+      0.999368,
+      1.00074,
+      1.00211,
+      0.998737,
+      0.997474
+     ],
+     "std": 0.00160332
+    },
+    "impl_b": {
+     "max": 1.01063,
+     "mean": 1.00928,
+     "min": 1.00768,
+     "n": 5,
+     "per_seed": [
+      1.00884,
+      1.00916,
+      1.01063,
+      1.01011,
+      1.00768
+     ],
+     "std": 0.00102576
+    }
+   }
+  },
+  "repeat_rows_sha256": "72eee452ef813b36b6c8e1369ebb1ad56fd321df2f0ac6a7acbf8547bbfec705",
+  "report_version": "open_report_v1",
+  "reproduced": true,
+  "rows_sha256": "f474d6614daaed487b3cbca47fa3a335b309c1b6e94c24282e57e3f71c47de6c",
+  "stable_metrics": {
+   "first_k_ratio": true,
+   "rest_ratio": true
+  },
+  "verdicts": [
+   {
+    "difference": -0.1824,
+    "explanation": "E1",
+    "left": "impl_b",
+    "left_mean": 0.8236,
+    "metric": "first_k_ratio",
+    "relation": "equal",
+    "right": "impl_a",
+    "right_mean": 1.006,
+    "seeds_agreeing": 0,
+    "seeds_compared": 5,
+    "sign_test_p": 0.0625,
+    "status": "failed",
+    "tolerance": 0.05
+   },
+   {
+    "difference": -0.1824,
+    "explanation": "E2",
+    "left": "impl_b",
+    "left_mean": 0.8236,
+    "metric": "first_k_ratio",
+    "relation": "less",
+    "right": "impl_a",
+    "right_mean": 1.006,
+    "seeds_agreeing": 5,
+    "seeds_compared": 5,
+    "sign_test_p": 0.0625,
+    "status": "held",
+    "tolerance": 0.05
+   }
+  ]
+ },
+ "harness_sha256": "f49e8d1e06afa4d95d4940689db0c0b32ad394cd7d7f50210fc0c2d468c84f45",
+ "index": 1,
+ "repeat": {
+  "elapsed_seconds": 5.532,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "impl_a",
+    "seconds": 0.0847,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 1.012,
+     "rest_ratio": 0.9993684210526316
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.072,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.832,
+     "rest_ratio": 1.008842105263158
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0713,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.986,
+     "rest_ratio": 1.0007368421052631
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0774,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.826,
+     "rest_ratio": 1.009157894736842
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0841,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.96,
+     "rest_ratio": 1.0021052631578948
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0725,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.798,
+     "rest_ratio": 1.0106315789473683
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0732,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 1.024,
+     "rest_ratio": 0.9987368421052631
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0757,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.808,
+     "rest_ratio": 1.0101052631578948
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0901,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 1.048,
+     "rest_ratio": 0.9974736842105263
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0834,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.854,
+     "rest_ratio": 1.0076842105263157
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "run": {
+  "elapsed_seconds": 5.937,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "impl_a",
+    "seconds": 0.0699,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 1.012,
+     "rest_ratio": 0.9993684210526316
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0707,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.832,
+     "rest_ratio": 1.008842105263158
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0708,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.986,
+     "rest_ratio": 1.0007368421052631
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0839,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.826,
+     "rest_ratio": 1.009157894736842
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0974,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.96,
+     "rest_ratio": 1.0021052631578948
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.0807,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.798,
+     "rest_ratio": 1.0106315789473683
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.0831,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 1.024,
+     "rest_ratio": 0.9987368421052631
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.1056,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.808,
+     "rest_ratio": 1.0101052631578948
+    }
+   },
+   {
+    "condition": "impl_a",
+    "seconds": 0.1399,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 1.048,
+     "rest_ratio": 0.9974736842105263
+    }
+   },
+   {
+    "condition": "impl_b",
+    "seconds": 0.146,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.854,
+     "rest_ratio": 1.0076842105263157
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "sandbox": {
+  "image_id": "sha256:78d13fb513c0fa6435c279d4f2c7cbd8bd0bafb2e304b636cc9190d8efe693c1",
+  "isolation": "docker_no_network",
+  "mode": "docker",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "runner_sha256": "9d58d2e6430a6ad8f61ac764edff26edd2bf6ab7bccf98af01e01c7580c11d2b"
+ },
+ "status": "completed"
+}

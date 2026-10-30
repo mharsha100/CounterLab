@@ -1,0 +1,78 @@
+{
+ "committed_at": "2026-10-30T04:56:12Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E1",
+  "claim": {
+   "evidence_quote": "Authors: 'continue  # hit: keep the stored prediction (refreshed when the page was loaded)'. Reproduction: 'cache[page] = predict(t, page)  # refresh on every request'.",
+   "source": "code",
+   "statement": "The difference in miss counts between the two PGE implementations is caused by when predictions are refreshed: authors refresh only on misses, reproduction refreshes on every request."
+  },
+  "conditions": [
+   {
+    "description": "Prediction updated only when page is loaded (miss).",
+    "id": "authors",
+    "label": "refresh on miss only"
+   },
+   {
+    "description": "Prediction updated on every request (hit or miss).",
+    "id": "reproduction",
+    "label": "refresh on every request"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "authors",
+      "metric": "misses",
+      "relation": "less",
+      "right": "reproduction",
+      "tolerance": 0
+     }
+    ],
+    "id": "E1",
+    "statement": "Refresh timing causes the difference in miss counts."
+   },
+   {
+    "expected": [
+     {
+      "left": "authors",
+      "metric": "misses",
+      "relation": "equal",
+      "right": "reproduction",
+      "tolerance": 0
+     }
+    ],
+    "id": "E2",
+    "statement": "Refresh timing does not cause the difference; something else does."
+   }
+  ],
+  "factor": "refresh_policy",
+  "harness_code": "import counterlab_sandbox as sb\nimport numpy as np\n\ndef measure(condition: str, seed: int) -> dict[str, float]:\n    # Load the two implementations\n    mod_authors = sb.load(\"cache_refresh/authors/pge.py\")\n    mod_repro = sb.load(\"cache_refresh/reproduction/pge.py\")\n    \n    # Deterministic RNG for this seed\n    rng = sb.rng(seed)\n    \n    # Generate a fixed trace: 5 pages cycling, 200 cycles = 1000 requests\n    n_pages = 5\n    n_cycles = 200\n    trace = [i % n_pages for i in range(n_cycles * n_pages)]  # [0,1,2,3,4, 0,1,2,3,4, ...]\n    n = len(trace)\n    \n    # Pre-compute true next-request time for each (t, page)\n    # large number if no future request\n    INF = 10_000\n    true_next = [[INF] * n_pages for _ in range(n)]\n    # For each page, scan backwards to fill next occurrence\n    for p in range(n_pages):\n        next_seen = INF\n        for t in range(n - 1, -1, -1):\n            true_next[t][p] = next_seen\n            if trace[t] == p:\n                next_seen = t\n    \n    # Pre-compute noise for each (t, page)\n    noise_std = 2.0\n    noise = [[rng.gauss(0.0, noise_std) for _ in range(n_pages)] for _ in range(n)]\n    \n    def predict(t: int, page: int) -> float:\n        return true_next[t][page] + noise[t][page]\n    \n    capacity = 3\n    \n    if condition == \"authors\":\n        misses = mod_authors.simulate(trace, capacity, predict)\n    elif condition == \"reproduction\":\n        misses = mod_repro.simulate(trace, capacity, predict)\n    else:\n        raise ValueError(f\"Unknown condition: {condition}\")\n    \n    return {\"misses\": float(misses)}",
+  "implementation_note": "Both uploaded modules are loaded and exercised. A synthetic periodic trace (period 5, 5 distinct pages) with a noisy Gaussian predictor (std=2.0) is generated per seed. Cache capacity is 3 (< 5 pages) to force evictions. The only varying factor is which module's simulate() is called.",
+  "metrics": [
+   {
+    "description": "Total cache misses over the trace.",
+    "id": "misses",
+    "label": "miss count",
+    "unit": "requests"
+   }
+  ],
+  "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?",
+  "seeds": [
+   42,
+   43,
+   44,
+   45,
+   46,
+   47,
+   48,
+   49,
+   50,
+   51
+  ],
+  "title": "PGE refresh timing: on-miss vs on-every-request"
+ },
+ "plan_sha256": "433875038c5783b71790981a4562a2bd261cd8c67ef2186e8cdecbaf9e98157e"
+}

@@ -3,6 +3,51 @@
 The local app is built and verified. Dependencies and the interface build are
 already prepared in this workspace.
 
+## Investigate any paper or code (open investigations)
+
+Start the app (it opens your browser):
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt   # once; adds pypdf
+.\.venv\Scripts\python.exe scripts\start_app.py
+```
+
+Then, in the app: **Settings → Nemotron connection** (paste the Nebius key, **Save and connect**,
+optionally **Send a test request**), **Settings → Sandbox → Set up sandbox** (Docker Desktop running;
+or run `scripts\setup_open_runner.py`), and **New investigation**. Add a paper (PDF, Markdown, LaTeX or
+text, or an arXiv/OpenReview link), the code (Python files, a ZIP per implementation, or a GitHub
+repository/folder link), or both; or pick an example. Write the question, approve the credit use and
+start. The investigation page shows each step live; **Stop** ends it, **Run again** reuses its inputs.
+
+What happens, step by step on screen:
+
+1. **Read.** Files are unpacked with normalised paths (symlinks, hidden and
+   oversized files dropped); PDF text is extracted with pypdf.
+2. **Design and commit.** Nemotron 3 Ultra on Nebius Token Factory returns one
+   strict-schema design: claim, the single factor varied, conditions, metrics,
+   seeds, competing explanations with expected outcomes, its bet and a
+   `measure(condition, seed)` harness. It is saved and hashed before anything runs.
+3. **Check.** The guard rejects designs that cannot tell the explanations apart
+   (one redesign allowed) and harnesses that ignore the uploaded code, reach the
+   network or processes, or ignore the seed (up to two repairs, predictions locked).
+4. **Run twice.** The code runs in the `counterlab-open-runner:local` image with
+   no network, a read-only root, a non-root user, no capabilities, CPU/memory/
+   process/time limits and inputs on stdin. Every condition uses the same seeds;
+   the repeat must match exactly.
+5. **Report and replay.** CounterLab computes means, spread, which expectations
+   held, a sign test, surviving explanations and whether the bet held. Nemotron
+   designs one follow-up from that summary. **Download replay package** gives a
+   ZIP whose `replay.py` rechecks every hash and finding offline (`--rerun`
+   re-executes the experiments; only for code you trust).
+
+Limits: at most seven Nemotron model turns per investigation; temporary Nebius errors are retried
+automatically (at most three times per request, with backoff) and recorded; Python on CPU within about
+four minutes per experiment. Stop ends a run within a second or two; Run again reuses its inputs. Failures show a fixed
+reason and the next step. `python scripts\preview_open_lab.py` runs the same flow
+for the bundled examples with labelled simulated planning (no key needed).
+`python scripts\promote_open_run.py RUN_ID` copies a finished run into
+`cases/open_lab/recorded/` so the evidence edition shows it.
+
 ## Check setup before starting
 
 Run `.\.venv\Scripts\python.exe scripts\check_readiness.py`. Each blocked item
@@ -369,10 +414,11 @@ history question; its equality remains a separate observation. The server shares
 one queue across source and constructed-case jobs, and binds duplicate request
 IDs to their original workflow and token allowance.
 
-The top-level **New investigation** button below refers to the older small,
-constructed diagnostic:
+The **Run the paging case** button in the case-study views starts the older
+small, constructed diagnostic (the sidebar's **New investigation** is the open
+workflow described at the top of this guide):
 
-Click **New investigation**, inspect the reviewed protocol and three allowed
+Click **Run the paging case**, inspect the reviewed protocol and three allowed
 input cases, select the output allowance, and confirm credit use. The default
 allowance is 8,192 output tokens per request. New version-5 live behavior has not
 yet been tested.

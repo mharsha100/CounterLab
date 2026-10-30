@@ -1,0 +1,18 @@
+{
+ "created_at": "2026-10-28T02:42:24Z",
+ "follow_up": true,
+ "links": {
+  "code_url": null,
+  "paper_url": null
+ },
+ "max_output_tokens": 16384,
+ "provider_mode": "simulated_provider",
+ "question": "Is Welford's online variance algorithm actually more accurate than the one-pass sum-of-squares formula, and does its advantage grow as the data's mean moves away from zero relative to its spread?",
+ "uploads": [
+  {
+   "name": "variance_note.md",
+   "role": "paper"
+  }
+ ],
+ "workflow_version": "open_investigation_v1"
+}

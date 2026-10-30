@@ -1,0 +1,6 @@
+{
+  "title": "Two reservoir samplers disagree",
+  "description": "Two implementations of Algorithm R from the same methods note. One team reports that its version is unbiased; the other sees skewed samples.",
+  "question": "Both implementations claim to implement Algorithm R from the note. Does each one give every stream item the same chance k/n of ending up in the sample? If one is biased, which items are affected and how badly?",
+  "kind": "paper_and_two_implementations"
+}

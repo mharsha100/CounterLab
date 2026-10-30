@@ -1,0 +1,24 @@
+{
+ "code_files": [],
+ "notes": [],
+ "papers": [
+  {
+   "characters": 843,
+   "name": "variance_note.md",
+   "pages": null,
+   "sha256": "6e0d6f1937f5382e3b01d91798acdf114dab90bb2017f3fcc4e2f6a18ba167f8",
+   "source": "upload"
+  }
+ ],
+ "sources": [
+  {
+   "bytes": 844,
+   "characters": 843,
+   "kind": "paper",
+   "name": "variance_note.md",
+   "pages": null,
+   "sha256": "6e0d6f1937f5382e3b01d91798acdf114dab90bb2017f3fcc4e2f6a18ba167f8",
+   "source": "upload"
+  }
+ ]
+}

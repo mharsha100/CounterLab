@@ -1,7 +1,14 @@
 # Publish the reviewed evidence build
 
-The local project is prepared for this step. **Nothing is published yet.**
-The repository owner and destination URL still need to be selected.
+The frozen source is uploaded to **private** repository
+https://github.com/mharsha100/CounterLab at commit
+`a9fe693cbc979c33097b824b8a6049c34788bd40`. **Nothing is publicly published yet.**
+See `PRIVATE_REPOSITORY.md` for the verified upload receipt.
+
+The later local quality-review release is
+`artifacts/releases/counterlab-final-review-20261026/`. Update the private
+repository from that reviewed source and verify its new commit/tree before any
+public-publication step. The commit above predates those improvements.
 
 **Current user instruction:** Upload the reviewed source to a private CounterLab
 repository first. Keep the website offline. The prepared Pages build job skips
@@ -23,8 +30,9 @@ contents before uploading. Retain notices and the frozen records.
 
 ## GitHub Pages path — manual publication
 
-1. Select an existing public repository or create one under your own account.
-   Use its `main` branch for the reviewed source package. Do not copy `.env`.
+1. After explicit public-publication authorization, use the reviewed source on
+   `main` in the existing CounterLab repository. Verify its commit and license
+   before changing visibility; do not copy the working folder or `.env`.
 2. In the repository's **Settings → Pages**, choose **GitHub Actions** as the
    publishing source. Check that the repository and chosen runner use your free
    plan; no paid service or Nebius inference is needed by this workflow.

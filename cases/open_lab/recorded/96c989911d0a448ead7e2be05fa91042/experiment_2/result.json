@@ -1,0 +1,412 @@
+{
+ "attempts": [
+  {
+   "admission": {
+    "accepted": true,
+    "checks": [
+     {
+      "check": "conditions",
+      "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+      "passed": true
+     },
+     {
+      "check": "metrics",
+      "message": "One to five uniquely named numeric metrics.",
+      "passed": true
+     },
+     {
+      "check": "explanations",
+      "message": "Two to four competing explanations with unique ids.",
+      "passed": true
+     },
+     {
+      "check": "seeds",
+      "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+      "passed": true
+     },
+     {
+      "check": "budget",
+      "message": "At most 60 measure() calls (conditions x seeds).",
+      "passed": true
+     },
+     {
+      "check": "predictions",
+      "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+      "passed": true
+     },
+     {
+      "check": "discriminating",
+      "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+      "passed": true
+     },
+     {
+      "check": "bet",
+      "message": "Commit which explanation you expect the measurements to support.",
+      "passed": true
+     },
+     {
+      "check": "new_experiment",
+      "message": "A follow-up must change the factor or the conditions.",
+      "passed": true
+     },
+     {
+      "check": "harness_syntax",
+      "message": "The harness parses as Python.",
+      "passed": true
+     },
+     {
+      "check": "measure_signature",
+      "message": "Define measure(condition, seed) at the top level.",
+      "passed": true
+     },
+     {
+      "check": "uses_condition",
+      "message": "measure() must change behaviour based on the condition.",
+      "passed": true
+     },
+     {
+      "check": "uses_seed",
+      "message": "measure() must use the seed so every condition is paired and repeatable.",
+      "passed": true
+     },
+     {
+      "check": "no_network_or_processes",
+      "message": "No network, process, serialisation or interpreter-control modules.",
+      "passed": true
+     },
+     {
+      "check": "no_dynamic_code",
+      "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+      "passed": true
+     },
+     {
+      "check": "tests_uploaded_code",
+      "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+      "passed": true
+     }
+    ]
+   },
+   "harness_sha256": "3464e989ec1306ea2bb0a0dfd5ec466fe477759e958943647d8fce0b1fb07520",
+   "number": 1,
+   "repeat": {
+    "status": "ok"
+   },
+   "run": {
+    "failed_calls": 0,
+    "rows": 10,
+    "status": "ok"
+   }
+  }
+ ],
+ "evaluation": {
+  "bet": {
+   "explanation": "E3",
+   "outcome": "held"
+  },
+  "complete": true,
+  "errors": [],
+  "explanations": [
+   {
+    "failed": 0,
+    "held": 1,
+    "id": "E3",
+    "inconclusive": 0,
+    "statement": "The bias is about 1/k: the first-k ratio is near (k-1)/k, so larger reservoirs hide it.",
+    "status": "consistent"
+   },
+   {
+    "failed": 1,
+    "held": 0,
+    "id": "E4",
+    "inconclusive": 0,
+    "statement": "The bias depends on stream length, not on k.",
+    "status": "contradicted"
+   }
+  ],
+  "finding": [
+   "First-k inclusion ratio: k = 10 0.912 vs k = 2 0.4825 (mean of 5 seeds). E3 expected k = 10 higher than k = 2 by more than 0.2: held (5/5 seeds agree). E4 expected k = 10 and k = 2 equal within ±0.05: failed (0/5 seeds agree).",
+   "Consistent with the measurements: E3. Contradicted: E4.",
+   "Nemotron's committed bet (E3) held.",
+   "Scope: this measures the uploaded code (or the stated re-implementation) under this harness, these settings and these seeds. It does not prove a general theorem."
+  ],
+  "measurements": {
+   "first_k_ratio": {
+    "k10": {
+     "max": 0.9315,
+     "mean": 0.912,
+     "min": 0.9005,
+     "n": 5,
+     "per_seed": [
+      0.913,
+      0.909,
+      0.906,
+      0.9005,
+      0.9315
+     ],
+     "std": 0.0105688
+    },
+    "k2": {
+     "max": 0.6,
+     "mean": 0.4825,
+     "min": 0.3875,
+     "n": 5,
+     "per_seed": [
+      0.45,
+      0.6,
+      0.5125,
+      0.3875,
+      0.4625
+     ],
+     "std": 0.0709753
+    }
+   }
+  },
+  "repeat_rows_sha256": "50417c65788eab78a3e6339c4e25b7415d255ec3ef23fd632cce740f29ca6460",
+  "report_version": "open_report_v1",
+  "reproduced": true,
+  "rows_sha256": "386c4c106ce19bbf2e89f182b594dd567ed298ec8f65a7d2e0dcc062784c8605",
+  "stable_metrics": {
+   "first_k_ratio": true
+  },
+  "verdicts": [
+   {
+    "difference": 0.4295,
+    "explanation": "E3",
+    "left": "k10",
+    "left_mean": 0.912,
+    "metric": "first_k_ratio",
+    "relation": "greater",
+    "right": "k2",
+    "right_mean": 0.4825,
+    "seeds_agreeing": 5,
+    "seeds_compared": 5,
+    "sign_test_p": 0.0625,
+    "status": "held",
+    "tolerance": 0.2
+   },
+   {
+    "difference": 0.4295,
+    "explanation": "E4",
+    "left": "k10",
+    "left_mean": 0.912,
+    "metric": "first_k_ratio",
+    "relation": "equal",
+    "right": "k2",
+    "right_mean": 0.4825,
+    "seeds_agreeing": 0,
+    "seeds_compared": 5,
+    "sign_test_p": 0.0625,
+    "status": "failed",
+    "tolerance": 0.05
+   }
+  ]
+ },
+ "harness_sha256": "3464e989ec1306ea2bb0a0dfd5ec466fe477759e958943647d8fce0b1fb07520",
+ "index": 2,
+ "repeat": {
+  "elapsed_seconds": 5.76,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "k2",
+    "seconds": 0.0723,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.45
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0834,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.913
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.1026,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.6
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0723,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.909
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0766,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.5125
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0681,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.906
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0739,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.3875
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0747,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.9005
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0835,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.4625
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0835,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.9315
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "run": {
+  "elapsed_seconds": 5.786,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "k2",
+    "seconds": 0.0756,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.45
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0686,
+    "seed": 1,
+    "values": {
+     "first_k_ratio": 0.913
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0734,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.6
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0712,
+    "seed": 2,
+    "values": {
+     "first_k_ratio": 0.909
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0717,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.5125
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0739,
+    "seed": 3,
+    "values": {
+     "first_k_ratio": 0.906
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0871,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.3875
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.0921,
+    "seed": 4,
+    "values": {
+     "first_k_ratio": 0.9005
+    }
+   },
+   {
+    "condition": "k2",
+    "seconds": 0.0779,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.4625
+    }
+   },
+   {
+    "condition": "k10",
+    "seconds": 0.073,
+    "seed": 5,
+    "values": {
+     "first_k_ratio": 0.9315
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "sandbox": {
+  "image_id": "sha256:78d13fb513c0fa6435c279d4f2c7cbd8bd0bafb2e304b636cc9190d8efe693c1",
+  "isolation": "docker_no_network",
+  "mode": "docker",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "runner_sha256": "9d58d2e6430a6ad8f61ac764edff26edd2bf6ab7bccf98af01e01c7580c11d2b"
+ },
+ "status": "completed"
+}

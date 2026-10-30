@@ -11,7 +11,8 @@ class EvidenceCatalogTests(unittest.TestCase):
         data = evidence_catalog(RECORDED_ID, SOURCE_RECORDED_ID, GUARDED_RECORDED_ID)
         items = data['items']
         _, exports = routes()
-        self.assertEqual({item['route'] for item in items}, set(exports))
+        # Open investigations have their own view and replay packages; the library covers the paging case.
+        self.assertEqual({item['route'] for item in items}, {route for route in exports if not route.startswith('/api/open-investigations/')})
         self.assertEqual(len(items), 8)
         self.assertEqual(len({item['id'] for item in items}), 8)
         self.assertEqual(len({item['filename'] for item in items}), 8)

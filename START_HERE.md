@@ -1,8 +1,45 @@
 # Hackathon project planning package
 
-**Updated October 26, 2026.**
+**Updated October 28, 2026 (product UI).** CounterLab now looks and works like a product: Home,
+New investigation, Investigations, a live investigation page (Stop, Run again, replay package) and
+Settings, where you paste your Nebius key, check the connection, send a test request and build the
+sandbox from the browser. Temporary Nebius errors are retried automatically and recorded. To use it:
 
-Start with **README → Fresh installation — current instructions**, then
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt   # required: adds pypdf
+.\.venv\Scripts\python.exe scripts\start_app.py                      # opens the browser
+```
+
+Then Settings → save the key → Check connection → Send a test request → Set up sandbox, and New
+investigation. Details: README → Quick start, The app, Reliability of the Nemotron connection;
+`submission/VALIDATION.md → Product interface and connection hardening`.
+
+**Updated October 27, 2026 (open investigations).** CounterLab now investigates
+**any uploaded paper or code**: the first screen, **New investigation**, takes a
+paper, code, two disagreeing implementations or links, and runs Nemotron design
+and commitment → guard → Docker sandbox (run twice) → code-written report →
+follow-up → sealed replay package. To use it live:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt   # required: adds pypdf
+.\.venv\Scripts\python.exe scripts\setup_open_runner.py               # once, Docker Desktop running
+.\.venv\Scripts\python.exe scripts\start_app.py
+```
+
+**October 30:** the first live Nemotron open investigation ran end to end on the
+entrant's machine (Nemotron 3 Ultra, 3 requests, 23,005 tokens, 87 s, no retries,
+including a sandbox crash that Nemotron repaired from the traceback). It is promoted
+into the recorded examples (`cases/open_lab/recorded/f37f1506613e4c78b194a93265caa0e7`)
+and gallery images 01 and 03–07 were recaptured from it. The other three recorded
+examples remain labelled simulated planning. Details: README → What an investigation does, APP_GUIDE →
+Investigate any paper or code, `submission/VALIDATION.md → Open investigations`.
+
+**Earlier on October 27:** Final submission polish is verified; see
+`submission/VALIDATION.md → Final submission polish` and `submission/SUBMISSION_PACKET.md`
+for the gallery images, Devpost copy and recommended video plan. Earlier
+idea-comparison and preparation documents now live in `docs/planning/`.
+
+Start with **README → Quick start**, then
 `PROJECT_COUNTDOWN.md` for the remaining work and `submission/PROJECT_FREEZE.md`
 for the reviewed release scope. Those documents supersede the historical setup
 and progress notes below. Publication, judge access, final video and submission
@@ -17,7 +54,7 @@ and video recording remain pending; no new inference or cash spending.
 
 **Previous delivery milestone:** A separate keyless evidence build and full source
 release are prepared locally, with downloadable replays, package integrity checks
-and submission drafts. Start with **README → Portable evidence release** and
+and submission drafts. Start with **DEVELOPMENT_LOG → Portable evidence release** and
 `submission/JUDGE_GUIDE.md`. No new inference, account setup or Docker is needed
 to inspect the extracted evidence build. Public links/video and upstream numeric
 artifact redistribution review remain pending.
@@ -88,7 +125,7 @@ The ambitious recommendation is an AI investigator that compares conflicting com
 
 **Research and evaluation update:** The six-source study covers 52 scenarios, 416 profiles and 624 matched comparisons. Independent mathematical checking matched 161,872 events. The approved eight-task model benchmark used 36/40 calls and 240,279 reported tokens. Adaptive found 2/2 available differences, fixed plan 1/2; both simple baselines found 2/2. Only 3/8 adaptive and 1/8 fixed-plan findings passed all evidence/scope checks. No advantage over simple selection policies is established; autonomous reporting targets are unmet. Failures remain visible alongside checked interpretations. Full external implementation parity, G1 and judging deployment remain open. See [README](README.md) and [source audit](cases/paging/SOURCE_AUDIT.md).
 
-1. [Ambitious idea comparison](AMBITIOUS_IDEA_COMPARISON.md) — CounterLab versus Second Look, robotics and flood response; research, prior art, winners, and decision conditions.
+1. [Ambitious idea comparison](docs/planning/AMBITIOUS_IDEA_COMPARISON.md) — CounterLab versus Second Look, robotics and flood response; research, prior art, winners, and decision conditions.
 2. [CounterLab PRD](COUNTERLAB_PRD.md) — full vision, actual submission scope, real cases, architecture, integrity requirements, and acceptance criteria.
 3. [CounterLab delivery and evaluation](COUNTERLAB_DELIVERY_PLAN.md) — 42-hour baseline, early gates, baselines, withheld evaluation, resources, and demonstration plan.
 
@@ -102,7 +139,7 @@ The ambitious recommendation is an AI investigator that compares conflicting com
 
 ## Preserved alternative: Second Look
 
-The earlier recommendation remains intact as a narrower experiment-integrity product and delivery fallback: [PRD](PROJECT_PRD.md), [research](RESEARCH_AND_DECISION.md), and [delivery/evaluation](DELIVERY_AND_EVALUATION_PLAN.md). It has better present delivery confidence. CounterLab has the higher proposed ceiling only if its discriminating experiment loop works. No silent switch or claim that the original leakage demo fulfills CounterLab's vision is planned.
+The earlier recommendation remains intact as a narrower experiment-integrity product and delivery fallback: [PRD](docs/planning/PROJECT_PRD.md), [research](docs/planning/RESEARCH_AND_DECISION.md), and [delivery/evaluation](docs/planning/DELIVERY_AND_EVALUATION_PLAN.md). It has better present delivery confidence. CounterLab has the higher proposed ceiling only if its discriminating experiment loop works. No silent switch or claim that the original leakage demo fulfills CounterLab's vision is planned.
 
 ## What is not yet done
 
@@ -120,4 +157,4 @@ The first two build sessions test feasibility. We will not treat the current per
 
 ## Earlier preparation
 
-[Preparation brief](HACKATHON_PREPARATION.md) and [readiness tracker](READINESS_TRACKER.md) retain the earlier preparation context. October 14 and October 15 recommendation/status statements describe those earlier phases; the October 16 documents above contain the current ambitious recommendation.
+[Preparation brief](docs/planning/HACKATHON_PREPARATION.md) and [readiness tracker](READINESS_TRACKER.md) retain the earlier preparation context. October 14 and October 15 recommendation/status statements describe those earlier phases; the October 16 documents above contain the current ambitious recommendation.

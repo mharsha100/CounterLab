@@ -1,0 +1,25 @@
+{
+ "created_at": "2026-10-28T02:41:50Z",
+ "files": {
+  "experiment_1/attempt_1.json": "6cdee3b644a2d616a98cebc9cc6959413e69b0fc5ec947b34d3fad14bbc46fa2",
+  "experiment_1/committed_plan.json": "13a801d5fe9e6eb015fe2cc10c77dc1dd1ef0cac58f060b48c27d22c042e6f68",
+  "experiment_1/design_request_1.json": "f7f03b501495d6d506ce389d0f93f8f86a02b88e17234d99ae61d68038f7bc61",
+  "experiment_1/harness.py": "8c8de1471bda7b453de18f84699192298b833af129730e3866c4e1cb238d51b5",
+  "experiment_1/repair_request_1.json": "c3c3692b4a5491fe6e166201fd2751027a0b6e391016a7a403d62059686b5c5c",
+  "experiment_1/result.json": "166cc191f461e63910d088e33a6ca8be556e5366166b1ae8b4ceaf0d4305733a",
+  "experiment_2/committed_plan.json": "a8be3934da8a9d4212f3e20d8da37115303de911d60acd3d5be9242b85100300",
+  "experiment_2/design_request_1.json": "18e3ecf7c63b34ffd7863acc7a5cbcb898b3eab590e69d0035700e00e0b3397f",
+  "experiment_2/harness.py": "9423c37812c1db8dad2734ea7c4533617e25b005e50a2a3f131357ebe1ae2a5d",
+  "experiment_2/result.json": "0f058d869e14ab203371f445dd642bd8641a8d77ee411b941b0201acd0e8789b",
+  "inputs/code/reservoir_samplers/impl_a/reservoir.py": "7deafb667522059bf205fdaa4700b75b016d11817fffc69ec3dc65ac97f59131",
+  "inputs/code/reservoir_samplers/impl_b/reservoir.py": "d724bdae6cc6d670955c8b8331932892ad5fb7ec1cb1bdde1611cea10c059512",
+  "inputs/manifest.json": "7e0e066c270b3ad70b813a32bc0d3cdc6d30e15441193682c82b52eafc1b445f",
+  "inputs/paper_1.txt": "12ecdc9d62f181d660301805694555dc6d6af5a8565b9f23ae946507675e247e",
+  "model_input.json": "83409e4c29e07c03ad359bd04cefe2163d8f3886b8510fc0d5df505e272d9a50",
+  "request.json": "6c6d6593e14f110359b6fe9e0f3eb2e8643e77fcbf517960638ac40f16519e6d",
+  "summary.json": "60915e565c313dd24d1c2e46f7baa91bfa9148efe4c0f6a577468641ab1de42e"
+ },
+ "run_id": "96c989911d0a448ead7e2be05fa91042",
+ "schema": 1,
+ "workflow_version": "open_investigation_v1"
+}

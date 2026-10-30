@@ -1,0 +1,117 @@
+{
+ "admission": {
+  "accepted": true,
+  "checks": [
+   {
+    "check": "conditions",
+    "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+    "passed": true
+   },
+   {
+    "check": "metrics",
+    "message": "One to five uniquely named numeric metrics.",
+    "passed": true
+   },
+   {
+    "check": "explanations",
+    "message": "Two to four competing explanations with unique ids.",
+    "passed": true
+   },
+   {
+    "check": "seeds",
+    "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+    "passed": true
+   },
+   {
+    "check": "budget",
+    "message": "At most 60 measure() calls (conditions x seeds).",
+    "passed": true
+   },
+   {
+    "check": "predictions",
+    "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+    "passed": true
+   },
+   {
+    "check": "discriminating",
+    "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+    "passed": true
+   },
+   {
+    "check": "bet",
+    "message": "Commit which explanation you expect the measurements to support.",
+    "passed": true
+   },
+   {
+    "check": "new_experiment",
+    "message": "A follow-up must change the factor or the conditions.",
+    "passed": true
+   },
+   {
+    "check": "harness_syntax",
+    "message": "The harness parses as Python.",
+    "passed": true
+   },
+   {
+    "check": "measure_signature",
+    "message": "Define measure(condition, seed) at the top level.",
+    "passed": true
+   },
+   {
+    "check": "uses_condition",
+    "message": "measure() must change behaviour based on the condition.",
+    "passed": true
+   },
+   {
+    "check": "uses_seed",
+    "message": "measure() must use the seed so every condition is paired and repeatable.",
+    "passed": true
+   },
+   {
+    "check": "no_network_or_processes",
+    "message": "No network, process, serialisation or interpreter-control modules.",
+    "passed": true
+   },
+   {
+    "check": "no_dynamic_code",
+    "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+    "passed": true
+   },
+   {
+    "check": "tests_uploaded_code",
+    "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+    "passed": true
+   }
+  ]
+ },
+ "feedback": {
+  "examples": [
+   {
+    "condition": "authors_noise_0.0",
+    "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 41, in measure\n    policy, noise_level = parse_condition(condition)\n                          ~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/tmp/counterlab/harness.py\", line 15, in parse_condition\n    noise = float(noise_str)\nValueError: could not convert string to float: 'noise_0.0'\n",
+    "seed": 42
+   },
+   {
+    "condition": "reproduction_noise_0.0",
+    "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 41, in measure\n    policy, noise_level = parse_condition(condition)\n                          ~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/tmp/counterlab/harness.py\", line 15, in parse_condition\n    noise = float(noise_str)\nValueError: could not convert string to float: 'oise_0.0'\n",
+    "seed": 42
+   },
+   {
+    "condition": "authors_noise_0.5",
+    "error": "Traceback (most recent call last):\n  File \"/app/open_runner.py\", line 163, in run\n    values = measure(condition, seed)\n  File \"/tmp/counterlab/harness.py\", line 41, in measure\n    policy, noise_level = parse_condition(condition)\n                          ~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/tmp/counterlab/harness.py\", line 15, in parse_condition\n    noise = float(noise_str)\nValueError: could not convert string to float: 'noise_0.5'\n",
+    "seed": 42
+   }
+  ],
+  "failed_calls": 40,
+  "kind": "measure_errors",
+  "output_tail": ""
+ },
+ "harness_code": "import counterlab_sandbox as sb\nimport math\n\nAUTHORS = sb.load(\"cache_refresh/authors/pge.py\")\nREPRODUCTION = sb.load(\"cache_refresh/reproduction/pge.py\")\n\n# Parse condition: \"authors_noise_0.0\" etc.\ndef parse_condition(cond):\n    if cond.startswith(\"authors_\"):\n        policy = \"authors\"\n        noise_str = cond[8:]\n    else:\n        policy = \"reproduction\"\n        noise_str = cond[14:]\n    noise = float(noise_str)\n    return policy, noise\n\ndef generate_trace(rng, n_pages=10, n_cycles=100):\n    \"\"\"Repeating pattern 0..n_pages-1.\"\"\"\n    base = list(range(n_pages))\n    trace = []\n    for _ in range(n_cycles):\n        trace.extend(base)\n    return trace\n\ndef precompute_true_next(trace):\n    \"\"\"For each t and page, true next access time after t.\"\"\"\n    n = len(trace)\n    max_page = max(trace) + 1\n    # next_pos[t][page] = next index > t where trace[index]==page, or inf\n    next_pos = [[float('inf')] * max_page for _ in range(n + 1)]\n    last_seen = [float('inf')] * max_page\n    for t in range(n - 1, -1, -1):\n        page = trace[t]\n        last_seen[page] = t\n        for p in range(max_page):\n            next_pos[t][p] = last_seen[p]\n    return next_pos\n\ndef measure(condition: str, seed: int) -> dict[str, float]:\n    policy, noise_level = parse_condition(condition)\n    \n    # Trace generation RNG\n    rng_trace = sb.rng(seed)\n    trace = generate_trace(rng_trace)\n    n = len(trace)\n    \n    # Precompute true next access\n    true_next = precompute_true_next(trace)\n    \n    # Noise RNG (separate stream, same for all conditions at this seed)\n    rng_noise = sb.rng(seed + 10000)\n    max_page = max(trace) + 1\n    noise = [[0.0] * max_page for _ in range(n)]\n    for t in range(n):\n        for p in range(max_page):\n            noise[t][p] = rng_noise.gauss(0.0, 1.0)\n    \n    # Predictor function\n    def predict(t, page):\n        tn = true_next[t][page]\n        if tn == float('inf'):\n            return float('inf')\n        return tn + noise_level * noise[t][page]\n    \n    # Run simulation\n    capacity = 3\n    if policy == \"authors\":\n        misses = AUTHORS.simulate(trace, capacity, predict)\n    else:\n        misses = REPRODUCTION.simulate(trace, capacity, predict)\n    \n    return {\"misses\": float(misses)}",
+ "harness_sha256": "78338af7a9c2f3a895080bcbebd319d0f15965bd1555d6b6c2d8d684014312cd",
+ "number": 1,
+ "run": {
+  "failed_calls": 40,
+  "rows": 40,
+  "status": "measure_errors"
+ }
+}

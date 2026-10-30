@@ -84,7 +84,7 @@ G1 and the original evaluation outcome remain unresolved.
 **Tagline:** Turn disagreement into experiments.  
 **Submission target:** October 29; official deadline October 30, 2026, 10 a.m. PDT / 1 p.m. EDT.
 
-Read the [comparison and evidence](AMBITIOUS_IDEA_COMPARISON.md) and [delivery and evaluation plan](COUNTERLAB_DELIVERY_PLAN.md). All performance requirements are prospective targets.
+Read the [comparison and evidence](docs/planning/AMBITIOUS_IDEA_COMPARISON.md) and [delivery and evaluation plan](COUNTERLAB_DELIVERY_PLAN.md). All performance requirements are prospective targets.
 
 ## 1. Product promise
 

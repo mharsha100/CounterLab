@@ -1,8 +1,11 @@
 """V2 consent is distinct from v1; one queue and no implicit provider requests."""
 import json
+import io
 import shutil
 import unittest
+import urllib.error
 import uuid
+import zipfile
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -46,6 +49,8 @@ class GuardedSourceApiTests(unittest.TestCase):
         response = self.client.get("/api/source-investigator-v2")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["workflow_version"], VERSION)
+        self.assertEqual(response.json()["execution_profile"], "source_wall60_v1")
+        self.assertEqual(response.json()["worker_wall_seconds"], 60)
         self.assertEqual(self.calls, [])
         self.assertEqual(self.client.post("/api/source-investigations-v2", json=self.payload()).status_code, 403)
         self.assertEqual(self.client.post("/api/source-investigations-v2", headers=HEADERS,
@@ -79,6 +84,8 @@ class GuardedSourceApiTests(unittest.TestCase):
         record = response.json()
         self.assertEqual(record["provider_mode"], "simulated_provider")
         self.assertEqual(record["summary"]["prediction_rejections"], 1)
+        self.assertNotIn("execution_profile", record)
+        self.assertEqual(record["attempts"][1]["execution"]["replays"][0]["policy"]["wall_seconds"], 15)
         self.assertIsNone(record["attempts"][0]["measurement"])
         self.assertEqual([row["mode"] for row in record["attempts"][1]["execution"]["replays"]], ["docker", "docker"])
         self.assertEqual(self.calls, [])
@@ -92,6 +99,7 @@ class GuardedSourceApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         record = response.json()
         self.assertEqual(record["workflow_version"], VERSION)
+        self.assertEqual(record["execution_profile"], "source_wall60_v1")
         self.assertEqual(record["state"], "completed")
         self.assertEqual(record["summary"]["prediction_rejections"], 1)
         self.assertIsNone(record["attempts"][0]["measurement"])
@@ -100,9 +108,40 @@ class GuardedSourceApiTests(unittest.TestCase):
         self.assertEqual(self.calls, ["models", "chat/completions", "chat/completions"])
         self.assertNotIn("guarded-test-secret", response.text)
         self.assertEqual(self.client.get(f"/api/source-investigations/{SOURCE_RECORDED_ID}").status_code, 200)
-        self.assertEqual(self.client.get(f"/api/source-investigations/{job_id}/export").status_code, 200)
+        exported = self.client.get(f"/api/source-investigations/{job_id}/export")
+        self.assertEqual(exported.status_code, 200)
+        with zipfile.ZipFile(io.BytesIO(exported.content)) as archive:
+            self.assertIn("counterlab/source_run_record_v3.py", archive.namelist())
+            self.assertIn(b"counterlab.source_run_record_v3", archive.read("replay.py"))
+            self.assertEqual(json.loads(archive.read("workflow_plan.json"))["execution_profile"], "source_wall60_v1")
         listed = next(row for row in self.client.get('/api/investigations').json()['items'] if row['id'] == job_id)
         self.assertEqual((listed['adapter'], listed['workflow_version']), ('source', VERSION))
+
+    def test_rate_limited_planning_request_is_sealed_explained_and_not_retried(self):
+        def limited(key, route, body=None):
+            self.calls.append(route)
+            if route == "models":
+                return {"data": [{"id": MODELS[0]}]}
+            raise urllib.error.HTTPError("https://api.tokenfactory.nebius.com/v1/chat/completions", 429,
+                                         "rate limited guarded-test-secret", {"Retry-After": "30"}, None)
+        self.app.state.workspace.transport = limited
+        with patch.object(self.app.state.workspace.executor, "submit") as submit:
+            response = self.client.post("/api/source-investigations-v2", headers=HEADERS, json=self.payload())
+        job_id = response.json()["id"]
+        self.app.state.workspace.work_source_v2(*submit.call_args.args[1:])
+        response = self.client.get(f"/api/source-investigations/{job_id}")
+        self.assertEqual(response.status_code, 200, response.text)
+        record = response.json()
+        self.assertEqual(record["state"], "needs_review")
+        self.assertEqual(record["phase"], "Nebius request stopped")
+        self.assertEqual(record["error"], "provider_http_429")
+        self.assertEqual(record["summary"]["review_reason"], "provider_error_no_retry")
+        self.assertEqual(record["summary"]["inference_requests"], 1)
+        self.assertEqual(record["summary"]["experiments_executed"], 0)
+        # One catalog read and one planning request: the 429 is never retried.
+        self.assertEqual(self.calls, ["models", "chat/completions"])
+        self.assertNotIn("guarded-test-secret", response.text)
+        self.assertNotIn("rate limited", response.text)
 
 
 if __name__ == "__main__":

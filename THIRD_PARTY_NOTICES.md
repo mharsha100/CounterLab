@@ -51,6 +51,10 @@ React, React DOM and Scheduler license texts; it accompanies the source ZIP and
 the website under `licenses/`. Packages and model weights are not vendored in the source ZIP.
 Do not remove dependency license headers from the compiled web assets.
 
+The interface self-hosts the IBM Plex Sans and IBM Plex Mono fonts (Copyright 2019 IBM Corp.),
+bundled from the `@fontsource` packages under the SIL Open Font License 1.1; the full license text
+is in `THIRD_PARTY_LICENSES.txt`. The fonts are not sold or renamed.
+
 Nebius Token Factory hosts inference for `nvidia/Nemotron-3-Ultra-550b-a55b`.
 CounterLab does not redistribute NVIDIA weights. Provider and model terms remain
 separate. Nebius/NVIDIA names identify the tools used; no endorsement is implied.

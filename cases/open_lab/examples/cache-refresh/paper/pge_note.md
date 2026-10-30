@@ -1,0 +1,19 @@
+# Prediction-guided eviction (PGE)
+
+A cache holds k pages. Each request names one page. If the page is cached
+(a hit), nothing is evicted; otherwise (a miss) the page is loaded and, when
+the cache is full, one cached page is evicted.
+
+PGE uses a predictor that, at request time t, estimates when page p will next
+be requested. **Eviction rule:** on a miss with a full cache, evict the cached
+page whose stored predicted next-request time is furthest in the future
+(ties broken by the smallest page id).
+
+**Refreshing predictions.** "Whenever a page is requested, its stored
+prediction is updated with the predictor's latest estimate."
+
+**Reported results.** With noisy predictions, the authors report fewer misses
+than LRU on traces with repeated access patterns. An independent
+reproduction (`reproduction/pge.py`) reports noticeably different miss counts
+from the authors' code (`authors/pge.py`) on the same traces and noise
+levels. Both teams say they follow the rule above.

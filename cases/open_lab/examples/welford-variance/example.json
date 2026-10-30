@@ -1,0 +1,6 @@
+{
+  "title": "Paper only: is Welford's variance really more stable?",
+  "description": "A short paper excerpt claims Welford's online algorithm stays accurate when data sit far from zero, while the textbook one-pass formula breaks down. No code: Nemotron implements both from the text.",
+  "question": "Is Welford's online variance algorithm actually more accurate than the one-pass sum-of-squares formula, and does its advantage grow as the data's mean moves away from zero relative to its spread?",
+  "kind": "paper_only"
+}

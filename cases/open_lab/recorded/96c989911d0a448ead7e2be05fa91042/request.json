@@ -1,0 +1,22 @@
+{
+ "created_at": "2026-10-28T02:41:50Z",
+ "follow_up": true,
+ "links": {
+  "code_url": null,
+  "paper_url": null
+ },
+ "max_output_tokens": 16384,
+ "provider_mode": "simulated_provider",
+ "question": "Both implementations claim to implement Algorithm R from the note. Does each one give every stream item the same chance k/n of ending up in the sample? If one is biased, which items are affected and how badly?",
+ "uploads": [
+  {
+   "name": "methods_note.md",
+   "role": "paper"
+  },
+  {
+   "name": "reservoir-samplers.zip",
+   "role": "code"
+  }
+ ],
+ "workflow_version": "open_investigation_v1"
+}

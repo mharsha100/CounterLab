@@ -1,0 +1,70 @@
+{
+ "automatic_retries": 0,
+ "calls": [
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_1_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 2774,
+    "total_tokens": 3674
+   }
+  },
+  {
+   "elapsed_seconds": 0.0,
+   "finish_reason": "stop",
+   "max_tokens": 16384,
+   "outcome": "ok",
+   "purpose": "experiment_2_design",
+   "reasoning_tokens": null,
+   "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "returned_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+   "usage": {
+    "completion_tokens": 900,
+    "prompt_tokens": 3433,
+    "total_tokens": 4333
+   }
+  }
+ ],
+ "experiments": [
+  {
+   "index": 1,
+   "reason": null,
+   "status": "completed"
+  },
+  {
+   "index": 2,
+   "reason": null,
+   "status": "completed"
+  }
+ ],
+ "finished_at": "2026-10-28T02:43:11Z",
+ "follow_up_requested": true,
+ "max_output_tokens": 16384,
+ "maximum_model_calls": 7,
+ "model_calls": 2,
+ "question": "The authors' implementation and the reproduction of prediction-guided eviction report different miss counts on the same traces. Is the timing of the prediction refresh (only on misses vs on every request) what causes the difference, and does it help or hurt?",
+ "requested_model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+ "returned_models": [
+  "nvidia/Nemotron-3-Ultra-550b-a55b"
+ ],
+ "review_reason": null,
+ "sandbox": {
+  "isolation": "docker_no_network",
+  "mode": "docker"
+ },
+ "started_at": "2026-10-28T02:42:50Z",
+ "status": "completed",
+ "usage": {
+  "completion_tokens": 1800,
+  "prompt_tokens": 6207,
+  "total_tokens": 8007
+ },
+ "workflow_version": "open_investigation_v1"
+}

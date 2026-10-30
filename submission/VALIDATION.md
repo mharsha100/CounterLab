@@ -1,6 +1,239 @@
-# Local release validation — October 26, 2026
+# Local release validation — October 30, 2026
 
-## Clean installation and project freeze
+## First live Nemotron investigation (October 30)
+
+Run on the entrant's Windows machine with the product app (`scripts/start_app.py`), after the
+entrant saved the key in Settings, checked the connection (the catalog lists
+`nvidia/Nemotron-3-Ultra-550b-a55b`), sent the test request and built the sandbox with the Settings
+button on Windows Docker Desktop.
+
+- **Run `f37f1506613e4c78b194a93265caa0e7`** (cache-eviction example, 16,384-token allowance,
+  follow-up on): completed in **87 s** with **3 Nemotron requests** (experiment 1 design 20.6 s,
+  experiment 2 design 20.6 s, experiment 2 repair 4.2 s) and **23,005 tokens** (9,348 prompt,
+  13,657 output of which 10,122 reasoning). Token Factory accepted the strict JSON schema (no
+  fallback); no retries; the returned model matched the requested one; Docker sandbox, no network.
+- **Experiment 1** (refresh policy): refresh on miss only 601.9 vs refresh on every request 557.3
+  misses (10 seeds). Nemotron's bet (E1) and E2 failed (0/10 seeds); the repeat run matched exactly.
+- **Experiment 2** (follow-up, policy × prediction noise): Nemotron's first harness crashed on all 40
+  measurements (`ValueError` parsing its own condition names). CounterLab returned the traceback;
+  the repaired harness ran, the repeat matched exactly, and the bet (E1) held on 10/10 seeds for both
+  comparisons (780 vs 802 with perfect predictions, 780.8 vs 802 with noisy ones); E2 and E3 were
+  contradicted.
+- The record verified, was promoted into `cases/open_lab/recorded/`, and all **293 Python tests** (295 after fix 6)
+  and **25 frontend tests** pass with it included; both builds and the evidence edition were rebuilt.
+  Its downloaded replay package re-verifies 18 files, recomputes both findings and re-executes both
+  experiments offline (`replay.py --rerun`). The hosted edition lists it first and opens it.
+
+Fixed from what this run exposed:
+
+1. The investigation overview showed only the first sentence of each experiment's finding, so
+   explanation E2 read as *held* beside its *contradicted* badge. The overview now shows every
+   comparison and the consistent/contradicted line.
+2. Once a live run existed, Home credited the simulated examples' bets and requests to Nemotron
+   (6/8 bets, 10 requests). Only Nemotron-planned runs are counted now (1/2, 3).
+3. In the entrant's browser, *Start investigation* gave no visible response (not reproduced; the
+   same form started the run from another browser). The form now reports any problem beside the
+   button and scrolls to the field that needs it, so a click can never look like nothing happened.
+4. README and Devpost text no longer state the simulated-planning cache finding (refreshing hurts
+   with noisy predictions), which Nemotron's live follow-up did not reproduce.
+5. After promotion, the entrant's own run was listed as a bundled *Recorded* example in their own
+   workspace, so the setup checklist still said to run a first investigation. A promoted run now
+   stays listed as yours where you ran it (new test); other installs see it as recorded.
+
+6. A second live run that morning (`8a57c696…`, 4 requests, 48,803 tokens, 146 s) showed two more
+   issues. Nemotron's follow-up design hit its output allowance, and the single re-ask used up the
+   one redesign, so a draft with a malformed prediction was committed, rejected by the guard, and
+   shown only as *Not measured*. A truncated reply no longer uses up the redesign (up to three design
+   requests per experiment, within the seven-request cap), and an unmeasured experiment now states
+   why on the overview and experiment tab (for older records too). Two new tests; **295 Python
+   tests** pass. That run's first experiment is valid as recorded: both implementations measured
+   1,337.1 misses, so both of Nemotron's predicted differences failed.
+
+Still not verified: Nemotron's open-design quality beyond this one run, live link downloads, and
+Stop during a sandbox run on Windows Docker Desktop.
+
+
+## Product interface and connection hardening (October 28)
+
+Scope: the app is now organised as a product (Home, New investigation, Investigations, an
+investigation page with tabs, Settings, the case study as a secondary section) and the Nemotron
+connection is hardened. Guidance applied: Vercel's Web Interface Guidelines, the UI UX Pro Max
+pre-delivery checklist, Linear-style app-shell patterns and SaaS sidebar navigation rules; the
+retry policy follows the official OpenAI SDK. **No Nebius requests were made** (Token Factory is
+unreachable from the build environment); live behaviour was exercised against a local fake
+Token Factory server and the simulated planner.
+
+- **292 Python tests passed** (80 s, no skips with Docker running). New: a local OpenAI-compatible
+  fake server injects HTTP 429 with `Retry-After`, 503, 401/402/403/404, dropped connections, slow
+  responses (timeouts) and schema rejections; the client retries what is temporary (at most three
+  retries, backoff with jitter, `Retry-After` honoured, one retry after a timeout), stops at once on
+  what is not, falls back from strict to relaxed schema to JSON mode, and records every event.
+  Service tests cover saving a key (never echoed, other `.env` lines kept, injection rejected,
+  read-only refused), the free catalog check and the paid test request, a run that survives two
+  503s and records them, fallback to the strongest available Nemotron model, Stop during a model
+  request (state *Stopped* within 3 s, record sealed), Stop during a sandbox process, Run again with
+  verified inputs, removing a run from the list, and a clear message when Docker is missing.
+- **25 frontend tests passed** (routes and deep-linked parameters, failure wording, chart helpers).
+  Both production builds pass; fonts are self-hosted (IBM Plex, SIL OFL 1.1).
+- **Browser walkthrough of the product** (Playwright/Chromium, preview server: simulated planning,
+  real Docker sandbox): Home → N opens the composer → example → missing consent explained beside the
+  field with focus moved → start → live progress rail → completed → Experiment tab deep-linked →
+  Activity → replay package downloaded → Run again reuses inputs → Stop → *Stopped* → status filter
+  and search (with `/`) in the URL → Settings rejects a malformed key, saves a valid one without ever
+  showing it, checks the connection and sends a test request → Ctrl K palette starts an example. No
+  console errors.
+- **Hosted evidence edition** (served from a GitHub-Pages-style subpath): hosted-demo labels, start
+  disabled with an explanation, three recorded investigations listed and opened, replay package
+  downloaded from the verified snapshot, no write requests. The case-study walkthrough passes on
+  the read-only app and the hosted edition.
+- **Accessibility:** axe-core (WCAG 2.0/2.1/2.2 A/AA + best practice) found no violations in 23
+  views and tabs (Home, composer, composer with an example, Investigations, an investigation's five
+  tabs, Settings and all 13 case-study views) at 1440 px and 390 px; no horizontal scrolling at 390 px.
+- **Not yet verified (October 28):** live Nemotron behaviour (design quality, timing, whether Token
+  Factory accepts the strict schema or needs the fallback), the sandbox build button on Windows Docker
+  Desktop, and live link downloads. *October 30: the first three are now covered by one live run
+  (above); design quality across tasks and link downloads remain open.*
+
+## Open investigations (October 27, late)
+
+Scope: the new any-paper-or-code workflow (`counterlab/open_lab/`, the **New
+investigation** screen, `scripts/setup_open_runner.py`, `preview_open_lab.py`,
+`promote_open_run.py`, `cases/open_lab/`). Case-study records, frozen protocols
+and the paging worker are unchanged. **No Nebius requests were made**: the build
+environment could not reach Token Factory, so every design below is simulated
+planning written by the developers and labelled as such in the app and records.
+
+- **271 Python tests passed**, 26 of them new for open investigations:
+  intake (archive path normalisation, symlink and size limits, PDF text, link
+  allowlist), guard (non-discriminating designs, forbidden modules/calls/attrs,
+  helper aliases, harness must load the uploaded code), workflow (commit before
+  run, redesign before commitment, harness repair with predictions locked,
+  a truncated design re-asked once with a doubled allowance, malformed
+  designs stopped after one re-ask with nothing run, HTTP 429 never retried, returned-model mismatch
+  stops the run), report statistics and sign test, sealing, tamper detection,
+  `replay.py --rerun`, API origin/consent checks, and a real Docker sandbox run
+  (no network, read-only root, non-root user). **24 frontend tests
+  passed**, including open-investigation failure wording, axis ticks and label
+  wrapping. Both production builds pass.
+- **Sandbox image:** `python:3.13.5-slim` pinned by digest with numpy 2.5.3,
+  scipy 1.18.1, pandas 3.0.6, scikit-learn 1.9.1 and networkx 3.7. After each
+  build `setup_open_runner.py` probes the boundary: network connect fails, root
+  filesystem is read-only, user is 65532, capabilities are empty. Runs use
+  `--network=none --read-only --cap-drop=ALL --security-opt no-new-privileges`,
+  2 GB memory, 2 CPUs, 128 processes, a 256 MB noexec `/tmp`, 240 s per run and
+  30 s per measurement call. (In this environment the image was built from a
+  local root filesystem because Docker Hub is unreachable; on a normal machine
+  the script pulls the pinned digest.)
+- **Three examples, end to end, real sandbox** (browser-driven through the UI,
+  20–28 s each): reservoir samplers (first harness has a wrong path, the guard
+  passes, the run fails, one repair succeeds; Group B first-k inclusion 0.8236×
+  expected vs theory 0.808×; follow-up: bias grows as k/n shrinks), Welford
+  (log10 relative error −8.39 vs +0.88 for the textbook formula at offset 1e9),
+  cache eviction (the committed bet fails: 1,626 vs 1,692.8 misses; follow-up
+  shows refresh-every-request gains 93 misses at noise 5 and loses 152.3 at
+  noise 100). Every repeat matched exactly.
+- **Downloaded replay packages** verified offline with standard-library Python;
+  `--rerun` re-executed every experiment and reproduced every value; editing a
+  measurement or finding makes the replay fail.
+- **Real inputs:** a public GitHub repository ZIP (micrograd) and a text PDF went
+  through intake, outline and prompt assembly within the size limits. Live
+  GitHub/arXiv downloads could not be exercised here (blocked network); the
+  fetcher is covered by tests with an injected transport.
+- **Browser and accessibility:** read-only app walkthrough, evidence edition
+  (recorded open investigations listed, start disabled with an explanation,
+  replay ZIP downloads), axe-core WCAG 2.0/2.1/2.2 A/AA + best-practice with
+  **no violations in all 14 views** at 1440 px and 390 px, and no horizontal
+  scrolling at 390 px.
+- **Not yet verified:** a live Nemotron open investigation (design quality,
+  token use and timing), Docker Desktop on Windows for the open runner, and live
+  link downloads. Run one example live before recording the video.
+
+## Final submission polish (October 27)
+
+Scope: interface wording and failure guidance, HTTP hardening, judge-facing
+README, gallery images, Devpost copy and repository layout. **No model calls,
+no Docker experiments, no paid services and no publication.** All 100 case files,
+the worker and every frozen numerical/record module are byte-identical to the
+October 26 release; only `counterlab/api.py` (security headers, credential-free
+`/api/health`, provider status codes kept on the job) and
+`counterlab/judge_release.py` (new docs paths) changed in the backend.
+
+- **245 Python tests passed** (42.6 s), including three new security-header/
+  health tests and a new rate-limit test: a planning request answered with HTTP
+  429 makes one catalog read and one planning request, is sealed as
+  `needs_review`, is never retried, and reports `provider_http_429` without the
+  provider message or key. **21 frontend tests passed**, including three new
+  wording tests. Both production builds pass; the setup check reports the
+  interface build current.
+- Browser end-to-end walkthrough (Playwright/Chromium) passed on the read-only
+  local app, on the evidence edition served from a GitHub-Pages-style subpath
+  (`/CounterLab/`) and on an app started from the freshly extracted source ZIP:
+  guided tour, inline link to the failed prediction, trace explorer, recorded
+  investigation, checked ZIP download, workbench comparison, Back/Forward and
+  titles, with no console errors and no write requests.
+- Writable-mode start flow checked with simulated planning and the in-process
+  fixture worker (no Docker, no Nebius): consent gates the start button; a normal
+  run shows the guard rejection and measured follow-up; a 429 run shows the
+  actionable rate-limit message and never the raw code.
+- axe-core 4.10 (WCAG 2.0/2.1/2.2 A and AA plus best-practice rules) found
+  **no violations in any of the 13 views** at 1440 px and 390 px on the local app
+  and at 1280 px and 390 px on the evidence edition. No view scrolls horizontally
+  at 390 px. Security headers were confirmed on the extracted build; its read-only
+  POST returned 403.
+- Clean extraction: the new source ZIP installed into a fresh Python 3.13 venv
+  from `requirements-lock.txt` (17 packages), passed the setup check and served
+  the app; `serve.py --verify-only` verified all 35 judge-site files.
+- The downloaded evaluation package replayed offline with standard-library Python
+  3.13 in 2.7 s: 22 paired tests, 45 independent profiles, 145,041 events,
+  16 + 16 runs rescored, 0 inference requests.
+- Release built locally (not published):
+  `artifacts/releases/final-check-20261027/`. Its `release-summary.json` records
+  the exact source and judge ZIP hashes. Distribution checks passed with no
+  credentials or full upstream artifact bundled.
+- Live Nemotron behavior of the guarded v2 workflow is still unmeasured; the
+  private GitHub commit is still the October 26 upload. **5 steps remain:
+  0 project + 5 submission.**
+
+## Final project quality review (October 26)
+
+- **241 Python tests passed in 200.722 seconds; 18 frontend tests passed.** Both
+  production builds pass. This is the final combined regression after the versioned
+  source execution profile and Windows crash-test correction. The crash test exits
+  the actual Python owner instead of its possible Windows launcher; all five
+  ownership tests also passed three consecutive runs.
+- Browser acceptance covered nested URLs, refresh, Back/Forward, headings and
+  titles, keyboard skip navigation, checked-download status/focus, manual recovery
+  from a failed source-record GET, and recovery from a render exception. The fault
+  proxy recorded GET requests only. The source view fit a 390-pixel viewport.
+- Real restricted Docker source execution passed with the new `source_wall60_v1`
+  profile: one rejected synthetic prediction, one admitted experiment and two
+  replays taking 30.187 and 28.884 seconds. The exported v3 package passed standalone
+  replay. The earlier 15-second timeout failure remains retained; old v2 verifiers,
+  receipts and frozen scientific code were not modified. No model call occurred.
+- Fresh extraction of the candidate source passed in the earlier clean 17-package
+  locked environment, with imports confirmed from the extraction. Its interface,
+  source contract, historical guarded record/export and absent optional reference
+  were checked with provider and credential access blocked. All three read-only
+  start routes returned 403. Dependencies were unchanged, so no repeat install
+  was required; the earlier clean-install evidence below remains applicable.
+- Packaging checks verify 17 snapshot routes, all eight exports, source/member
+  manifests, the whole portable site and distribution exclusions. All 100 case
+  files remain byte-identical to the preceding freeze. The member contents of
+  all eight replay ZIPs remain identical to the fully replayed earlier release.
+- npm and OSV advisory queries returned no known matches for the locked packages.
+  This is not a security certification. No speculative dependency changes were made.
+- New release: `artifacts/releases/counterlab-final-review-20261026/`. Its
+  `acceptance-receipt.json` records exact archives and verification evidence;
+  detailed local logs are under `artifacts/freeze/20261026-final-review/`.
+  Changes after extracted runtime acceptance are documentation and the separately
+  regression-tested Windows process-exit test only.
+- The user's port-8000 server was not replaced; restart it before adopting the
+  updated live code. The private GitHub commit is still the previous release.
+  Windows was tested locally; Unix locking and public hosting need their own
+  environment checks. Live model quality, scientific generality and external-user
+  usefulness were not re-evaluated. **5 steps remain: 0 project + 5 submission.**
+
+## Previous clean installation and project freeze
 
 - Extracted the previous reviewed source archive into a new folder, verified its
   source manifest, and created a fresh Python 3.13.5 virtual environment. Installed

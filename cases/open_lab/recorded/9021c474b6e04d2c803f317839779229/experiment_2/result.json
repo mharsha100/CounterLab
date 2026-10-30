@@ -1,0 +1,446 @@
+{
+ "attempts": [
+  {
+   "admission": {
+    "accepted": true,
+    "checks": [
+     {
+      "check": "conditions",
+      "message": "Two to four uniquely named conditions (letters, digits, _ . + -; up to 48 characters).",
+      "passed": true
+     },
+     {
+      "check": "metrics",
+      "message": "One to five uniquely named numeric metrics.",
+      "passed": true
+     },
+     {
+      "check": "explanations",
+      "message": "Two to four competing explanations with unique ids.",
+      "passed": true
+     },
+     {
+      "check": "seeds",
+      "message": "Three to twelve distinct non-negative integer seeds, shared by every condition.",
+      "passed": true
+     },
+     {
+      "check": "budget",
+      "message": "At most 60 measure() calls (conditions x seeds).",
+      "passed": true
+     },
+     {
+      "check": "predictions",
+      "message": "Each explanation commits one to four expected outcomes, each comparing two declared conditions on a declared metric with a non-negative tolerance.",
+      "passed": true
+     },
+     {
+      "check": "discriminating",
+      "message": "The explanations must expect different outcomes; otherwise the experiment cannot tell them apart.",
+      "passed": true
+     },
+     {
+      "check": "bet",
+      "message": "Commit which explanation you expect the measurements to support.",
+      "passed": true
+     },
+     {
+      "check": "new_experiment",
+      "message": "A follow-up must change the factor or the conditions.",
+      "passed": true
+     },
+     {
+      "check": "harness_syntax",
+      "message": "The harness parses as Python.",
+      "passed": true
+     },
+     {
+      "check": "measure_signature",
+      "message": "Define measure(condition, seed) at the top level.",
+      "passed": true
+     },
+     {
+      "check": "uses_condition",
+      "message": "measure() must change behaviour based on the condition.",
+      "passed": true
+     },
+     {
+      "check": "uses_seed",
+      "message": "measure() must use the seed so every condition is paired and repeatable.",
+      "passed": true
+     },
+     {
+      "check": "no_network_or_processes",
+      "message": "No network, process, serialisation or interpreter-control modules.",
+      "passed": true
+     },
+     {
+      "check": "no_dynamic_code",
+      "message": "No eval/exec, file deletion, writes outside scratch, or interpreter internals.",
+      "passed": true
+     },
+     {
+      "check": "tests_uploaded_code",
+      "message": "The harness must import or load the uploaded Python code (for example with counterlab_sandbox.load('path/to/file.py')), so the experiment tests what was uploaded.",
+      "passed": true
+     }
+    ]
+   },
+   "harness_sha256": "8d1c9746d449cd63cb84aadf764d0340f88b7ce47eaf15b6c4b72d966178a31f",
+   "number": 1,
+   "repeat": {
+    "status": "ok"
+   },
+   "run": {
+    "failed_calls": 0,
+    "rows": 12,
+    "status": "ok"
+   }
+  }
+ ],
+ "evaluation": {
+  "bet": {
+   "explanation": "E3",
+   "outcome": "held"
+  },
+  "complete": true,
+  "errors": [],
+  "explanations": [
+   {
+    "failed": 0,
+    "held": 1,
+    "id": "E3",
+    "inconclusive": 0,
+    "statement": "Fresh predictions help only when they are accurate; with noisy predictions, refreshing on every request adds noise to every hit and hurts.",
+    "status": "consistent"
+   },
+   {
+    "failed": 1,
+    "held": 0,
+    "id": "E4",
+    "inconclusive": 0,
+    "statement": "Prediction noise does not change the effect of refresh timing.",
+    "status": "contradicted"
+   }
+  ],
+  "finding": [
+   "Misses saved by refreshing: Accurate predictions (sd 5) 93 vs Noisy predictions (sd 100) -152.3 (mean of 6 seeds). E3 expected Accurate predictions (sd 5) higher than Noisy predictions (sd 100) by more than 50: held (6/6 seeds agree). E4 expected Accurate predictions (sd 5) and Noisy predictions (sd 100) equal within ±30: failed (0/6 seeds agree).",
+   "Consistent with the measurements: E3. Contradicted: E4.",
+   "Nemotron's committed bet (E3) held.",
+   "Scope: this measures the uploaded code (or the stated re-implementation) under this harness, these settings and these seeds. It does not prove a general theorem."
+  ],
+  "measurements": {
+   "refresh_gain": {
+    "noise_100": {
+     "max": 92.0,
+     "mean": -152.333,
+     "min": -366.0,
+     "n": 6,
+     "per_seed": [
+      -262.0,
+      -81.0,
+      -366.0,
+      92.0,
+      -42.0,
+      -255.0
+     ],
+     "std": 155.553
+    },
+    "noise_5": {
+     "max": 361.0,
+     "mean": 93.0,
+     "min": 17.0,
+     "n": 6,
+     "per_seed": [
+      42.0,
+      17.0,
+      22.0,
+      361.0,
+      78.0,
+      38.0
+     ],
+     "std": 121.444
+    }
+   }
+  },
+  "repeat_rows_sha256": "1c66d39e7529faea0841c90ea7748d49603c4eded8d04227a1956a59ce20954f",
+  "report_version": "open_report_v1",
+  "reproduced": true,
+  "rows_sha256": "a05e16cfbee32fc3e3139df356adb99b778e3ec7bb87985e1da24effa6d9d772",
+  "stable_metrics": {
+   "refresh_gain": true
+  },
+  "verdicts": [
+   {
+    "difference": 245.333,
+    "explanation": "E3",
+    "left": "noise_5",
+    "left_mean": 93.0,
+    "metric": "refresh_gain",
+    "relation": "greater",
+    "right": "noise_100",
+    "right_mean": -152.333,
+    "seeds_agreeing": 6,
+    "seeds_compared": 6,
+    "sign_test_p": 0.03125,
+    "status": "held",
+    "tolerance": 50
+   },
+   {
+    "difference": 245.333,
+    "explanation": "E4",
+    "left": "noise_5",
+    "left_mean": 93.0,
+    "metric": "refresh_gain",
+    "relation": "equal",
+    "right": "noise_100",
+    "right_mean": -152.333,
+    "seeds_agreeing": 0,
+    "seeds_compared": 6,
+    "sign_test_p": 0.03125,
+    "status": "failed",
+    "tolerance": 30
+   }
+  ]
+ },
+ "harness_sha256": "8d1c9746d449cd63cb84aadf764d0340f88b7ce47eaf15b6c4b72d966178a31f",
+ "index": 2,
+ "repeat": {
+  "elapsed_seconds": 4.536,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "noise_5",
+    "seconds": 0.0069,
+    "seed": 11,
+    "values": {
+     "refresh_gain": 42.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0073,
+    "seed": 11,
+    "values": {
+     "refresh_gain": -262.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0067,
+    "seed": 12,
+    "values": {
+     "refresh_gain": 17.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0076,
+    "seed": 12,
+    "values": {
+     "refresh_gain": -81.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0063,
+    "seed": 13,
+    "values": {
+     "refresh_gain": 22.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0068,
+    "seed": 13,
+    "values": {
+     "refresh_gain": -366.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0065,
+    "seed": 14,
+    "values": {
+     "refresh_gain": 361.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0076,
+    "seed": 14,
+    "values": {
+     "refresh_gain": 92.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0064,
+    "seed": 15,
+    "values": {
+     "refresh_gain": 78.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.007,
+    "seed": 15,
+    "values": {
+     "refresh_gain": -42.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0063,
+    "seed": 16,
+    "values": {
+     "refresh_gain": 38.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0072,
+    "seed": 16,
+    "values": {
+     "refresh_gain": -255.0
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "run": {
+  "elapsed_seconds": 4.469,
+  "harness_output_tail": "",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "python": "3.13.17",
+  "rows": [
+   {
+    "condition": "noise_5",
+    "seconds": 0.0142,
+    "seed": 11,
+    "values": {
+     "refresh_gain": 42.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0151,
+    "seed": 11,
+    "values": {
+     "refresh_gain": -262.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0088,
+    "seed": 12,
+    "values": {
+     "refresh_gain": 17.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0074,
+    "seed": 12,
+    "values": {
+     "refresh_gain": -81.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0063,
+    "seed": 13,
+    "values": {
+     "refresh_gain": 22.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.007,
+    "seed": 13,
+    "values": {
+     "refresh_gain": -366.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0077,
+    "seed": 14,
+    "values": {
+     "refresh_gain": 361.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0079,
+    "seed": 14,
+    "values": {
+     "refresh_gain": 92.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0065,
+    "seed": 15,
+    "values": {
+     "refresh_gain": 78.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0073,
+    "seed": 15,
+    "values": {
+     "refresh_gain": -42.0
+    }
+   },
+   {
+    "condition": "noise_5",
+    "seconds": 0.0061,
+    "seed": 16,
+    "values": {
+     "refresh_gain": 38.0
+    }
+   },
+   {
+    "condition": "noise_100",
+    "seconds": 0.0073,
+    "seed": 16,
+    "values": {
+     "refresh_gain": -255.0
+    }
+   }
+  ],
+  "runner_version": "open_runner_v1",
+  "status": "ok"
+ },
+ "sandbox": {
+  "image_id": "sha256:78d13fb513c0fa6435c279d4f2c7cbd8bd0bafb2e304b636cc9190d8efe693c1",
+  "isolation": "docker_no_network",
+  "mode": "docker",
+  "packages": {
+   "networkx": "3.7",
+   "numpy": "2.5.3",
+   "pandas": "3.0.6",
+   "scipy": "1.18.1",
+   "sklearn": "1.9.1"
+  },
+  "runner_sha256": "9d58d2e6430a6ad8f61ac764edff26edd2bf6ab7bccf98af01e01c7580c11d2b"
+ },
+ "status": "completed"
+}

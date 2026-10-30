@@ -1,0 +1,79 @@
+{
+ "committed_at": "2026-10-28T02:41:50Z",
+ "committed_before_execution": true,
+ "plan": {
+  "bet": "E2",
+  "claim": {
+   "evidence_quote": "every item has probability exactly k/n of being in the reservoir",
+   "source": "paper",
+   "statement": "Algorithm R includes every item with probability exactly k/n."
+  },
+  "conditions": [
+   {
+    "description": "impl_a/reservoir.py, j uniform over {0..i}",
+    "id": "impl_a",
+    "label": "Group A"
+   },
+   {
+    "description": "impl_b/reservoir.py, j uniform over {0..i-1}",
+    "id": "impl_b",
+    "label": "Group B"
+   }
+  ],
+  "explanations": [
+   {
+    "expected": [
+     {
+      "left": "impl_b",
+      "metric": "first_k_ratio",
+      "relation": "equal",
+      "right": "impl_a",
+      "tolerance": 0.05
+     }
+    ],
+    "id": "E1",
+    "statement": "Both implementations are uniform; group B's lower early estimates are noise."
+   },
+   {
+    "expected": [
+     {
+      "left": "impl_b",
+      "metric": "first_k_ratio",
+      "relation": "less",
+      "right": "impl_a",
+      "tolerance": 0.05
+     }
+    ],
+    "id": "E2",
+    "statement": "impl_b draws j from {0..i-1}, so the first k items are evicted too often and under-represented."
+   }
+  ],
+  "factor": "Which implementation draws the replacement index",
+  "harness_code": "import counterlab_sandbox as sb\n\nIMPLEMENTATIONS = {\"impl_a\": \"impl_a/reservoir.py\", \"impl_b\": \"impl_b/reservoir.py\"}\nN, K, TRIALS = 100, 5, 2000\n\n\ndef measure(condition, seed):\n    module = sb.load(IMPLEMENTATIONS[condition])\n    rng = sb.rng(seed)\n    counts = [0] * N\n    for _ in range(TRIALS):\n        for item in module.reservoir_sample(range(N), K, rng=rng):\n            counts[item] += 1\n    expected = TRIALS * K / N\n    return {\"first_k_ratio\": sum(counts[:K]) / (K * expected),\n            \"rest_ratio\": sum(counts[K:]) / ((N - K) * expected)}\n",
+  "implementation_note": "Calls each uploaded reservoir_sample on range(100) with k=5, 2,000 times per seed, using the same random stream for both.",
+  "metrics": [
+   {
+    "description": "Inclusion frequency of the first k stream items divided by k/n (1.0 = uniform).",
+    "id": "first_k_ratio",
+    "label": "First-k inclusion ratio",
+    "unit": "x expected"
+   },
+   {
+    "description": "Same ratio for items k..n-1.",
+    "id": "rest_ratio",
+    "label": "Remaining-items inclusion ratio",
+    "unit": "x expected"
+   }
+  ],
+  "question": "Does each implementation include every stream position with probability k/n?",
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "title": "Do both reservoir samplers give every item the same chance?"
+ },
+ "plan_sha256": "d711439f87ad471c8abb0d5ad27025bb3e0b768daa4715517be55b141aa30201"
+}

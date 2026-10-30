@@ -7,7 +7,7 @@ import subprocess
 import time
 import uuid
 
-from counterlab.investigator import PROTOCOL_HASH, ROOT, validate_plan_data
+from counterlab.investigator import PROTOCOL_HASH, ROOT, execute_plan, validate_plan_data
 from scripts.check_experiment_engine import digest, write_once
 
 LOCK = ROOT / "artifacts" / "worker" / "image-lock.json"
@@ -20,6 +20,8 @@ SOURCES = ("counterlab/__init__.py", "counterlab/paging.py", "counterlab/learnin
 POLICY = {"network": "none", "read_only_root": True, "user": "65532:65532",
           "memory_bytes": 268435456, "cpus": 1, "pids": 32, "wall_seconds": 15,
           "host_mounts": False, "credentials_forwarded": False}
+SOURCE_EXECUTION_PROFILE = "source_wall60_v1"
+SOURCE_POLICY = {**POLICY, "wall_seconds": 60}
 
 
 class WorkerError(ValueError):
@@ -51,6 +53,12 @@ class DockerExperimentWorker:
             raise WorkerError("Experiment worker unavailable. Run scripts/setup_worker.py with Docker Desktop running.") from None
 
     def invoke(self, payload, descriptor):
+        wall_seconds = POLICY["wall_seconds"]
+        if payload.get("action") == "source_reproduction" and descriptor.get("execution_profile") is not None:
+            if (descriptor["execution_profile"] != SOURCE_EXECUTION_PROFILE
+                    or digest(descriptor.get("policy")) != digest(SOURCE_POLICY)):
+                raise WorkerError("source_execution_profile_invalid")
+            wall_seconds = SOURCE_POLICY["wall_seconds"]
         # Every argument except this owned name and a validated image ID is fixed.
         name = "counterlab-exp-" + uuid.uuid4().hex
         command = ["docker", "run", "--rm", "--interactive", "--pull=never", "--name", name,
@@ -61,7 +69,7 @@ class DockerExperimentWorker:
                    descriptor["image_id"]]
         try:
             response = subprocess.run(command, input=json.dumps(payload), text=True,
-                                      capture_output=True, timeout=POLICY["wall_seconds"])
+                                      capture_output=True, timeout=wall_seconds)
             if response.returncode or len(response.stdout) > 128_000:
                 raise WorkerError("experiment_worker_rejected_or_failed")
             body = json.loads(response.stdout)
@@ -87,9 +95,15 @@ class DockerExperimentWorker:
                     "memory_max": "268435456", "cpu_max": "100000 100000", "pids_max": "32",
                     "provider_credential_variable_present": False, "host_environment_sentinel_present": False,
                     "host_workspace_mounted": False, "docker_socket_present": False}
-        if probe != expected:
+        if digest(probe) != digest(expected):
             raise WorkerError("experiment_worker_boundary_check_failed")
         return {**descriptor, "observed_boundaries": probe}
+
+    def check_source(self):
+        # The boundary probe still has its original 15-second limit. Only the
+        # fixed long source replay opts in to this separately recorded profile.
+        return {**self.check(), "execution_profile": SOURCE_EXECUTION_PROFILE,
+                "policy": dict(SOURCE_POLICY), "boundary_probe_wall_seconds": POLICY["wall_seconds"]}
 
     def execute(self, protocol, plan, attempt_path):
         validate_plan_data(plan)
@@ -108,6 +122,10 @@ class DockerExperimentWorker:
                 or evidence.get("input_sha256") != digest(case["requests"])
                 or evidence.get("source_protocol_sha256") != PROTOCOL_HASH):
             raise WorkerError("experiment_worker_evidence_invalid")
+        # JSON counts must retain their types: Python equality treats False as 0
+        # and 1.0 as 1. Reject before saving a receipt or supplying model feedback.
+        if digest(evidence) != digest(execute_plan(protocol, plan)):
+            raise WorkerError("experiment_worker_replay_mismatch")
         write_once(attempt_path / "execution.json", {
             **descriptor, "elapsed_seconds": round(time.monotonic() - started, 3),
             "input_payload_sha256": digest(payload), "evidence_id": evidence["evidence_id"],
@@ -115,16 +133,28 @@ class DockerExperimentWorker:
         return evidence
 
     def execute_source(self, task, source, plan, attempt_path):
-        from counterlab.source_investigation import SOURCE_HASH, admission, option, task_contract
-        if task != task_contract() or digest(source) != SOURCE_HASH or not admission(task, plan)["accepted"]:
+        return self._execute_source(task, source, plan, attempt_path, extended=False)
+
+    def execute_source_guarded(self, task, source, plan, attempt_path):
+        return self._execute_source(task, source, plan, attempt_path, extended=True)
+
+    def _execute_source(self, task, source, plan, attempt_path, *, extended):
+        from counterlab.source_investigation import SOURCE_HASH, admission, expected_batch, option, task_contract
+        if digest(task) != digest(task_contract()) or digest(source) != SOURCE_HASH or not admission(task, plan)["accepted"]:
             raise WorkerError("source_test_not_reviewed")
         descriptor = self.descriptor()
+        if extended:
+            descriptor = {**descriptor, "execution_profile": SOURCE_EXECUTION_PROFILE,
+                          "policy": dict(SOURCE_POLICY)}
         payload = {"action": "source_reproduction", "protocol_sha256": SOURCE_HASH,
                    "seed_index": option(task, plan["test_id"])["seed_index"]}
         batches, receipts = [], []
+        expected = expected_batch(source, payload["seed_index"])
         for index in (1, 2):
             started = time.monotonic()
             batch = self.invoke(payload, descriptor)
+            if digest(batch) != digest(expected):
+                raise WorkerError("source_worker_replay_mismatch")
             write_once(attempt_path / f"replay_{index}.json", batch)
             batches.append(batch)
             receipts.append({**descriptor, "input_payload_sha256": digest(payload),
